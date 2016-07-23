@@ -14,7 +14,9 @@ class Main extends React.Component{
 	return (
 		<div>
 		<Header />
+		<div className='container'>
 		<QuestionList />
+		</div>
 		</div>
 	);
     }

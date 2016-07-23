@@ -93,7 +93,11 @@
 													'div',
 													null,
 													_react2.default.createElement(_Header2.default, null),
-													_react2.default.createElement(_QuestionList2.default, null)
+													_react2.default.createElement(
+																'div',
+																{ className: 'container' },
+																_react2.default.createElement(_QuestionList2.default, null)
+													)
 										);
 							}
 				}]);
