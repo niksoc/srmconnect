@@ -1,0 +1,33 @@
+/* 
+ * header styles 
+*/
+
+header .btn-group .btn-default {
+    background-color:inherit;
+    border: none;
+} 
+
+header .btn-group.open .dropdown-toggle,
+header .btn-group .dropdown-toggle,
+header .btn-group>.btn:first-child,
+header .open>.dropdown-toggle.btn-default,
+header .btn-group.open .dropdown-toggle:active,
+header .open>.dropdown-toggle.btn-default:focus,
+header .open>.dropdown-toggle.btn-default:hover{ 
+    background-color:inherit;
+    box-shadow:none;
+    padding:5px;
+    margin-left:0px;
+    margin-top:10px;
+} 
+
+header .btn-group .dropdown-toggle{
+    color:gray;
+}
+
+header .btn-group .dropdown-toggle:hover{
+    color:black;
+}
+
+
+    
