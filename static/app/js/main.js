@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Header from './components/header/Header';
+import QuestionList from './components/QuestionList';
 
 class Main extends React.Component{
     constructor(){
@@ -11,7 +12,10 @@ class Main extends React.Component{
     }
     render(){
 	return (
+		<div>
 		<Header />
+		<QuestionList />
+		</div>
 	);
     }
 };
