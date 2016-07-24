@@ -1,3 +1,6 @@
+body {
+    font-size:130%;
+}
 /* 
  * header styles 
 */
@@ -30,4 +33,17 @@ header .btn-group .dropdown-toggle:hover{
 }
 
 
+/* 
+ * featureNav styles 
+*/ 
+
+#FeatureNav, #FeatureNav a {
+    font-size:1.7rem;
+    color: darkgreen;
+}
+
+#FeatureNav:hover, #FeatureNav a:hover {
+    text-decoration:none;
+    color: black; 
+}
     

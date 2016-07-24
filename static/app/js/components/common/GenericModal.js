@@ -4,7 +4,7 @@ import {Modal} from 'react-bootstrap';
 class GenericModal extends React.Component {
     constructor() {
 	super();
-	this.state={ showModal: false };
+	this.state = { showModal: false };
     } 
 
     close() {
@@ -14,11 +14,10 @@ class GenericModal extends React.Component {
     open() {
 	this.setState({ showModal: true });
     } 
- 
     render() {
-	return (
-	        <div>
-		<span onClick={this.open.bind(this)}>{this.props.title}</span> 
+	return ( 
+	        <div onClick={this.open.bind(this)}> 
+		<span>{this.props.title}</span> 
 		<Modal show={this.state.showModal} onHide={this.close.bind(this)}>
 		<Modal.Header closeButton>
 		<Modal.Title>{this.props.title}</Modal.Title>

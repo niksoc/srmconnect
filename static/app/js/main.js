@@ -1,37 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Header from './components/header/Header';
-import QuestionList from './components/QuestionList';
+import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 
-class Main extends React.Component{
-    constructor(){
-	super();
-	this.state = {
-	    'loggedIn':false
-	};
-    }
-    render(){
-	return (
-		<div>
-		<Header />
-		<div className='container'>
-		<QuestionList />
-		</div>
-		</div>
-	);
-    }
-};
-
-ReactDOM.render(<Main />, document.getElementById("app"));
+import Layout from './Layout.js';
+import Home from './pages/Home';
+import ExperienceSpeaks from './pages/ExperienceSpeaks';
+import Wanted from './pages/Wanted';
+import Available from './pages/Available';
 
 
+const app = document.getElementById('app');
 
-
-
-
-
-
-
-
-
-
+ReactDOM.render(
+	<Router history={hashHistory}>
+	<Route path='/' component={Layout}>
+	<IndexRoute component={Home}></IndexRoute>
+	<Route path='experience_speaks' component={ExperienceSpeaks} />
+	<Route path='wanted' component={Wanted} />
+	<Route path='available' component={Available} />
+	<Route path='*' component={Home} />
+	</Route>
+	</Router>
+	, app);
