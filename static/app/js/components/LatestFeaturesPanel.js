@@ -30,18 +30,18 @@ class LatestFeaturesPanel  extends React.Component{
 		<Panel collapsible expanded={this.props.isExpanded}>
 		<Row> 
 		<Col sm={4}>
-		<h4 className="hidden-sm">Experience Speaks</h4>
+		<h4 className="visible-xs">Experience Speaks</h4>
 		<ListGroup>
 		<ListGroupItem href="#">My experience preparing for GRE - Amitav Gupta</ListGroupItem>
 		<ListGroupItem href="#">How I got a job at Microsoft - Kumar K</ListGroupItem>
 		</ListGroup>
 		</Col> 
 		<Col sm={4}>
-		<h4 className="hidden-sm">Wanted</h4>
+		<h4 className="visible-xs">Wanted</h4>
 		<GenericPanelList items={wantedData} bsStyle="info" /> 
 		</Col> 
 		<Col sm={4}>
-		<h4 className="hidden-sm">Available</h4>
+		<h4 className="visible-xs">Available</h4>
 		<GenericPanelList items={availableData} bsStyle="success" /> 
 	    </Col> 
 		</Row>

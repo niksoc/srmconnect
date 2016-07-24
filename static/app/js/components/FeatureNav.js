@@ -25,10 +25,10 @@ class FeatureNav extends React.Component{
     render(){
 	return (
 		<div> 
-		<Row id="FeatureNav">
+		<Row id="FeatureNav"> 
 		<Col sm={4}><Link to={'experience_speaks'} className="featureNavLink">Experience Speaks</Link></Col>
 		<Col sm={4}><Link to={'wanted'} className="featureNavLink">Wanted</Link></Col> 
-		<Col sm={4}><Link to={'available'} className="featureNavLink">Available</Link><span className="pull-right" onClick={this.togglePanel.bind(this)}><span className="hidden-sm">Latest</span><span className="caret"></span></span></Col>
+		<Col sm={4}><Link to={'available'} className="featureNavLink">Available</Link><span className="pull-right" onClick={this.togglePanel.bind(this)}><span className="visible-xs">Latest</span><span className="caret"></span></span></Col>
 		</Row>
 		<LatestFeaturesPanel isExpanded={this.state.panelExpanded} />
 		</div>
