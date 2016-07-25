@@ -43986,7 +43986,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -43998,62 +43998,20 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var LoginForm = _react2.default.createElement(
-	  _reactBootstrap.Form,
-	  { horizontal: true },
-	  _react2.default.createElement(
-	    _reactBootstrap.FormGroup,
-	    { controlId: 'formHorizontalEmail' },
-	    _react2.default.createElement(
-	      _reactBootstrap.Col,
-	      { componentClass: _reactBootstrap.ControlLabel, sm: 2 },
-	      'Email'
-	    ),
-	    _react2.default.createElement(
-	      _reactBootstrap.Col,
-	      { sm: 10 },
-	      _react2.default.createElement(_reactBootstrap.FormControl, { type: 'email', placeholder: 'Email' })
-	    )
-	  ),
-	  _react2.default.createElement(
-	    _reactBootstrap.FormGroup,
-	    { controlId: 'formHorizontalPassword' },
-	    _react2.default.createElement(
-	      _reactBootstrap.Col,
-	      { componentClass: _reactBootstrap.ControlLabel, sm: 2 },
-	      'Password'
-	    ),
-	    _react2.default.createElement(
-	      _reactBootstrap.Col,
-	      { sm: 10 },
-	      _react2.default.createElement(_reactBootstrap.FormControl, { type: 'password', placeholder: 'Password' })
-	    )
-	  ),
-	  _react2.default.createElement(
-	    _reactBootstrap.FormGroup,
-	    null,
-	    _react2.default.createElement(
-	      _reactBootstrap.Col,
-	      { smOffset: 2, sm: 10 },
-	      _react2.default.createElement(
-	        _reactBootstrap.Checkbox,
-	        null,
-	        'Remember me'
-	      )
-	    )
-	  ),
-	  _react2.default.createElement(
-	    _reactBootstrap.FormGroup,
-	    null,
-	    _react2.default.createElement(
-	      _reactBootstrap.Col,
-	      { smOffset: 2, sm: 10 },
-	      _react2.default.createElement(
-	        _reactBootstrap.Button,
-	        { type: 'submit' },
-	        'Sign in'
-	      )
-	    )
-	  )
+		'div',
+		null,
+		'If you don\'t have an account, you will be registered automatically. Please use either Facebook or Google always as a new account will be created otherwise. Login with ',
+		_react2.default.createElement(
+			'a',
+			{ href: '/login/google-oauth2' },
+			'Google'
+		),
+		'OR ',
+		_react2.default.createElement(
+			'a',
+			{ href: '/login/facebook' },
+			'Facebook'
+		)
 	);
 
 	exports.default = LoginForm;

@@ -8,4 +8,5 @@ from . import views
 urlpatterns = [ 
     url(r'^$', views.home, name='home'),
     url(r'^question$', views.questions),
+    url(r'logout', views.logout),
 ] 

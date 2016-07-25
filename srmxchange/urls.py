@@ -22,4 +22,5 @@ import app.views
 urlpatterns = [ 
     url(r'^admin/', admin.site.urls),
     url(r'^app/', include('app.urls')),
+    url('', include('social.apps.django_app.urls', namespace='social')),
 ]
