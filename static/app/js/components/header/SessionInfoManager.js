@@ -1,17 +1,22 @@
 import React from 'react';
-import {Navbar, Nav, NavItem, MenuItem, NavDropdown, DropdownButton} from 'react-bootstrap';
+import {Navbar, Nav, NavItem, MenuItem, NavDropdown} from 'react-bootstrap';
+import {browserHistory} from 'react-router';
 import GenericModal from '../common/GenericModal';
 import LoginForm from './LoginForm';
 
 class SessionInfoManager extends React.Component{
+    onSelectHandler(eventkey){
+	if(eventkey===1) browserHistory.push('profile');
+	if(eventkey===2) location.pathname = 'app/logout';
+    }
     render(){
-	if(false)
+	if(this.context.isLoggedIn)
 	    return (
-		<Dropdown eventKey={3} title="Nikhil Satish" id="basic-dropdown">
-		<MenuItem eventKey={3.3}>Manage Account</MenuItem>
+		    <NavDropdown onSelect={this.onSelectHandler.bind(this)} title={this.context.user.display_name} id="user-details-dropdown">
+		<MenuItem eventKey={1}>Profile</MenuItem>
 		<MenuItem divider />
-		<MenuItem eventKey={3.3}>Logout</MenuItem>
-		</Dropdown>
+		<MenuItem eventKey={2}>Logout</MenuItem>
+		</NavDropdown>
 	    );
 	else return (
 		<Nav>
@@ -21,6 +26,11 @@ class SessionInfoManager extends React.Component{
 	);
     } 
 }
+
+SessionInfoManager.contextTypes = {
+    isLoggedIn: React.PropTypes.bool,
+    user: React.PropTypes.object 
+};
 
 export default SessionInfoManager;
  

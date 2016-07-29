@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route, IndexRoute, hashHistory} from 'react-router';
+import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 
 import Layout from './Layout.js';
 import Home from './pages/Home';
@@ -12,7 +12,7 @@ import Available from './pages/Available';
 const app = document.getElementById('app');
 
 ReactDOM.render(
-	<Router history={hashHistory}>
+	<Router history={browserHistory}>
 	<Route path='/' component={Layout}>
 	<IndexRoute component={Home}></IndexRoute>
 	<Route path='experience_speaks' component={ExperienceSpeaks} />
