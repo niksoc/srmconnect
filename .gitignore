@@ -10,3 +10,5 @@ db.sqlite3
 .env
 media/profiles/
 *.log
+mydatabase
+static/app/js/bundle.js
