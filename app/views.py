@@ -4,13 +4,13 @@ Definition of views.
 
 import django
 from django.shortcuts import render
-from django.shortcuts import redirect
 from django.http import HttpRequest
 from django.http import JsonResponse
-from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.http import Http404
-from . import serializers
+from django.core.urlresolvers import reverse
+from . import models
+from . import utils
 
 
 def home(request):
@@ -23,7 +23,7 @@ def home(request):
 
 
 def logout(request):
-    django.contrib.auth.logout(request);
+    django.contrib.auth.logout(request)
     return HttpResponseRedirect("/app/")
 
 
@@ -44,8 +44,8 @@ def questions(request):
 
 def user(request):
     user = request.user
+    userProfile = user.userprofile
     if(user.is_authenticated()):
-        return JsonResponse(serializers.UserProfileSerializer(user.profile).data)
+        return JsonResponse(utils._to_dict(userProfile))
     else:
         raise Http404
-    

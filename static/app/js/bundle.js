@@ -26798,7 +26798,7 @@
 							key: 'componentWillMount',
 							value: function componentWillMount() {
 										var self = this;
-										_axios2.default.get('user').then(function (response) {
+										_axios2.default.get('user/').then(function (response) {
 													self.setState({ isLoggedIn: true, user: response.data });
 										}).catch(function (error) {});
 							}
@@ -43906,12 +43906,7 @@
 					_react2.default.createElement(
 						_reactBootstrap.NavItem,
 						null,
-						_react2.default.createElement(_GenericModal2.default, { title: 'Register' })
-					),
-					_react2.default.createElement(
-						_reactBootstrap.NavItem,
-						null,
-						_react2.default.createElement(_GenericModal2.default, { title: 'Login', children: _LoginForm2.default })
+						_react2.default.createElement(_GenericModal2.default, { buttonText: 'Login', title: 'Login', children: _LoginForm2.default })
 					)
 				);
 			}
@@ -43978,13 +43973,16 @@
 				}, {
 							key: 'render',
 							value: function render() {
+										var style = {
+													'display': 'inline-block'
+										};
 										return _react2.default.createElement(
 													'div',
-													{ onClick: this.open.bind(this) },
+													{ style: style, onClick: this.open.bind(this) },
 													_react2.default.createElement(
 																'span',
 																null,
-																this.props.title
+																this.props.buttonText
 													),
 													_react2.default.createElement(
 																_reactBootstrap.Modal,
@@ -44084,6 +44082,14 @@
 
 	var _LatestFeaturesPanel2 = _interopRequireDefault(_LatestFeaturesPanel);
 
+	var _GenericModal = __webpack_require__(451);
+
+	var _GenericModal2 = _interopRequireDefault(_GenericModal);
+
+	var _FormFrame = __webpack_require__(485);
+
+	var _FormFrame2 = _interopRequireDefault(_FormFrame);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -44124,6 +44130,10 @@
 				}, {
 							key: 'render',
 							value: function render() {
+										var plusIcon = _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: 'plus-sign' });
+										var wantedForm = _react2.default.createElement(_FormFrame2.default, { src: 'create/wanted/' });
+										var storyForm = _react2.default.createElement(_FormFrame2.default, { src: 'create/story/' });
+										var availableForm = _react2.default.createElement(_FormFrame2.default, { src: 'create/available/' });
 										return _react2.default.createElement(
 													'div',
 													null,
@@ -44137,7 +44147,8 @@
 																						_reactRouter.Link,
 																						{ to: 'experience_speaks', className: 'featureNavLink' },
 																						'Experience Speaks'
-																			)
+																			),
+																			_react2.default.createElement(_GenericModal2.default, { buttonText: plusIcon, title: 'Create Story', children: storyForm })
 																),
 																_react2.default.createElement(
 																			_reactBootstrap.Col,
@@ -44146,7 +44157,8 @@
 																						_reactRouter.Link,
 																						{ to: 'wanted', className: 'featureNavLink' },
 																						'Wanted'
-																			)
+																			),
+																			_react2.default.createElement(_GenericModal2.default, { buttonText: plusIcon, title: 'Create Wanted', children: wantedForm })
 																),
 																_react2.default.createElement(
 																			_reactBootstrap.Col,
@@ -44156,14 +44168,11 @@
 																						{ to: 'available', className: 'featureNavLink' },
 																						'Available'
 																			),
+																			_react2.default.createElement(_GenericModal2.default, { buttonText: plusIcon, title: 'Create Available', children: availableForm }),
 																			_react2.default.createElement(
 																						'span',
 																						{ className: 'pull-right', onClick: this.togglePanel.bind(this) },
-																						_react2.default.createElement(
-																									'span',
-																									{ className: 'visible-xs' },
-																									'Latest'
-																						),
+																						'Latest',
 																						_react2.default.createElement('span', { className: 'caret' })
 																			)
 																)
@@ -45837,7 +45846,7 @@
 	    'num_views': 11,
 	    'title': 'Is global warming real?'}]};
 	   */
-			_axios2.default.get('question').then(function (response) {
+			_axios2.default.get('question/').then(function (response) {
 				self.setState({ questions: response.data });
 			}).catch(function (error) {
 				console.log(error);
@@ -46108,6 +46117,32 @@
 	;
 
 	exports.default = Available;
+
+/***/ },
+/* 485 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var FormFrame = function FormFrame(props) {
+		var formframeStyle = {
+			'width': '100%',
+			'height': '500px'
+		};
+		return _react2.default.createElement('iframe', { src: props.src, sandbox: 'allow-forms allow-same-origin allow-scripts', frameBorder: '0', seamless: true, style: formframeStyle });
+	};
+
+	exports.default = FormFrame;
 
 /***/ }
 /******/ ]);

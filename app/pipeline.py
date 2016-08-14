@@ -4,7 +4,9 @@ from django.core.files.base import ContentFile
 
 def save_profile(backend, user, response, *args, **kwargs):
     profile = user.profile
-    print(response.items())
+    if(not user.is_active):
+        # do later
+        return None
     if(backend.name == 'google-oauth2'):
         image = response.get('image')
         if(not image.get('isDefault')):

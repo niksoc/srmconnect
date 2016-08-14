@@ -19,8 +19,9 @@ from django.contrib import admin
 
 import app.views
 
-urlpatterns = [ 
+urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url('^searchableselect/', include('searchableselect.urls')),
     url(r'^app/', include('app.urls')),
     url('', include('social.apps.django_app.urls', namespace='social')),
 ]

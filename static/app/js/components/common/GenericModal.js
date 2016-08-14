@@ -15,9 +15,12 @@ class GenericModal extends React.Component {
 	this.setState({ showModal: true });
     } 
     render() {
+	const style = {
+	    'display':'inline-block'
+	};
 	return ( 
-	        <div onClick={this.open.bind(this)}> 
-		<span>{this.props.title}</span> 
+	        <div style={style} onClick={this.open.bind(this)}> 
+		<span>{this.props.buttonText}</span> 
 		<Modal show={this.state.showModal} onHide={this.close.bind(this)}>
 		<Modal.Header closeButton>
 		<Modal.Title>{this.props.title}</Modal.Title>

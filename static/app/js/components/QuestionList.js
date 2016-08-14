@@ -17,7 +17,7 @@ class QuestionList extends React.Component {
 	     'num_views': 11,
 	     'title': 'Is global warming real?'}]};
 	    */
-	axios.get('question')
+	axios.get('question/')
 	    .then(function (response) {
 		self.setState({questions:response.data});
 	    })

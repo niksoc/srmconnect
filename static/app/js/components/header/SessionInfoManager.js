@@ -11,7 +11,7 @@ class SessionInfoManager extends React.Component{
     }
     render(){
 	if(this.context.isLoggedIn)
-	    return (
+	    return ( 
 		    <NavDropdown onSelect={this.onSelectHandler.bind(this)} title={this.context.user.display_name} id="user-details-dropdown">
 		<MenuItem eventKey={1}>Profile</MenuItem>
 		<MenuItem divider />
@@ -20,8 +20,7 @@ class SessionInfoManager extends React.Component{
 	    );
 	else return (
 		<Nav>
-		<NavItem><GenericModal title='Register' /></NavItem>
-		<NavItem><GenericModal title='Login' children={LoginForm} /></NavItem>
+		<NavItem><GenericModal buttonText='Login' title='Login' children={LoginForm} /></NavItem>
 		</Nav>
 	);
     } 

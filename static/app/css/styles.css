@@ -37,13 +37,18 @@ header .btn-group .dropdown-toggle:hover{
  * featureNav styles 
 */ 
 
-#FeatureNav, #FeatureNav a {
+#FeatureNav a, #FeatureNav span{
     font-size:1.7rem;
     color: darkgreen;
+    cursor: pointer;
 }
 
-#FeatureNav:hover, #FeatureNav a:hover {
+#FeatureNav a:hover, #FeatureNav span:hover{
     text-decoration:none;
     color: black; 
+}
+
+#FeatureNav .glyphicon{
+    margin-left:5px;
 }
     
