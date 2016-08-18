@@ -2,26 +2,27 @@ from requests import request, HTTPError
 from django.core.files.base import ContentFile
 
 
-def save_profile(backend, user, response, *args, **kwargs):
+def save_profile(backend, user, is_new, response, *args, **kwargs):
     profile = user.profile
-    if(not user.is_active):
+    if not user.is_active:
         # do later
         return None
     if(backend.name == 'google-oauth2'):
-        image = response.get('image')
-        if(not image.get('isDefault')):
-            try:
-                response_img = request('GET', image.get('url'))
-                response_img.raise_for_status()
-            except HTTPError:
-                pass
-            else:
-                profile.profile_image.save('{0}_google.jpg'.format(user.username),
-                                           ContentFile(response_img.content))
-        profile.display_name = response.get('displayName')
-        name = response.get('name')
-        profile.first_name = name.get('givenName')
-        profile.last_name = name.get('familyName')
-        if(response.get('domain') == 'srmuniv.edu.in'):
-            profile.register_no = name.get('familyName')
-        profile.save()
+        if is_new:
+            image = response.get('image')
+            if(not image.get('isDefault')):
+                try:
+                    response_img = request('GET', image.get('url'))
+                    response_img.raise_for_status()
+                except HTTPError:
+                    pass
+                else:
+                    profile.profile_image.save('{0}_google.jpg'.format(user.username),
+                                            ContentFile(response_img.content))
+            profile.display_name = response.get('displayName')
+            name = response.get('name')
+            profile.first_name = name.get('givenName')
+            profile.last_name = name.get('familyName')
+            if(response.get('domain') == 'srmuniv.edu.in'):
+                profile.register_no = name.get('familyName')
+            profile.save()

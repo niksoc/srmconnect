@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib import admin
 from django_extensions.db.models import TimeStampedModel
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 
 def get_sentinel_user():
@@ -38,44 +40,63 @@ class ActivatableModelMixin(models.Model):
             return self.save(update_fields=['is_active'])
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=50, blank=False)
+    is_moderator_only = models.BooleanField(default=False)
+    count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     course_choices = (
         ('B.Tech', 'B.Tech'),
         ('M.Tech', 'M.Tech'),
         ('Phd', 'Phd'),
-        )
+    )
     dept_choices = (
         ('CSE', 'CSE'),
         ('IT', 'IT'),
         ('ECE', 'ECE'),
         ('ITC', 'ITC'),
         ('Mech', 'Mech'),
-        )
+    )
     year_choices = (
         ('I', 1),
         ('II', 2),
         ('III', 3),
         ('IV', 4),
         ('V', 5),
-        )
+    )
     campus_choices = (
         ('KTR', 'Kattankulathur'),
         ('VDP', 'Vadapalani'),
         ('RMP', 'Ramapuram'),
         ('NCR', 'NCR'),
         ('SKM', 'Sikkim'),
-        )
+    )
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=25)
     display_name = models.CharField(max_length=50)
-    register_no = models.CharField(max_length=20, unique=True, null=True)
-    course = models.CharField(choices=course_choices, max_length=10, null=True)
-    department = models.CharField(choices=dept_choices, max_length=5, null=True)
-    year = models.IntegerField(choices=year_choices, null=True)
-    campus = models.CharField(choices=campus_choices, max_length=3, null=True)
-    oneliner = models.CharField(max_length=100, null=True)
-    profile_image = models.ImageField(upload_to='profiles', null=True)
+    register_no = models.CharField(
+        max_length=20, unique=True, null=True, blank=True)
+    course = models.CharField(choices=course_choices,
+                              max_length=10, null=True, blank=True)
+    department = models.CharField(
+        choices=dept_choices, max_length=5, null=True, blank=True)
+    year = models.IntegerField(choices=year_choices, null=True, blank=True)
+    campus = models.CharField(choices=campus_choices,
+                              max_length=3, null=True, blank=True)
+    profile_text = models.TextField(
+        max_length=500, null=True, blank=True, verbose_name='Describe yourself')
+    profile_image = ProcessedImageField(upload_to='profiles',
+                                        processors=[ResizeToFill(50, 50)],
+                                        format='JPEG',
+                                        options={'quality': 60},
+                                        default='profiles/default.jpg')
+    interests = models.ManyToManyField(Tag, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.id and not self.display_name:
@@ -86,38 +107,53 @@ class UserProfile(models.Model):
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 
-class Tag(models.Model):
-    name = models.CharField(max_length=50, blank=False)
-    is_moderator_only = models.BooleanField(default=False)
-    count = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.name
-
-
 class Feature(TimeStampedModel, ActivatableModelMixin):
     title = models.CharField(max_length=100, blank=False)
     text = models.TextField()
     num_views = models.IntegerField(default=0)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
         abstract = True
 
 
+class Question(Feature):
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT,
+                                   related_name='questions_created')
+    modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
+                                    related_name='questions_modified',
+                                    null=True)
+    votes = models.ManyToManyField(User, blank=True,
+                                   related_name='questions_voted')
+    num_votes = models.IntegerField(default=0)
+    num_answers = models.IntegerField(default=0)
+    followers = models.ManyToManyField(User)
+
+    class Meta:
+        ordering = ('created', 'num_views', 'num_votes', )
+
+
 class Answer(TimeStampedModel, ActivatableModelMixin):
+    for_question = models.ForeignKey(Question, on_delete=models.PROTECT)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                    related_name='answers_created')
     modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                     related_name='answers_modified',
                                     null=True)
     text = models.TextField(blank=False)
+    votes = models.ManyToManyField(User, blank=True,
+                                   related_name='answers_voted')
     num_votes = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ('created', 'num_votes', )
+        ordering = ('created', 'num_votes')
+
+    def delete(self, *args, **kwargs):
+        self.for_question.num_answers -= 1
+        self.for_question.save()
+        super(Answer, self).delete(*args, **kwargs)
 
 
 class Notification(models.Model):
@@ -127,30 +163,18 @@ class Notification(models.Model):
     url = models.URLField(max_length=100)
 
 
-class Question(Feature):
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT,
-                                   related_name='questions_created')
-    modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
-                                    related_name='questions_modified',
-                                    null=True)
-    num_votes = models.IntegerField(default=0)
-    num_answers = models.IntegerField(default=0)
-    followers = models.ManyToManyField(User)
-
-    class Meta:
-        ordering = ('created', 'num_views', 'num_votes', )
-
-
 class Story(Feature):
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                    related_name='stories_created')
     modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                     related_name='stories_modified',
                                     null=True)
+    votes = models.ManyToManyField(User, blank=True,
+                                   related_name='stories_voted')
     num_votes = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ('created', 'num_votes', 'num_views', )
+        ordering = ('created', 'num_views', 'num_votes', )
 
 
 class Wanted(Feature):
@@ -175,51 +199,84 @@ class Available(Feature):
         ordering = ('created', 'num_views', )
 
 
+class Event(Feature):
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT,
+                                   related_name='events_created')
+    modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
+                                    related_name='events_modified',
+                                    null=True)
+    time = models.DateTimeField(blank=True,
+                                help_text='should be in the form of day/month/year and optionally hour:minute, eg, 12/2/2016 12:30')
+    image = models.ImageField(upload_to='events', blank=True, null=True)
+
+    class Meta:
+        ordering = ('created', 'num_views',)
+
+
+class Project(Feature):
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT,
+                                   related_name='projects_created')
+    modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
+                                    related_name='projects_modified',
+                                    null=True)
+    image = models.ImageField(upload_to='projects', blank=True, null=True)
+
+    class Meta:
+        ordering = ('created', 'num_views', )
+
+
 class Moderator(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
 
 
 class CommentBaseModel(TimeStampedModel, ActivatableModelMixin):
-    text = models.TextField(blank=False)
+    text = models.TextField(blank=False, verbose_name='comment')
     is_active = models.BooleanField(default=True)
 
     class Meta:
         abstract = True
 
 
-class Comment_Question(CommentBaseModel, ActivatableModelMixin):
+class Comment_Question(CommentBaseModel):
     for_item = models.ForeignKey(Question, on_delete=models.PROTECT,
                                  related_name='comments')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                    related_name='comments_created_on_questions')
 
 
-class Comment_Answer(CommentBaseModel, ActivatableModelMixin):
+class Comment_Answer(CommentBaseModel):
     for_item = models.ForeignKey(Answer, on_delete=models.PROTECT,
                                  related_name='comments')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                    related_name='comments_created_on_answers')
 
 
-class Comment_Available(CommentBaseModel, ActivatableModelMixin):
+class Comment_Available(CommentBaseModel):
     for_item = models.ForeignKey(Available, on_delete=models.PROTECT,
                                  related_name='comments')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                    related_name='comments_created_on_availables')
 
 
-class Comment_Wanted(CommentBaseModel, ActivatableModelMixin):
+class Comment_Wanted(CommentBaseModel):
     for_item = models.ForeignKey(Wanted, on_delete=models.PROTECT,
                                  related_name='comments')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                    related_name='comments_created_on_wanteds')
 
 
-class Comment_Story(CommentBaseModel, ActivatableModelMixin):
+class Comment_Story(CommentBaseModel):
     for_item = models.ForeignKey(Story, on_delete=models.PROTECT,
                                  related_name='comments')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                    related_name='comments_created_on_stories')
+
+
+class Comment_Event(CommentBaseModel):
+    for_item = models.ForeignKey(Event, on_delete=models.PROTECT,
+                                 related_name='comments')
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT,
+                                   related_name='comments_created_on_events')
 
 admin.site.register(UserProfile)
 admin.site.register(Question)

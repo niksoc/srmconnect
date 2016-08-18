@@ -11,10 +11,24 @@
 	<script type="text/javascript" src="/static/searchableselect/main.js"></script>
     </head>
     <body>
-	<form action="{{request.get_full_path}}" method="POST"> 
-	    {% csrf_token %}
-	    {{form.as_p}}
-	    <input type="submit" value="{% if 'delete' in request.path %}Confirm Deletion{% else %}Save{% endif %}">
-	</form>
+	{% if form.is_multipart %}
+	<form enctype="multipart/form-data" method="post" action="{{request.get_full_path}}">
+	    {% else %}
+	    <form action="{{request.get_full_path}}" method="POST"> 
+		{% endif %}
+		{% csrf_token %}
+		{{form.as_p}}
+	{% if 'comment' in request.path %} 
+		<p>Comment on <input disabled name="for" type="text" value="{{for_model_name}}" />{% if for_id %} no. <input disabled name="id" type="text" value="{{for_id}}" /> {% endif %} </p>
+		    {% endif %}
+
+	{% if 'create/answer' in request.path %} 
+		<p>Answer for question {% if for_id %} no. <input disabled name="id" type="text" value="{{for_id}}" /> {% endif %} :<br />
+		{{q_title}}</p>
+		    {% endif %}
+
+		<input type="submit" value="{% if 'delete' in request.path %}Confirm Deletion{% else %}Save{% endif %}">
+
+	    </form>
     </body>
 </html>

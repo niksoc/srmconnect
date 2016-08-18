@@ -1,10 +1,9 @@
 from django.db.models.fields.related import ManyToManyRel, ManyToManyField, ManyToOneRel
-from django.db.models.fields.files import FieldFile 
+from django.db.models.fields.files import FieldFile
 
 
 def _to_dict(self, *args, **kwargs):
     exclude_fields = kwargs.get('exclude', ())
-    include_fields = kwargs.get('include', ())
     data = {}
     for field in self._meta.get_fields():
         field_name = field.name
@@ -18,7 +17,7 @@ def _to_dict(self, *args, **kwargs):
             pass
         else:
             value = field.value_from_object(self)
-            if field.name == 'profile_image':
+            if 'image' in field.name:
                 value = value.url
             data[field_name] = value
     return data

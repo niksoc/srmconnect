@@ -1,7 +1,7 @@
 import React from 'react';
 import QuestionList from '../components/QuestionList';
 
-class Home extends React.Component{
+class Latest extends React.Component{
     render(){
 	return ( 
 		<div> 
@@ -11,7 +11,7 @@ class Home extends React.Component{
     }
 };
 
-export default Home;
+export default Latest;
 
 
 

@@ -3,7 +3,7 @@ Definition of views.
 """
 
 import django
-from django.shortcuts import render
+from django.shortcuts import (render, redirect)
 from django.http import HttpRequest
 from django.http import JsonResponse
 from django.http import HttpResponseRedirect
@@ -20,6 +20,10 @@ def home(request):
         request,
         'app/index.html'
     )
+
+
+def redirect_to_home(request):
+    return redirect('/app/')
 
 
 def logout(request):
@@ -39,13 +43,13 @@ def questions(request):
          'num_answers': 1,
          'num_views': 11,
          'title': 'Is global warming real?'}
-        ], safe=False)
+    ], safe=False)
 
 
 def user(request):
     user = request.user
-    userProfile = user.userprofile
     if(user.is_authenticated()):
+        userProfile = user.userprofile
         return JsonResponse(utils._to_dict(userProfile))
     else:
         raise Http404

@@ -2,27 +2,24 @@ import React from 'react';
 import {Panel, Label, Badge} from 'react-bootstrap';
 import {Link} from 'react-router';
 import {pure} from 'recompose';
- 
-const GenericPanelItem = React.createClass({render(){
+
+const DetailPanelItem = React.createClass({render(){
     const margin = {
 	marginLeft:'5px' 
     };
     console.log(this.props);
-    const pk = this.props.pk;
-    const uri = this.props.uri+ pk + '/';
+    const pk = this.props.params.id;
     const fields = this.props.fields;
     const tags = fields.tags.map((label,i)=>(<Label key={i} bsStyle="info" style={margin}>{label}</Label>)); 
-    const title = (<Link to={uri}>{fields.title}</Link>);
-    return (
+    const title = (<h2>{fields.title}</h2>);
+    return ( 
 	    <Panel header={title} footer={tags} bsStyle={this.props.bsStyle}>
 	    {fields.text}
-	    <Link to={uri}>...</Link>
 	</Panel> 
     );
 }});
 
-GenericPanelItem.propTypes = {
-    pk:React.PropTypes.number,
+DetailPanelItem.propTypes = {
     uri:React.PropTypes.string,
     fields:React.PropTypes.array,
     tags:React.PropTypes.array,
@@ -30,19 +27,4 @@ GenericPanelItem.propTypes = {
 };
     
 
-export default pure(GenericPanelItem);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default pure(DetailPanelItem);

@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from django.conf.urls import include 
+from django.conf.urls import include
 from django.contrib import admin
 
 import app.views
@@ -23,5 +23,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url('^searchableselect/', include('searchableselect.urls')),
     url(r'^app/', include('app.urls')),
+    url(r'^api/', include('app.api_urls')),
     url('', include('social.apps.django_app.urls', namespace='social')),
+    url('^(!login).+', app.views.redirect_to_home)
 ]
