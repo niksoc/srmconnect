@@ -2,22 +2,53 @@ from django.http import (HttpResponse, Http404, JsonResponse)
 from django.views.generic import (ListView, DetailView)
 from django.core import serializers
 from django.apps import apps
+from django.shortcuts import get_object_or_404
 
 from . import models
 from . import utils
+
+
+def processDataList(data):
+    ''' truncates text field if too long, adds tag_names,
+    created_by_name and modified_by_name if corresponding fields exist'''
+    if('text' in data[0]):
+        for obj in data:
+            if len(obj['text']) > 150:
+                obj['text'] = obj['text'][:150]
+    if('tags' in data[0]):
+        for obj in data:
+            obj['tag_names'] = []
+            for tag in obj['tags']:
+                obj['tag_names'].append(
+                    models.Tag.objects.get(pk=tag).name)
+    if('created_by' in data[0]):
+        for obj in data:
+            try:
+                obj['created_by_name'] = models.UserProfile.objects.get(
+                    user=models.User.objects.get(pk=obj['created_by'])).display_name
+            except:
+                obj['created_by_name'] = models.User.objects.get(
+                    pk=obj['created_by']).username
+    if('modified_by' in data[0]):
+        for obj in data:
+            if(obj['modified_by'] is not None):
+                try:
+                    obj['modified_by_name'] = models.UserProfile.objects.get(
+                        user=models.User.objects.get(pk=obj['modified_by'])).display_name
+                except:
+                    obj['modified_by_name'] = models.User.objects.get(
+                        pk=obj['modified_by']).username
 
 
 class BaseListView(ListView):
     paginate_by = 20
 
     def render_to_response(self, context, **response_kwargs):
-        try:  # if text field exists and is too long, truncate it
-            for obj in context.get('object_list'):
-                if len(obj.text) > 50:
-                    obj.text = obj.text[:50]
-        except:
-            pass
-        return HttpResponse(serializers.serialize('json', context.get('object_list')), content_type="application/json")
+        data = []
+        for obj in context.get('object_list'):
+            data.append(utils.to_dict(obj))
+        processDataList(data)
+        return JsonResponse(data, safe=False)
 
     def get(self, request, *args, **kwargs):
         self.ordering = request.GET.get('ordering')
@@ -49,11 +80,11 @@ class CommentListView(ListView):
     ordering = '-created'
 
     def render_to_response(self, context, **response_kwargs):
-        return JsonResponse(
-            serializers.serialize('json', context.get('object_list')),
-            safe=False,
-            **response_kwargs
-        )
+        data = []
+        for obj in context.get('object_list'):
+            data.append(utils.to_dict(obj))
+        processDataList(data)
+        return JsonResponse(data, safe=False)
 
     def get(self, request, *args, **kwargs):
         self.for_model_name = request.GET['for']
@@ -67,25 +98,25 @@ class CommentListView(ListView):
         else:
             self.queryset = model.objects.filter(
                 is_active=True, for_item=for_item)
-        return super().get(self, request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class AnswerListView(ListView):
     ordering = '-num_votes'
 
     def render_to_response(self, context, **response_kwargs):
-        return JsonResponse(
-            serializers.serialize('json', context.get('object_list')),
-            safe=False,
-            **response_kwargs
-        )
+        data = []
+        for obj in context.get('object_list'):
+            data.append(utils.to_dict(obj))
+        processDataList(data)
+        return JsonResponse(data, safe=False)
 
     def get(self, request, *args, **kwargs):
         self.for_id = request.GET['id']
         for_question = models.Question.objects.get(pk=self.for_id)
         self.queryset = models.Answer.objects.filter(
             is_active=True, for_question=for_question)
-        return super().get(self, request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class WantedListView(BaseListView):
@@ -140,7 +171,26 @@ class ProjectDetailView(BaseDetailView):
 # and not userProfile pk
 def UserProfileDetailView(request, pk):
     userProfile = models.User.objects.get(pk=pk).userprofile
-    fields = utils._to_dict(userProfile)
+    fields = utils.to_dict(userProfile)
     profile_dict = {'model': "app.userprofile",
                     'pk': fields['id'], 'fields': fields}
     return JsonResponse(profile_dict)
+
+
+def TagDetailView(request, pk):
+    tag = get_object_or_404(models.Tag, pk=pk)
+    fields = utils.to_dict(tag)
+    return JsonResponse({'model': "app.tag", 'pk': pk, 'fields': fields})
+
+
+def CountView(request, model):
+    try:
+        tags = request.GET.get('tags')
+        if tags:
+            tags = [tag for tag in tags.split(',')]
+            return JsonResponse({'count': apps.get_model(
+                'app.' + model).objects.filter(is_active=True, tags__in=tags).count()})
+        return JsonResponse({'count': apps.get_model(
+            'app.' + model).objects.filter(is_active=True).count()})
+    except:
+        raise Http404

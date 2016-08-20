@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "axios": "^0.13.1",
+    "fbjs": "^0.8.4",
     "flux": "^2.1.1",
     "history": "^1.17.0",
     "immutable": "^3.8.1",

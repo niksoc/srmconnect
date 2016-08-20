@@ -14,7 +14,7 @@ class FeatureNav extends React.Component{
 	};
     }
     handleSelect(key) {
-	let url = constants.baseUrl;
+	let url = constants.BASE_URL;
 	let activeKey=1;
 	switch(key){
 	case 1:url+=''; activeKey=1; break;

@@ -84,4 +84,8 @@ urlpatterns = [
         rest_retrieve_views.AnswerListView.as_view()),
     url(r'^detail/user_profile/(?P<pk>\d+)/$',
         rest_retrieve_views.UserProfileDetailView),
+    url(r'^detail/tag/(?P<pk>\d+)/$',
+        rest_retrieve_views.TagDetailView),
+    url(r'^count/(?P<model>\w+)/$',
+        rest_retrieve_views.CountView),
 ]

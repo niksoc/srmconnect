@@ -3,7 +3,7 @@ import AddButton from './AddButton';
 
 const PageTitle = (props) => {
     return (
-	    <h1>{props.title} <AddButton item={props.title} src={props.src} /> </h1>
+	    <h1 style={props.style}>{props.title} <AddButton item={props.title} src={props.src} /> </h1>
     );
 };
 

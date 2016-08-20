@@ -50,6 +50,6 @@ def user(request):
     user = request.user
     if(user.is_authenticated()):
         userProfile = user.userprofile
-        return JsonResponse(utils._to_dict(userProfile))
+        return JsonResponse(utils.to_dict(userProfile))
     else:
         raise Http404

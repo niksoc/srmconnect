@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './components/header/Header';
 import FeatureNav from './components/FeatureNav';
 import axios from 'axios';
+import UserThumb from './components/UserThumb';
 
 class Layout extends React.Component{
     constructor(){

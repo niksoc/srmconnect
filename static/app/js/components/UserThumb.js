@@ -1,28 +1,58 @@
 import React from 'react';
 import {Media} from 'react-bootstrap';
 import {Link} from 'react-router';
-import {pure} from 'recompose';
+import axios from 'axios';
 
-const UserThumb = (props) => (
-	<Media>
-	<Media.Left>
-	<Link to={'user_profile/'+props.fields.user}>
-	<img width={50} height={50} alt={props.fields.display_name} src={props.fields.profile_image} />
-	</Link>
-	</Media.Left>
-	<Media.Body>
-        <Media.Heading>
-	<Link to={'user_profile/'+props.fields.user}>{props.fields.display_name}</Link>
-	</Media.Heading>
-	dept: {props.fields.dept? props.fields.dept : '-'} <br/>
-	year: {props.fields.dept? props.fields.year : '-'}
-	</Media.Body>
-	</Media>	
-);
+export class UserThumb extends React.Component{
+    constructor(){
+	super();
+	this.state = {
+	    data:{}
+	};
+    }
+    componentDidMount(){
+	axios.get(`/api/detail/user_profile/${this.props.id}/`)
+	    .then(({data})=>this.setState({data}))
+	    .catch((error)=>console.error(error));
+    }
+    render(){
+	if(Object.keys(this.state.data).length === 0 && this.state.data.constructor === Object)
+	    return null;
+	const fields=this.state.data.fields;
+	const style = {
+	    fontSize:'1.4rem'
+	};
+	return(
+		<Media>
+		<Media.Left align="middle">
+		<Link to={'user_profile/'+fields.user}>
+		<img width={50} height={50} alt={fields.display_name} src={fields.profile_image} />
+		</Link>
+		</Media.Left>
+		<Media.Body>
+		<Media.Heading style={style}>
+		<Link to={'user_profile/'+fields.user}>{fields.display_name}</Link>
+		</Media.Heading>
+		dept: {fields.dept? fields.dept : '-'} <br/>
+		year: {fields.dept? fields.year : '-'}
+	    </Media.Body>
+	    </Media>
+		
+	);
+    }
+}
 
 UserThumb.propTypes = {
-    fields: React.PropTypes.object
+    id: React.PropTypes.number
 };
 
-export default pure(UserThumb);
+export default UserThumb;
+
+
+
+
+
+
+
+
 

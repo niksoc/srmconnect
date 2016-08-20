@@ -17,11 +17,10 @@ const routes = (
 	<Route path={BASE_URL} component={Layout}>
 	<IndexRoute component={Latest}></IndexRoute>
 	<Route path='experience_speaks' component={ExperienceSpeaks} />
-	<Route path='wanted' component={Wanted} >
-	<IndexRoute component={ListView} />
-	<Route path=':id' component={DetailView} />
+	<Route title='Wanted' path='wanted' model='wanted' bsStyle='info' orderings={['-created','-num_views']} component={Wanted}>
 	</Route>
-	<Route path='available' component={Available} />
+	<Route title='Available' path='available' model='available' bsStyle='success' orderings={['-created','-num_views']} component={Wanted}>
+	</Route>
 	<Route path='*' component={Latest} />
 	</Route>);
 
