@@ -24,6 +24,7 @@ import app.views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url('^searchableselect/', include('searchableselect.urls')),
+    url('^markdown/', include('django_markdown.urls')),
     url(r'^app/', include('app.urls')),
     url(r'^api/', include('app.api_urls')),
     url('', include('social.apps.django_app.urls', namespace='social')),

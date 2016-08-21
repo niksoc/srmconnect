@@ -9,6 +9,8 @@ from django.contrib import admin
 from django_extensions.db.models import TimeStampedModel
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
+from django_markdown.models import MarkdownField
+from django.utils.html import escape
 
 
 def get_sentinel_user():
@@ -89,7 +91,7 @@ class UserProfile(models.Model):
     year = models.IntegerField(choices=year_choices, null=True, blank=True)
     campus = models.CharField(choices=campus_choices,
                               max_length=3, null=True, blank=True)
-    profile_text = models.TextField(
+    profile_text = MarkdownField(
         max_length=500, null=True, blank=True, verbose_name='Describe yourself')
     profile_image = ProcessedImageField(upload_to='profiles',
                                         processors=[ResizeToFill(50, 50)],
@@ -103,19 +105,28 @@ class UserProfile(models.Model):
             self.display_name = self.first_name + self.last_name
         return super(UserProfile, self).save(*args, **kwargs)
 
+    def clean(self):
+        self.first_name = escape(self.first_name)
+        self.last_name = escape(self.last_name)
+        self.display_name = escape(self.display_name)
+        self.register_no = escape(self.register_no)
+
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 
 class Feature(TimeStampedModel, ActivatableModelMixin):
     title = models.CharField(max_length=100, blank=False)
-    text = models.TextField()
+    text = MarkdownField()
     num_views = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag, blank=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
         abstract = True
+
+    def clean(self):
+        self.title = escape(self.title)
 
 
 class Question(Feature):
@@ -141,7 +152,7 @@ class Answer(TimeStampedModel, ActivatableModelMixin):
     modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                     related_name='answers_modified',
                                     null=True)
-    text = models.TextField(blank=False)
+    text = MarkdownField(blank=False)
     votes = models.ManyToManyField(User, blank=True,
                                    related_name='answers_voted')
     num_votes = models.IntegerField(default=0)
@@ -230,7 +241,7 @@ class Moderator(models.Model):
 
 
 class CommentBaseModel(TimeStampedModel, ActivatableModelMixin):
-    text = models.TextField(blank=False, verbose_name='comment')
+    text = MarkdownField(blank=False, verbose_name='comment')
     is_active = models.BooleanField(default=True)
 
     class Meta:

@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 *~
 *#
+.#*
 pip-log.txt
 pip-delete-this-directory.txt
 local_settings.py

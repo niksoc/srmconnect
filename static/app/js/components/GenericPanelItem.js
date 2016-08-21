@@ -4,6 +4,7 @@ import {Link} from 'react-router';
 import {pure} from 'recompose';
 import Timestamp from './Timestamp';
 import UserThumb from './UserThumb';
+import Markdown from './Markdown';
  
 const GenericPanelItem = React.createClass({render(){
     const margin = {
@@ -11,6 +12,10 @@ const GenericPanelItem = React.createClass({render(){
     };
     const ellipsisStyle = {
 	fontWeight:700
+    };
+    const maxHeight = {
+	maxHeight:'75px',
+	overflow:'hidden'
     };
     const pk = this.props.id;
     const uri = this.props.uri+ pk + '/';
@@ -21,7 +26,9 @@ const GenericPanelItem = React.createClass({render(){
 		    <UserThumb id={this.props.created_by}/></span>); 
     return (
 	    <Panel header={title} footer={footer} bsStyle={this.props.bsStyle}>
-	    {this.props.text}
+	    <div style={maxHeight}>
+	    <Markdown>{this.props.text}</Markdown>
+	    </div>
 	    <Link to={uri} style={ellipsisStyle}> ...</Link>
     </Panel> 
     );

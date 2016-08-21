@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'activatable_model',
     'searchableselect',
+    'django_html_cleaner',
+    'django_markdown',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -168,3 +170,5 @@ STATICFILES_DIRS = [STATIC_DIR, ]
 STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
+
+HTML_CLEANER_ALLOWED_TAGS = []

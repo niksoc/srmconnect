@@ -12,12 +12,11 @@ class Layout extends React.Component{
 	    user:{} 
 	};
     }
-    componentWillMount(){
-	let self = this;
-	axios.get('user/')
-	    .then(function (response) {
-		self.setState({isLoggedIn:true, user:response.data});
-	    })
+    componentDidMount(){
+	axios.get('/app/user/')
+	    .then(({data})=>
+		this.setState({isLoggedIn:true, user:data}) 
+		 )
 	    .catch(function (error) {
 
 	    });

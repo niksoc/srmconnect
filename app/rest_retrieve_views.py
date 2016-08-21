@@ -11,6 +11,8 @@ from . import utils
 def processDataList(data):
     ''' truncates text field if too long, adds tag_names,
     created_by_name and modified_by_name if corresponding fields exist'''
+    if len(data) == 0:
+        return
     if('text' in data[0]):
         for obj in data:
             if len(obj['text']) > 150:

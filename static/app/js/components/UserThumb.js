@@ -12,8 +12,11 @@ export class UserThumb extends React.Component{
     }
     componentDidMount(){
 	axios.get(`/api/detail/user_profile/${this.props.id}/`)
-	    .then(({data})=>this.setState({data}))
+	    .then(({data})=>{if(!this.ignoreLastFetch) this.setState({data});})
 	    .catch((error)=>console.error(error));
+    }
+    componentWillUnmount(){
+	this.ignoreLastFetch = true;
     }
     render(){
 	if(Object.keys(this.state.data).length === 0 && this.state.data.constructor === Object)

@@ -3,10 +3,10 @@ import {Pagination, Nav, NavItem} from 'react-bootstrap';
 import PageTitle from '../components/PageTitle';
 import ListView from '../components/ModelViews/ListView';
 import DetailView from '../components/ModelViews/DetailView';
-import GenericPanelItem from '../components/GenericPanelItem';
 import axios from 'axios';
+import {BASE_URL} from '../constants';
 
-class Wanted extends React.Component{
+class ListViewPage extends React.Component{
     constructor(){
 	super();
 	this.state = {
@@ -83,8 +83,8 @@ class Wanted extends React.Component{
 		<PageTitle title={this.props.route.title} style={inlineBlock} src={`/api/create/${this.props.route.model}/`} />
 		<Nav style={orderingStyle} bsStyle="tabs" activeKey={this.state.ordering} onSelect={this.handleOrderingSelect.bind(this)} pullRight>
 		{orderingButtons}
-		</Nav>
-		<ListView data={this.state.data} class={GenericPanelItem} bsStyle={this.props.route.bsStyle} model={this.props.route.model} detail_url='' />
+		</Nav> 
+		<ListView data={this.state.data} class={this.props.route.class} bsStyle={this.props.route.bsStyle} model={this.props.route.model} detail_url={`${BASE_URL}${this.props.route.title}/`} />
 		<Pagination
 	    prev
 	    next
@@ -100,13 +100,4 @@ class Wanted extends React.Component{
 	);
     }
 };
-export default Wanted; 
-
-
-
-
-
-
-
-
-
+export default ListViewPage; 
