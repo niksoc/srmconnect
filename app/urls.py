@@ -13,6 +13,5 @@ urlpatterns = [
     url(r'^message/(?P<message>\D+)/$',
         TemplateView.as_view(template_name='app/message.html')),
     url(r'^logout', views.logout),
-    url(r'^get_route/', views.get_route),
     url(r'(?P<route>.+)', views.redirect_to_home),
 ]
