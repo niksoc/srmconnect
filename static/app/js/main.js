@@ -16,20 +16,11 @@ import axios from 'axios';
 
 const app = document.getElementById('app');
 
-if(window.localStorage.hasOwnProperty('route')){
-    browserHistory.push(window.localStorage.getItem('route'));
-}
-
 browserHistory.listen(function(ev) {
     window.localStorage.setItem('route',ev.pathname);
 });
 
-
-axios.get('/app/get_route/')
-    .then(({data})=>{
-	console.log(data.route); 
-	browserHistory.push(BASE_URL+data.route);})
-    .catch((error)=>0); 
+if(window._SRMXCHANGE_INIT_ROUTE_!=='None') browserHistory.push(BASE_URL+window._SRMXCHANGE_INIT_ROUTE_);
 
 
 const routes = (

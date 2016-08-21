@@ -102,38 +102,27 @@
 
 	var app = document.getElementById('app');
 
-	if (window.localStorage.hasOwnProperty('route')) {
-					_reactRouter.browserHistory.push(window.localStorage.getItem('route'));
-	}
-
 	_reactRouter.browserHistory.listen(function (ev) {
-					window.localStorage.setItem('route', ev.pathname);
+		window.localStorage.setItem('route', ev.pathname);
 	});
 
-	_axios2.default.get('/app/get_route/').then(function (_ref) {
-					var data = _ref.data;
-
-					console.log(data.route);
-					_reactRouter.browserHistory.push(_constants.BASE_URL + data.route);
-	}).catch(function (error) {
-					return 0;
-	});
+	if (window._SRMXCHANGE_INIT_ROUTE_ !== 'None') _reactRouter.browserHistory.push(_constants.BASE_URL + window._SRMXCHANGE_INIT_ROUTE_);
 
 	var routes = _react2.default.createElement(
-					_reactRouter.Route,
-					{ path: _constants.BASE_URL, component: _Layout2.default },
-					_react2.default.createElement(_reactRouter.IndexRoute, { component: _Latest2.default }),
-					_react2.default.createElement(_reactRouter.Route, { path: 'experience_speaks', component: _ExperienceSpeaks2.default }),
-					_react2.default.createElement(_reactRouter.Route, { title: 'Wanted', 'class': _GenericPanelItem2.default, path: 'wanted', model: 'wanted', bsStyle: 'info', orderings: ['-created', '-num_views'], component: _ListViewPage2.default }),
-					_react2.default.createElement(_reactRouter.Route, { title: 'Wanted', 'class': _GenericPanelItem2.default, path: 'wanted/:id', model: 'wanted', bsStyle: 'info', component: _SimpleDetailViewPage2.default }),
-					_react2.default.createElement(_reactRouter.Route, { title: 'Available', 'class': _GenericPanelItem2.default, path: 'available', model: 'available', bsStyle: 'success', orderings: ['-created', '-num_views'], component: _ListViewPage2.default }),
-					_react2.default.createElement(_reactRouter.Route, { path: '*', component: _Latest2.default })
+		_reactRouter.Route,
+		{ path: _constants.BASE_URL, component: _Layout2.default },
+		_react2.default.createElement(_reactRouter.IndexRoute, { component: _Latest2.default }),
+		_react2.default.createElement(_reactRouter.Route, { path: 'experience_speaks', component: _ExperienceSpeaks2.default }),
+		_react2.default.createElement(_reactRouter.Route, { title: 'Wanted', 'class': _GenericPanelItem2.default, path: 'wanted', model: 'wanted', bsStyle: 'info', orderings: ['-created', '-num_views'], component: _ListViewPage2.default }),
+		_react2.default.createElement(_reactRouter.Route, { title: 'Wanted', 'class': _GenericPanelItem2.default, path: 'wanted/:id', model: 'wanted', bsStyle: 'info', component: _SimpleDetailViewPage2.default }),
+		_react2.default.createElement(_reactRouter.Route, { title: 'Available', 'class': _GenericPanelItem2.default, path: 'available', model: 'available', bsStyle: 'success', orderings: ['-created', '-num_views'], component: _ListViewPage2.default }),
+		_react2.default.createElement(_reactRouter.Route, { path: '*', component: _Latest2.default })
 	);
 
 	_reactDom2.default.render(_react2.default.createElement(
-					_reactRouter.Router,
-					{ history: _reactRouter.browserHistory },
-					routes
+		_reactRouter.Router,
+		{ history: _reactRouter.browserHistory },
+		routes
 	), app);
 
 /***/ },
