@@ -102,10 +102,6 @@
 
 	var app = document.getElementById('app');
 
-	_reactRouter.browserHistory.listen(function (ev) {
-		window.localStorage.setItem('route', ev.pathname);
-	});
-
 	if (window._SRMXCHANGE_INIT_ROUTE_ !== 'None') _reactRouter.browserHistory.push(_constants.BASE_URL + window._SRMXCHANGE_INIT_ROUTE_);
 
 	var routes = _react2.default.createElement(

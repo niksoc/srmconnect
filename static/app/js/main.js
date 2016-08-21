@@ -16,10 +16,6 @@ import axios from 'axios';
 
 const app = document.getElementById('app');
 
-browserHistory.listen(function(ev) {
-    window.localStorage.setItem('route',ev.pathname);
-});
-
 if(window._SRMXCHANGE_INIT_ROUTE_!=='None') browserHistory.push(BASE_URL+window._SRMXCHANGE_INIT_ROUTE_);
 
 

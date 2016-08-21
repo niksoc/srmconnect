@@ -8,8 +8,6 @@ from django.http import HttpRequest
 from django.http import JsonResponse
 from django.http import HttpResponseRedirect
 from django.http import Http404
-from django.core.urlresolvers import reverse
-from . import models
 from . import utils
 
 
@@ -30,7 +28,6 @@ def home(request):
 
 def redirect_to_home(request, route):
     request.session['route'] = route
-    print('set here ', request.session['route'])
     return redirect('/app/')
 
 
