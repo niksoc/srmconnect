@@ -18,7 +18,6 @@ const app = document.getElementById('app');
 
 if(window._SRMXCHANGE_INIT_ROUTE_!=='None') browserHistory.push(BASE_URL+window._SRMXCHANGE_INIT_ROUTE_);
 
-
 const routes = (
 	<Route path={BASE_URL} component={Layout}>
 	<IndexRoute component={Latest}></IndexRoute>

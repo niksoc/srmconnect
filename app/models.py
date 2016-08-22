@@ -6,11 +6,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib import admin
-from django_extensions.db.models import TimeStampedModel
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from django_markdown.models import MarkdownField
 from django.utils.html import escape
+import datetime
 
 
 def get_sentinel_user():
@@ -20,6 +20,19 @@ def get_sentinel_user():
 #    refer https://github.com/ambitioninc/django-activatable-model/blob/develop/activatable_model/models.py
 #    to extend this if needed. Before using this be aware of possible
 #    ForiegnKey/OnetoOneKey problems. refer to above repository for details
+
+
+class TimeStampedModel(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(blank=True)
+
+    def save(self, _modified, *args, **kwargs):
+        if(_modified):
+            self.modified = datetime.datetime.now()
+        super(TimeStampedModel, self).save(*args, **kwargs)
+
+    class Meta:
+        abstract = True
 
 
 class ActivatableModelMixin(models.Model):
@@ -122,6 +135,21 @@ class Feature(TimeStampedModel, ActivatableModelMixin):
     tags = models.ManyToManyField(Tag, blank=True)
     is_active = models.BooleanField(default=True)
 
+    __original_title_text = None
+    __original_modified = None
+
+    def __init__(self, *args, **kwargs):
+        super(Feature, self).__init__(*args, **kwargs)
+        self.__original_title_text = (self.title, self.text)
+        self.__original_modified = self.modified
+
+    def save(self, *args, **kwargs):
+        _modified = True
+        if (self.title, self.text) == self.__original_title_text:
+            _modified = False
+        super(Feature, self).save(_modified=_modified, *args, **kwargs)
+        self.__original_title_text = (self.title, self.text)
+
     class Meta:
         abstract = True
 
@@ -157,6 +185,21 @@ class Answer(TimeStampedModel, ActivatableModelMixin):
                                    related_name='answers_voted')
     num_votes = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
+
+    __original_text = None
+    __original_modified = None
+
+    def __init__(self, *args, **kwargs):
+        super(Answer, self).__init__(*args, **kwargs)
+        self.__original_text = self.text
+        self.__original_modified = self.modified
+
+    def save(self, *args, **kwargs):
+        _modified = True
+        if self.text == self.__original_text:
+            _modified = False
+        super(Answer, self).save(_modified=_modified, *args, **kwargs)
+        self.__original_text = self.text
 
     class Meta:
         ordering = ('created', 'num_votes')
@@ -243,6 +286,22 @@ class Moderator(models.Model):
 class CommentBaseModel(TimeStampedModel, ActivatableModelMixin):
     text = MarkdownField(blank=False, verbose_name='comment')
     is_active = models.BooleanField(default=True)
+
+    __original_text = None
+    __original_modified = None
+
+    def __init__(self, *args, **kwargs):
+        super(CommentBaseModel, self).__init__(*args, **kwargs)
+        self.__original_text = self.text
+        self.__original_modified = self.modified
+
+    def save(self, force_insert=False, force_update=False, *args, **kwargs):
+        _modified = True
+        if self.text == self.__original_text:
+            _modified = False
+        super(CommentBaseModel, self).save(
+            _modified=_modified, *args, **kwargs)
+        self.__original_text = self.text
 
     class Meta:
         abstract = True

@@ -59450,13 +59450,31 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _PageTitle = __webpack_require__(537);
-
-	var _PageTitle2 = _interopRequireDefault(_PageTitle);
+	var _reactBootstrap = __webpack_require__(237);
 
 	var _axios = __webpack_require__(507);
 
 	var _axios2 = _interopRequireDefault(_axios);
+
+	var _Markdown = __webpack_require__(546);
+
+	var _Markdown2 = _interopRequireDefault(_Markdown);
+
+	var _PageTitle = __webpack_require__(537);
+
+	var _PageTitle2 = _interopRequireDefault(_PageTitle);
+
+	var _LoadingIndicator = __webpack_require__(543);
+
+	var _LoadingIndicator2 = _interopRequireDefault(_LoadingIndicator);
+
+	var _UserThumb = __webpack_require__(506);
+
+	var _UserThumb2 = _interopRequireDefault(_UserThumb);
+
+	var _Timestamp = __webpack_require__(505);
+
+	var _Timestamp2 = _interopRequireDefault(_Timestamp);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -59512,18 +59530,50 @@
 				}, {
 							key: 'render',
 							value: function render() {
-										var str = '';
-										for (var property in this.state.data.fields) {
-													if (this.state.data.fields.hasOwnProperty(property)) {
-																str += property + this.state.data.fields[property] + "\n\n\n";
-													}
-										}
-										return _react2.default.createElement(
-													'div',
-													null,
-													_react2.default.createElement(_PageTitle2.default, { title: this.props.route.title, src: '/api/create/' + this.props.route.model + '/' }),
-													str
-										);
+										var fields = this.state.data.fields;
+										if (fields) {
+													var modified_by = fields.modified !== fields.created ? _react2.default.createElement(
+																'div',
+																{ pullRight: true },
+																'last edited: ',
+																_react2.default.createElement(_UserThumb2.default, { id: fields.modified_by })
+													) : null;
+
+													return _react2.default.createElement(
+																'div',
+																null,
+																_react2.default.createElement(_PageTitle2.default, { title: this.props.route.title, src: '/api/create/' + this.props.route.model + '/' }),
+																_react2.default.createElement(
+																			'div',
+																			null,
+																			_react2.default.createElement(
+																						'h3',
+																						null,
+																						fields.title
+																			),
+																			_react2.default.createElement('hr', { className: 'inset' }),
+																			_react2.default.createElement(
+																						'div',
+																						null,
+																						_react2.default.createElement(
+																									_Markdown2.default,
+																									null,
+																									fields.text
+																						),
+																						_react2.default.createElement('hr', { className: 'inset' }),
+																						_react2.default.createElement(_Timestamp2.default, { title: 'modified', datetime: fields.modified }),
+																						_react2.default.createElement(_Timestamp2.default, { title: 'created', datetime: fields.created }),
+																						modified_by,
+																						_react2.default.createElement(
+																									'div',
+																									{ pullRight: true },
+																									'created by: ',
+																									_react2.default.createElement(_UserThumb2.default, { id: fields.created_by })
+																						)
+																			)
+																)
+													);
+										} else return _react2.default.createElement(_LoadingIndicator2.default, null);
 							}
 				}]);
 
