@@ -11,7 +11,8 @@ const Timestamp = (props) => {
     const time = datetime.split(' ')[1].slice(0,-3);
     const datetime_str = [day, month, year, 'at', time].join(' ');
     const style = {
-	fontSize:'1.1rem'
+	fontSize:'1.1rem',
+	...props.style
     };
     return (<span style={style}>{props.title}: <time dateTime={datetime}>{datetime_str}</time></span>);
 };

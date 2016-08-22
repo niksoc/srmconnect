@@ -32,7 +32,7 @@ export class UserThumb extends React.Component{
 		<img width={50} height={50} alt={fields.display_name} src={fields.profile_image} />
 		</Link>
 		</Media.Left>
-		<Media.Body>
+		<Media.Body style={{maxWidth:'110px'}}>
 		<Media.Heading style={style}>
 		<Link to={'user_profile/'+fields.user}>{fields.display_name}</Link>
 		</Media.Heading>

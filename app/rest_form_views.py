@@ -5,6 +5,7 @@ from django.views.generic import (CreateView, UpdateView, DeleteView)
 from searchableselect.widgets import SearchableSelect
 from django.apps import apps
 
+from . import widgets
 from . import models
 
 
@@ -21,6 +22,13 @@ def isCreatorOrModerator(temp, obj, user):
 
 class CommonCreateFormViewBase(CreateView):
     template_name = 'app/form.html'
+
+    def form_invalid(self, form):
+        """
+        If the form is invalid, re-render the context data with the
+        data-filled form and errors.
+        """
+        return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
         if(not self.request.user.is_authenticated()):
@@ -174,12 +182,12 @@ class QuestionUpdateFormView(CommonUpdateFormViewBase):
 class EventCreateFormView(CommonCreateFormViewBase):
 
     class FormClass(ModelForm):
-        time = forms.DateTimeField(required=False, input_formats=[
-                                   '%d/%m/%Y %H:%M', '%d/%m/%Y'])
+        time = forms.DateTimeField(
+            required=False, widget=widgets.SplitSelectDateTimeWidget())
 
         class Meta:
             model = models.Event
-            fields = ('title', 'text', 'time', 'tags',)
+            fields = ('title', 'text', 'time', 'image', 'tags',)
             widgets = tagsWidget
     form_class = FormClass
     model = models.Event
@@ -189,8 +197,8 @@ class EventCreateFormView(CommonCreateFormViewBase):
 class EventUpdateFormView(CommonUpdateFormViewBase):
 
     class FormClass(ModelForm):
-        time = forms.DateTimeField(required=False, input_formats=['%d/%m/%Y %H:%M', '%d/%m/%Y'],
-                                   help_text='format :d/m/Y H:M or d/m/Y')
+        time = forms.DateTimeField(
+            required=False, widget=widgets.SplitSelectDateTimeWidget())
 
         class Meta:
             model = models.Event

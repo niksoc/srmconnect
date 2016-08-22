@@ -44186,6 +44186,13 @@
 										_reactRouter.browserHistory.push(url);
 							}
 				}, {
+							key: 'componentWillMount',
+							value: function componentWillMount() {
+										var features = ['', 'qa', 'wanted', 'available', 'story', 'project', 'event'];
+										var initFeature = window._SRMXCHANGE_INIT_ROUTE_.slice(0, window._SRMXCHANGE_INIT_ROUTE_.indexOf('/'));
+										this.setState({ activeKey: features.indexOf(initFeature) + 1 });
+							}
+				}, {
 							key: 'render',
 							value: function render() {
 										return _react2.default.createElement(
@@ -44236,95 +44243,6 @@
 
 				return FeatureNav;
 	}(_react2.default.Component);
-
-	var FeatureNav2 = function (_React$Component2) {
-				_inherits(FeatureNav2, _React$Component2);
-
-				function FeatureNav2() {
-							_classCallCheck(this, FeatureNav2);
-
-							var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(FeatureNav2).call(this));
-
-							_this2.state = {
-										'panelExpanded': true
-							};
-							return _this2;
-				}
-
-				_createClass(FeatureNav2, [{
-							key: 'openPanel',
-							value: function openPanel() {
-										this.setState({ panelExpanded: true });
-							}
-				}, {
-							key: 'closePanel',
-							value: function closePanel() {
-										this.setState({ panelExpanded: false });
-							}
-				}, {
-							key: 'togglePanel',
-							value: function togglePanel() {
-										if (this.state.panelExpanded) this.setState({ panelExpanded: false });else this.setState({ panelExpanded: true });
-							}
-				}, {
-							key: 'render',
-							value: function render() {
-										var plusIcon = _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: 'plus-sign' });
-										var wantedForm = _react2.default.createElement(_FormFrame2.default, { src: 'create/wanted/' });
-										var storyForm = _react2.default.createElement(_FormFrame2.default, { src: 'create/story/' });
-										var availableForm = _react2.default.createElement(_FormFrame2.default, { src: 'create/available/' });
-										return _react2.default.createElement(
-													'div',
-													null,
-													_react2.default.createElement(
-																_reactBootstrap.Row,
-																{ id: 'FeatureNav' },
-																_react2.default.createElement(
-																			_reactBootstrap.Col,
-																			{ sm: 4 },
-																			_react2.default.createElement(
-																						_reactRouter.Link,
-																						{ to: 'experience_speaks', className: 'featureNavLink' },
-																						'Experience Speaks'
-																			),
-																			_react2.default.createElement(_GenericModal2.default, { buttonText: plusIcon, title: 'Create Story', children: storyForm })
-																),
-																_react2.default.createElement(
-																			_reactBootstrap.Col,
-																			{ sm: 4 },
-																			_react2.default.createElement(
-																						_reactRouter.Link,
-																						{ to: 'wanted', className: 'featureNavLink' },
-																						'Wanted'
-																			),
-																			_react2.default.createElement(_GenericModal2.default, { buttonText: plusIcon, title: 'Create Wanted', children: wantedForm })
-																),
-																_react2.default.createElement(
-																			_reactBootstrap.Col,
-																			{ sm: 4 },
-																			_react2.default.createElement(
-																						_reactRouter.Link,
-																						{ to: 'available', className: 'featureNavLink' },
-																						'Available'
-																			),
-																			_react2.default.createElement(_GenericModal2.default, { buttonText: plusIcon, title: 'Create Available', children: availableForm }),
-																			_react2.default.createElement(
-																						'span',
-																						{ className: 'pull-right', onClick: this.togglePanel.bind(this) },
-																						'Latest',
-																						_react2.default.createElement('span', { className: 'caret' })
-																			)
-																)
-													),
-													_react2.default.createElement(_LatestFeaturesPanel2.default, { isExpanded: this.state.panelExpanded })
-										);
-							}
-				}]);
-
-				return FeatureNav2;
-	}(_react2.default.Component);
-
-	;
 
 	exports.default = FeatureNav;
 
@@ -46698,6 +46616,8 @@
 	    value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -46715,9 +46635,9 @@
 	    var year = "'" + date[0].slice(2);
 	    var time = datetime.split(' ')[1].slice(0, -3);
 	    var datetime_str = [day, month, year, 'at', time].join(' ');
-	    var style = {
+	    var style = _extends({
 	        fontSize: '1.1rem'
-	    };
+	    }, props.style);
 	    return _react2.default.createElement(
 	        'span',
 	        { style: style },
@@ -46824,7 +46744,7 @@
 													),
 													_react2.default.createElement(
 																_reactBootstrap.Media.Body,
-																null,
+																{ style: { maxWidth: '110px' } },
 																_react2.default.createElement(
 																			_reactBootstrap.Media.Heading,
 																			{ style: style },
@@ -59532,11 +59452,20 @@
 							value: function render() {
 										var fields = this.state.data.fields;
 										if (fields) {
+													var style = {
+																position: 'relative',
+																top: '10px'
+													};
+													var borderBottom = {
+																borderBottom: '1px solid #eeeeee',
+																paddingBottom: '10px'
+													};
+													var modified_ut = fields.modified_by !== fields.created_by ? _react2.default.createElement(_UserThumb2.default, { id: fields.modified_by }) : null;
 													var modified_by = fields.modified !== fields.created ? _react2.default.createElement(
 																'div',
-																{ pullRight: true },
-																'last edited: ',
-																_react2.default.createElement(_UserThumb2.default, { id: fields.modified_by })
+																{ className: 'pull-right' },
+																_react2.default.createElement(_Timestamp2.default, { style: style, title: 'last edited', datetime: fields.modified }),
+																modified_ut
 													) : null;
 
 													return _react2.default.createElement(
@@ -59548,28 +59477,24 @@
 																			null,
 																			_react2.default.createElement(
 																						'h3',
-																						null,
+																						{ style: borderBottom },
 																						fields.title
 																			),
-																			_react2.default.createElement('hr', { className: 'inset' }),
 																			_react2.default.createElement(
 																						'div',
 																						null,
 																						_react2.default.createElement(
 																									_Markdown2.default,
-																									null,
+																									{ style: borderBottom },
 																									fields.text
 																						),
-																						_react2.default.createElement('hr', { className: 'inset' }),
-																						_react2.default.createElement(_Timestamp2.default, { title: 'modified', datetime: fields.modified }),
-																						_react2.default.createElement(_Timestamp2.default, { title: 'created', datetime: fields.created }),
-																						modified_by,
 																						_react2.default.createElement(
 																									'div',
-																									{ pullRight: true },
-																									'created by: ',
+																									{ className: 'pull-right', style: { marginLeft: '10px' } },
+																									_react2.default.createElement(_Timestamp2.default, { style: style, title: 'created', datetime: fields.created }),
 																									_react2.default.createElement(_UserThumb2.default, { id: fields.created_by })
-																						)
+																						),
+																						modified_by
 																			)
 																)
 													);

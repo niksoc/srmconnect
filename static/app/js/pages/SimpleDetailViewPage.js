@@ -31,23 +31,29 @@ class SimpleDetailViewPage extends React.Component{
     render(){ 
 	const fields = this.state.data.fields;
 	if(fields){
-	    const modified_by = (fields.modified !== fields.created)? (<div pullRight>
-								       last edited: <UserThumb id={fields.modified_by} />
-								       </div>) : null;
+	    const style = {
+		position:'relative',
+		top:'10px'
+	    };
+	    const borderBottom = {
+		borderBottom: '1px solid #eeeeee',
+		paddingBottom:'10px'
+	    };
+	    const modified_ut = fields.modified_by!==fields.created_by?	<UserThumb id={fields.modified_by} />:null;
+	    const modified_by = (fields.modified !== fields.created)? (<div className="pull-right">
+								       <Timestamp style={style} title='last edited' datetime={fields.modified} />
+								       {modified_ut}
+								       </div>) : null; 
 	 
 	return(
 		<div> 
 		<PageTitle title={this.props.route.title} src={`/api/create/${this.props.route.model}/`} />
 		<div>
-		<h3>{fields.title}</h3>
-		<hr className="inset"/>
+		<h3 style={borderBottom}>{fields.title}</h3>
 		<div>
-		<Markdown>{fields.text}</Markdown>
-		<hr className="inset"/>
-		<Timestamp title='modified' datetime={fields.modified} />
-		<Timestamp title='created' datetime={fields.created} />
+		<Markdown style={borderBottom}>{fields.text}</Markdown>
+		<div className="pull-right" style={{marginLeft:'10px'}}><Timestamp style={style} title='created' datetime={fields.created} /><UserThumb id={fields.created_by} /></div>
 		{modified_by} 
-		<div pullRight>created by: <UserThumb id={fields.created_by} /></div>
 		</div>
 		</div>
 		</div>

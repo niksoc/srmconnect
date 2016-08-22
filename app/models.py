@@ -259,8 +259,7 @@ class Event(Feature):
     modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                     related_name='events_modified',
                                     null=True)
-    time = models.DateTimeField(blank=True,
-                                help_text='should be in the form of day/month/year and optionally hour:minute, eg, 12/2/2016 12:30')
+    time = models.DateTimeField(blank=True)
     image = models.ImageField(upload_to='events', blank=True, null=True)
 
     class Meta:
