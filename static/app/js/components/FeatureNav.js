@@ -23,13 +23,12 @@ class FeatureNav extends React.Component{
 	case 4:url+='available/'; activeKey=4; break;
 	case 5:url+='story/'; activeKey=5; break;
 	case 6:url+='project/'; activeKey=6; break;
-	case 7:url+='event/'; activeKey=7; break;
 	}
 	this.setState({activeKey});
 	browserHistory.push(url);
     } 
     componentWillMount(){
-	const features = ['','qa','wanted','available','story','project','event'];
+	const features = ['','qa','wanted','available','story','project'];
 	const initFeature = window._SRMXCHANGE_INIT_ROUTE_.slice(0, window._SRMXCHANGE_INIT_ROUTE_.indexOf('/'));
 	this.setState({activeKey:features.indexOf(initFeature)+1});
     }
@@ -43,7 +42,6 @@ class FeatureNav extends React.Component{
 		<NavItem eventKey={4}>Available</NavItem>
 		<NavItem eventKey={5}>Experience Speak</NavItem>
 		<NavItem eventKey={6}>Project</NavItem>
-		<NavItem eventKey={7}>Event</NavItem>
 		</Nav>
 		</div>
 	);

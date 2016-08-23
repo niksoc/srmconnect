@@ -253,19 +253,6 @@ class Available(Feature):
         ordering = ('created', 'num_views', )
 
 
-class Event(Feature):
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT,
-                                   related_name='events_created')
-    modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
-                                    related_name='events_modified',
-                                    null=True)
-    time = models.DateTimeField(blank=True)
-    image = models.ImageField(upload_to='events', blank=True, null=True)
-
-    class Meta:
-        ordering = ('created', 'num_views',)
-
-
 class Project(Feature):
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                    related_name='projects_created')
@@ -340,12 +327,6 @@ class Comment_Story(CommentBaseModel):
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                    related_name='comments_created_on_stories')
 
-
-class Comment_Event(CommentBaseModel):
-    for_item = models.ForeignKey(Event, on_delete=models.PROTECT,
-                                 related_name='comments')
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT,
-                                   related_name='comments_created_on_events')
 
 admin.site.register(UserProfile)
 admin.site.register(Question)

@@ -179,36 +179,6 @@ class QuestionUpdateFormView(CommonUpdateFormViewBase):
     queryset = models.Question.objects.filter(is_active=True)
 
 
-class EventCreateFormView(CommonCreateFormViewBase):
-
-    class FormClass(ModelForm):
-        time = forms.DateTimeField(
-            required=False, widget=widgets.SplitSelectDateTimeWidget())
-
-        class Meta:
-            model = models.Event
-            fields = ('title', 'text', 'time', 'image', 'tags',)
-            widgets = tagsWidget
-    form_class = FormClass
-    model = models.Event
-    success_url = "/app/message/success/"
-
-
-class EventUpdateFormView(CommonUpdateFormViewBase):
-
-    class FormClass(ModelForm):
-        time = forms.DateTimeField(
-            required=False, widget=widgets.SplitSelectDateTimeWidget())
-
-        class Meta:
-            model = models.Event
-            fields = ('title', 'text', 'time', 'image', 'tags',)
-            widgets = tagsWidget
-    form_class = FormClass
-    success_url = "/app/message/success/"
-    queryset = models.Event.objects.filter(is_active=True)
-
-
 class ProjectCreateFormView(CommonCreateFormViewBase):
 
     class FormClass(ModelForm):
@@ -420,10 +390,6 @@ class WantedDeleteView(CommonDeleteViewBase):
 
 class StoryDeleteView(CommonDeleteViewBase):
     queryset = models.Story.objects.filter(is_active=True)
-
-
-class EventDeleteView(CommonDeleteViewBase):
-    queryset = models.Event.objects.filter(is_active=True)
 
 
 class ProjectDeleteView(CommonDeleteViewBase):

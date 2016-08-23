@@ -44179,8 +44179,6 @@
 																url += 'story/';activeKey = 5;break;
 													case 6:
 																url += 'project/';activeKey = 6;break;
-													case 7:
-																url += 'event/';activeKey = 7;break;
 										}
 										this.setState({ activeKey: activeKey });
 										_reactRouter.browserHistory.push(url);
@@ -44188,7 +44186,7 @@
 				}, {
 							key: 'componentWillMount',
 							value: function componentWillMount() {
-										var features = ['', 'qa', 'wanted', 'available', 'story', 'project', 'event'];
+										var features = ['', 'qa', 'wanted', 'available', 'story', 'project'];
 										var initFeature = window._SRMXCHANGE_INIT_ROUTE_.slice(0, window._SRMXCHANGE_INIT_ROUTE_.indexOf('/'));
 										this.setState({ activeKey: features.indexOf(initFeature) + 1 });
 							}
@@ -44230,11 +44228,6 @@
 																			_reactBootstrap.NavItem,
 																			{ eventKey: 6 },
 																			'Project'
-																),
-																_react2.default.createElement(
-																			_reactBootstrap.NavItem,
-																			{ eventKey: 7 },
-																			'Event'
 																)
 													)
 										);

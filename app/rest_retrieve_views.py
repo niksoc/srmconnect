@@ -153,14 +153,6 @@ class QuestionDetailView(BaseDetailView):
     queryset = models.Question.objects.filter(is_active=True)
 
 
-class EventListView(BaseListView):
-    model = models.Event
-
-
-class EventDetailView(BaseDetailView):
-    queryset = models.Event.objects.filter(is_active=True)
-
-
 class ProjectListView(BaseListView):
     model = models.Project
 
