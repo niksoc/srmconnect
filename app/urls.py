@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^question/$', views.questions),
     url(r'^user/$', views.user),
+    url(r'^moderator/$', views.moderator),
     url(r'^message/(?P<message>\D+)/$',
         TemplateView.as_view(template_name='app/message.html')),
     url(r'^logout', views.logout),

@@ -20,7 +20,7 @@ class SessionInfoManager extends React.Component{
 	    );
 	else return (
 		<Nav>
-		<NavItem><GenericModal buttonText='Login' title='Login' children={LoginForm} /></NavItem>
+		<NavItem><GenericModal buttonText='Login/SignUp' title='Login/SignUp' children={LoginForm} /></NavItem>
 		</Nav>
 	);
     } 

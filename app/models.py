@@ -10,6 +10,7 @@ from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from django_markdown.models import MarkdownField
 from django.utils.html import escape
+from hitcount.models import HitCountMixin
 import datetime
 
 
@@ -55,9 +56,15 @@ class ActivatableModelMixin(models.Model):
             return self.save(update_fields=['is_active'])
 
 
+class Dept(models.Model):
+    name = models.CharField(max_length=50)
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=50, blank=False)
     is_moderator_only = models.BooleanField(default=False)
+    dept = models.ForeignKey(
+        Dept, on_delete=models.SET_NULL, null=True)
     count = models.IntegerField(default=0)
 
     def __str__(self):
@@ -70,13 +77,6 @@ class UserProfile(models.Model):
         ('B.Tech', 'B.Tech'),
         ('M.Tech', 'M.Tech'),
         ('Phd', 'Phd'),
-    )
-    dept_choices = (
-        ('CSE', 'CSE'),
-        ('IT', 'IT'),
-        ('ECE', 'ECE'),
-        ('ITC', 'ITC'),
-        ('Mech', 'Mech'),
     )
     year_choices = (
         ('I', 1),
@@ -99,8 +99,8 @@ class UserProfile(models.Model):
         max_length=20, unique=True, null=True, blank=True)
     course = models.CharField(choices=course_choices,
                               max_length=10, null=True, blank=True)
-    department = models.CharField(
-        choices=dept_choices, max_length=5, null=True, blank=True)
+    department = models.ForeignKey(
+        Dept, on_delete=models.SET_NULL, null=True)
     year = models.IntegerField(choices=year_choices, null=True, blank=True)
     campus = models.CharField(choices=campus_choices,
                               max_length=3, null=True, blank=True)
@@ -112,6 +112,7 @@ class UserProfile(models.Model):
                                         options={'quality': 60},
                                         default='profiles/default.jpg')
     interests = models.ManyToManyField(Tag, blank=True)
+    num_views = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.id and not self.display_name:
@@ -169,6 +170,10 @@ class Question(Feature):
     num_answers = models.IntegerField(default=0)
     followers = models.ManyToManyField(User)
 
+    def save(self, *args, **kwargs):
+        self.followers.add(self.created_by)
+        super(Question, self).save(*args, **kwargs)
+
     class Meta:
         ordering = ('created', 'num_views', 'num_votes', )
 
@@ -185,6 +190,7 @@ class Answer(TimeStampedModel, ActivatableModelMixin):
                                    related_name='answers_voted')
     num_votes = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
+    followers = models.ManyToManyField(User)
 
     __original_text = None
     __original_modified = None
@@ -226,6 +232,7 @@ class Story(Feature):
     votes = models.ManyToManyField(User, blank=True,
                                    related_name='stories_voted')
     num_votes = models.IntegerField(default=0)
+    followers = models.ManyToManyField(User)
 
     class Meta:
         ordering = ('created', 'num_views', 'num_votes', )
@@ -237,6 +244,7 @@ class Wanted(Feature):
     modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                     related_name='wanteds_modified',
                                     null=True)
+    followers = models.ManyToManyField(User)
 
     class Meta:
         ordering = ('created', 'num_views', )
@@ -248,6 +256,7 @@ class Available(Feature):
     modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                     related_name='availables_modified',
                                     null=True)
+    followers = models.ManyToManyField(User)
 
     class Meta:
         ordering = ('created', 'num_views', )
@@ -270,7 +279,7 @@ class Moderator(models.Model):
 
 
 class CommentBaseModel(TimeStampedModel, ActivatableModelMixin):
-    text = MarkdownField(blank=False, verbose_name='comment')
+    text = models.TextField(blank=False, verbose_name='comment')
     is_active = models.BooleanField(default=True)
 
     __original_text = None
@@ -328,6 +337,10 @@ class Comment_Story(CommentBaseModel):
                                    related_name='comments_created_on_stories')
 
 
+class App_Text(models.Model):
+    title = models.CharField(max_length=20, unique=True)
+    text = MarkdownField()
+
 admin.site.register(UserProfile)
 admin.site.register(Question)
 admin.site.register(Answer)
@@ -342,3 +355,4 @@ admin.site.register(Comment_Answer)
 admin.site.register(Comment_Available)
 admin.site.register(Comment_Wanted)
 admin.site.register(Comment_Story)
+admin.site.register(App_Text)

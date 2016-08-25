@@ -9,6 +9,7 @@ class Layout extends React.Component{
 	super();
 	this.state = {
 	    isLoggedIn:false,
+	    isModerator:false,
 	    user:{} 
 	};
     }
@@ -20,10 +21,18 @@ class Layout extends React.Component{
 	    .catch(function (error) {
 
 	    });
+	axios.get('/app/moderator/')
+	    .then(({data})=>
+		  this.setState({isModerator:true}) 
+		 )
+	    .catch(function (error) {
+
+	    });
     } 
     getChildContext() {
 	return {
 	    isLoggedIn: this.state.isLoggedIn,
+	    isModerator: this.state.isModerator,
 	    user: this.state.user
 	};
     }
@@ -42,6 +51,7 @@ class Layout extends React.Component{
 
 Layout.childContextTypes = {
     isLoggedIn: React.PropTypes.bool,
+    isModerator: React.PropTypes.bool,
     user: React.PropTypes.object 
 };
 

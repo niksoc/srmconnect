@@ -3,6 +3,10 @@ from django.views.generic import (ListView, DetailView)
 from django.core import serializers
 from django.apps import apps
 from django.shortcuts import get_object_or_404
+from hitcount.views import HitCountDetailView
+from hitcount.views import HitCountMixin
+from hitcount.models import HitCount
+from django.db.models import F
 
 from . import models
 from . import utils
@@ -68,22 +72,31 @@ class BaseDetailView(DetailView):
 
     def render_to_response(self, context, **response_kwargs):
         obj = context.get('object')
+        instance = self.get_object()
         try:  # if num_views field exists, update it
-            obj.num_views += 1
-            obj.save()
+            a = instance.num_views  # crude test for existence
         except:
             pass
+        else:
+            hit_count = HitCount.objects.get_for_object(instance)
+            hit_count_response = HitCountMixin.hit_count(
+                self.request, hit_count)
+            if(hit_count_response[0]):
+                instance.num_views = F('num_views') + 1
+                instance.save()
         obj = [obj]  # serializer needs an iterable
         # to remove the '[' and ']' to make array -> object
         return HttpResponse(serializers.serialize('json', obj)[1:-1], content_type="application/json")
 
 
 class CommentListView(ListView):
-    ordering = '-created'
+    ordering = 'created'
 
     def render_to_response(self, context, **response_kwargs):
         data = []
-        for obj in context.get('object_list'):
+        for i, obj in enumerate(context.get('object_list')):
+            if self.num and self.num != '' and i >= int(self.num):
+                break
             data.append(utils.to_dict(obj))
         processDataList(data)
         return JsonResponse(data, safe=False)
@@ -92,14 +105,15 @@ class CommentListView(ListView):
         self.for_model_name = request.GET['for']
         self.for_id = request.GET['id']
         model = apps.get_model('app.Comment_' + self.for_model_name)
-        for_item = apps.get_model(self.for_model_name).get(pk=self.for_id)
-        if request.GET.get('num'):
-            num = request.GET.get('num')
-            self.queryset = model.objects.filter(
-                is_active=True, for_item=for_item)[:num]
-        else:
-            self.queryset = model.objects.filter(
-                is_active=True, for_item=for_item)
+        for_item = apps.get_model(
+            'app.' + self.for_model_name).objects.get(pk=self.for_id)
+        self.num = request.GET.get('num')
+        if self.num:
+            # if limited no. of comments is requested, we give them latest
+            # comments first
+            self.ordering = '-created'
+        self.queryset = model.objects.filter(
+            is_active=True, for_item=for_item)
         return super().get(request, *args, **kwargs)
 
 
@@ -165,6 +179,12 @@ class ProjectDetailView(BaseDetailView):
 # and not userProfile pk
 def UserProfileDetailView(request, pk):
     userProfile = models.User.objects.get(pk=pk).userprofile
+    if request.GET.get('count_hit'):
+        hit_count = HitCount.objects.get_for_object(userProfile)
+        hit_count_response = HitCountMixin.hit_count(request, hit_count)
+        if(hit_count_response[0]):
+            userProfile.num_views = F('num_views') + 1
+            userProfile.save()
     fields = utils.to_dict(userProfile)
     profile_dict = {'model': "app.userprofile",
                     'pk': fields['id'], 'fields': fields}
@@ -175,6 +195,13 @@ def TagDetailView(request, pk):
     tag = get_object_or_404(models.Tag, pk=pk)
     fields = utils.to_dict(tag)
     return JsonResponse({'model': "app.tag", 'pk': pk, 'fields': fields})
+
+
+# only model which you fetch by title
+def App_TextDetailView(request, title):
+    tag = get_object_or_404(models.App_Text, title=title)
+    fields = utils.to_dict(tag)
+    return JsonResponse(fields)
 
 
 def CountView(request, model):

@@ -20,7 +20,7 @@ class GenericModal extends React.Component {
 	};
 	return ( 
 	        <div style={style} onClick={this.open.bind(this)}> 
-		<span>{this.props.buttonText}</span> 
+		<span className='link' style={this.props.style}>{this.props.buttonText}</span> 
 		<Modal show={this.state.showModal} onHide={this.close.bind(this)}>
 		<Modal.Header closeButton>
 		<Modal.Title>{this.props.title}</Modal.Title>

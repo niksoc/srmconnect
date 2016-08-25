@@ -23,8 +23,9 @@ const routes = (
 	<IndexRoute component={Latest}></IndexRoute>
 	<Route path='experience_speaks' component={ExperienceSpeaks} />
 	<Route title='Wanted' class={GenericPanelItem} path='wanted' model='wanted' bsStyle='info' orderings={['-created','-num_views']} component={ListViewPage} />
-	<Route title='Wanted' class={GenericPanelItem} path='wanted/:id' model='wanted' bsStyle='info' component={SimpleDetailViewPage} />
+	<Route title='Wanted' class={GenericPanelItem} path='wanted/:id' model='wanted' comments={true} bsStyle='info' component={SimpleDetailViewPage} />
 	<Route title='Available' class={GenericPanelItem} path='available' model='available' bsStyle='success' orderings={['-created','-num_views']} component={ListViewPage} />
+	<Route title='Available' class={GenericPanelItem} path='Available/:id' model='available' comments={true} bsStyle='success' component={SimpleDetailViewPage} />
 	<Route path='*' component={Latest} />
 	</Route>);
 

@@ -1,17 +1,12 @@
 import axios from 'axios';
+ 
+var w = window,
+    d = document,
+    e = d.documentElement,
+    g = d.getElementsByTagName('body')[0],
+    x = w.innerWidth || e.clientWidth || g.clientWidth,
+    y = w.innerHeight|| e.clientHeight|| g.clientHeight; 
 
-export var tagStore = [];
-
-export function fetchAndStoreTagData(tag_id){
-    if(!tagStore.some((item)=>item.pk===tag_id)){ 
-	axios.get(`/api/detail/tag/${tag_id}/`) 
-	    .then(({data})=> {
-		if(!tagStore.some((item)=>item.pk===data.pk)){ 
-		    tagStore.push({pk:data.pk, name:data.fields.name});
-		} 
-		console.log(tagStore);
-	    })
-	    .catch((error)=> console.error(error)); 
-    }
+export function getViewPortWidth(){
+    return x;
 }
-	 

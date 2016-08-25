@@ -3,20 +3,39 @@
 {% load staticfiles %}
 
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static "app/css/styles.css" %}">
-    <title>srmxchange</title>
-    <script>
-	window._SRMXCHANGE_INIT_ROUTE_ = '{{route}}';
-    </script>
-  </head>
-  <body>
-      <div id="app"></div>
-    <script src="{% static "app/js/bundle.js" %}"></script>
-  </body>
+    <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{% static "app/css/cosmo.min.css" %}">
+	<link rel="stylesheet" href="{% static "app/css/styles.css" %}">
+	<title>srmxchange</title>
+	<script>
+	 window._SRMXCHANGE_INIT_ROUTE_ = '{{route}}';
+	</script>
+    </head>
+    <body>
+	<!--<script>
+	 window.fbAsyncInit = function() {
+	     FB.init({
+		 appId      : '187076368372427',
+		 xfbml      : true,
+		 version    : 'v2.7'
+	     });
+	 };
+
+	 (function(d, s, id){
+	     var js, fjs = d.getElementsByTagName(s)[0];
+	     if (d.getElementById(id)) {return;}
+	     js = d.createElement(s); js.id = id;
+	     js.src = "//connect.facebook.net/en_US/sdk.js";
+	     fjs.parentNode.insertBefore(js, fjs);
+	 }(document, 'sript', 'fac    book-jssdk'));
+	</script>-->
+
+	<div id="app"></div>
+	<script src="{% static "app/js/bundle.js" %}"></script>
+    </body>
 </html>

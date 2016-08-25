@@ -4,7 +4,7 @@ import {pure} from 'recompose';
 import LoadingIndicator from '../LoadingIndicator';
  
 const ListView = (props) => {
-    const itemsPerRow = 2;
+    const itemsPerRow = 1;
     if(props.data){
 	const items = props.data.map((entry)=>
 					  React.createElement(props.class,

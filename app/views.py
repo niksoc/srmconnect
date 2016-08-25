@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from django.http import HttpResponseRedirect
 from django.http import Http404
 from . import utils
+from . import models
 
 
 def home(request):
@@ -56,5 +57,13 @@ def user(request):
     if(user.is_authenticated()):
         userProfile = user.userprofile
         return JsonResponse(utils.to_dict(userProfile))
+    else:
+        raise Http404
+
+
+def moderator(request):
+    user = request.user
+    if(user.is_authenticated() and models.Moderator.objects.filter(user=user).exists()):
+        return JsonResponse({'isModerator': True})
     else:
         raise Http404
