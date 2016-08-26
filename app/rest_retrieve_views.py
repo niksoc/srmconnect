@@ -47,7 +47,7 @@ def processDataList(data):
 
 
 class BaseListView(ListView):
-    paginate_by = 20
+    paginate_by = 15
 
     def render_to_response(self, context, **response_kwargs):
         data = []

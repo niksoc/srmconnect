@@ -9,6 +9,10 @@ a, .link{
 .link:hover{
     text-decoration:underline;
 }
+.panel-footer{
+    width:100%;
+    overflow:hidden;
+}
 /* 
  * header styles 
 */
@@ -67,5 +71,12 @@ header .btn-group .dropdown-toggle:hover{
 @media(min-width:768px){
     .info-panel{
 	float:right;
+    }
+}
+
+
+@media(min-width:768px){
+    .project-col{
+	min-height:100px;
     }
 }

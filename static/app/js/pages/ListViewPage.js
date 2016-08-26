@@ -23,7 +23,7 @@ class ListViewPage extends React.Component{
     }
     getPageCount(props = this.props){
 	axios.get(`/api/count/${props.route.model}/?tags=${this.state.tags}`) 
-	    .then(({data})=> {if(!this.ignoreLastFetch) this.setState({num_pages:Math.floor(data.count/20)+1});})
+	    .then(({data})=> {if(!this.ignoreLastFetch) this.setState({num_pages:Math.floor(data.count/15)+1});})
 	    .catch((error)=> console.log(error)); 
     }
     updateListData(props = this.props){

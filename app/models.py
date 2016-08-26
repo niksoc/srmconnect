@@ -172,8 +172,8 @@ class Question(Feature):
     followers = models.ManyToManyField(User)
 
     def save(self, *args, **kwargs):
-        self.followers.add(self.created_by)
         super(Question, self).save(*args, **kwargs)
+        self.followers.add(self.created_by)
 
     class Meta:
         ordering = ('created', 'num_views', 'num_votes', )
@@ -272,7 +272,13 @@ class Project(Feature):
     modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                     related_name='projects_modified',
                                     null=True)
-    image = models.ImageField(upload_to='projects', blank=True, null=True)
+    image = ProcessedImageField(upload_to='projects',
+                                processors=[ResizeToFill(300, 225)],
+                                format='JPEG',
+                                options={'quality': 60},
+                                default='projects/default.jpg',
+                                blank=True,
+                                null=True)
 
     class Meta:
         ordering = ('created', 'num_views', )

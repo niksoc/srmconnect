@@ -19,11 +19,11 @@ const NumberBox = (props)=>{
 
     };
     return (
-        <div style={style}>
+            <div style={{...style, ...props.style}}>
 	         <div style={valueStyle}>{props.value}</div>
              <div style={titleStyle}>{props.title}</div>
         </div>
     );
-} 
+};
 
-export default NumberBox
+export default NumberBox;
