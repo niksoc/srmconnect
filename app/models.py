@@ -164,6 +164,7 @@ class Question(Feature):
     modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                     related_name='questions_modified',
                                     null=True)
+    last_active = models.DateTimeField(null=True, blank=True)
     votes = models.ManyToManyField(User, blank=True,
                                    related_name='questions_voted')
     num_votes = models.IntegerField(default=0)
@@ -206,6 +207,9 @@ class Answer(TimeStampedModel, ActivatableModelMixin):
             _modified = False
         super(Answer, self).save(_modified=_modified, *args, **kwargs)
         self.__original_text = self.text
+        q = self.for_question
+        q.last_active = datetime.datetime.now()
+        q.save()
 
     class Meta:
         ordering = ('created', 'num_votes')
@@ -307,6 +311,11 @@ class Comment_Question(CommentBaseModel):
                                  related_name='comments')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                    related_name='comments_created_on_questions')
+
+    def save(self, *args, **kwargs):
+        q = self.for_item
+        q.last_active = datetime.datetime.now()
+        q.save()
 
 
 class Comment_Answer(CommentBaseModel):

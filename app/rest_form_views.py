@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import (HttpResponse, Http404)
 from django.forms import ModelForm
 from django import forms
 from django.views.generic import (CreateView, UpdateView, DeleteView)
@@ -281,6 +281,9 @@ class CommentCreateFormView(CreateView):
         self.for_model_name = request.GET['for']
         self.for_id = request.GET['id']
         self.model = apps.get_model('app.Comment_' + self.for_model_name)
+        if (not apps.get_model(
+                'app.' + self.for_model_name).objects.get(pk=self.for_id).is_active):
+            raise Http404
         return super(CommentCreateFormView, self).get(request, * args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -292,7 +295,7 @@ class CommentCreateFormView(CreateView):
         for_model_name = request.GET.get('for')
         for_id = request.GET.get('id')
         self.for_item = apps.get_model(
-            'app.' + for_model_name).objects.get(pk=for_id)
+            'app.' + for_model_name).objects.get(pk=for_id, is_active=True)
         self.model = apps.get_model('app.Comment_' + for_model_name)
         return super(CommentCreateFormView, self).post(request, * args, **kwargs)
 
