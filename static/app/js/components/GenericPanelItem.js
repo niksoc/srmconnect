@@ -6,7 +6,8 @@ import Timestamp from './Timestamp';
 import TagList from'./common/TagList';
 import UserThumb from './UserThumb';
 import Markdown from './Markdown';
- 
+import UserName from './UserName';
+
 const GenericPanelItem = React.createClass({render(){
     const ellipsisStyle = {
 	fontWeight:700
@@ -22,7 +23,7 @@ const GenericPanelItem = React.createClass({render(){
     const footer = (<span>
 		    {tags}
 		    <span className="pull-right">
-		    <Timestamp title='posted' datetime={this.props.created}/> by <Link to ={'user_profile/'+this.props.created_by}>{this.props.created_by_name}</Link>
+		    <Timestamp title='posted' datetime={this.props.created}/> by <UserName id={this.props.created_by} name={this.props.created_by_name}/>
 		   </span></span>); 
     return ( 
 	    <Panel bsStyle={this.props.bsStyle} header={title} footer={footer}>

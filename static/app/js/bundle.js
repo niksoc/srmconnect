@@ -45802,6 +45802,8 @@
 				value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
@@ -45944,9 +45946,6 @@
 										var inlineBlock = {
 													'display': 'inline-block'
 										};
-										var orderingStyle = {
-													'marginTop': '65px'
-										};
 										var orderingButtons = this.props.route.orderings.map(function (name, i) {
 													return _react2.default.createElement(
 																_reactBootstrap.NavItem,
@@ -45965,10 +45964,16 @@
 													_react2.default.createElement(
 																_reactBootstrap.Col,
 																{ sm: 8 },
-																_react2.default.createElement(_PageTitle2.default, { title: this.props.route.title, style: inlineBlock, src: '/api/create/' + this.props.route.model + '/' }),
+																_react2.default.createElement(_PageTitle2.default, { title: this.props.route.title, src: '/api/create/' + this.props.route.model + '/' }),
+																_react2.default.createElement(
+																			'span',
+																			{ style: { position: 'relative', bottom: '20px' } },
+																			'sort by:'
+																),
+																' ',
 																_react2.default.createElement(
 																			_reactBootstrap.Nav,
-																			{ style: orderingStyle, bsStyle: 'tabs', activeKey: this.state.ordering, onSelect: this.handleOrderingSelect.bind(this), pullRight: true },
+																			{ bsStyle: 'pills', style: _extends({}, inlineBlock, { marginBottom: '10px' }), activeKey: this.state.ordering, onSelect: this.handleOrderingSelect.bind(this) },
 																			orderingButtons
 																),
 																_react2.default.createElement(_ListView2.default, { data: this.state.data, 'class': this.props.route.class, bsStyle: this.props.route.bsStyle, model: this.props.route.model, detail_url: '' + _constants.BASE_URL + this.props.route.title + '/' }),
@@ -59637,6 +59642,10 @@
 
 	var _Markdown2 = _interopRequireDefault(_Markdown);
 
+	var _UserName = __webpack_require__(613);
+
+	var _UserName2 = _interopRequireDefault(_UserName);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var GenericPanelItem = _react2.default.createClass({
@@ -59666,11 +59675,7 @@
 	                { className: 'pull-right' },
 	                _react2.default.createElement(_Timestamp2.default, { title: 'posted', datetime: this.props.created }),
 	                ' by ',
-	                _react2.default.createElement(
-	                    _reactRouter.Link,
-	                    { to: 'user_profile/' + this.props.created_by },
-	                    this.props.created_by_name
-	                )
+	                _react2.default.createElement(_UserName2.default, { id: this.props.created_by, name: this.props.created_by_name })
 	            )
 	        );
 	        return _react2.default.createElement(
@@ -59790,6 +59795,10 @@
 
 	var constants = _interopRequireWildcard(_constants);
 
+	var _UserName = __webpack_require__(613);
+
+	var _UserName2 = _interopRequireDefault(_UserName);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -59838,11 +59847,7 @@
 													{ className: 'pull-right' },
 													_react2.default.createElement(_Timestamp2.default, { title: 'posted', datetime: this.props.created }),
 													' by ',
-													_react2.default.createElement(
-																_reactRouter.Link,
-																{ to: 'user_profile/' + this.props.created_by },
-																this.props.created_by_name
-													)
+													_react2.default.createElement(_UserName2.default, { id: this.props.created_by, name: this.props.created_by_name })
 										)
 							);else return _react2.default.createElement(
 										_reactBootstrap.Media,
@@ -59882,11 +59887,7 @@
 																{ style: { position: 'absolute', bottom: '5px' } },
 																_react2.default.createElement(_Timestamp2.default, { title: 'posted', datetime: this.props.created }),
 																' by ',
-																_react2.default.createElement(
-																			_reactRouter.Link,
-																			{ to: 'user_profile/' + this.props.created_by },
-																			this.props.created_by_name
-																)
+																_react2.default.createElement(_UserName2.default, { id: this.props.created_by, name: this.props.created_by_name })
 													)
 										)
 							);
@@ -59925,9 +59926,7 @@
 	    var style = {
 	        'display': 'inline-block',
 	        'minWidth': '51px',
-	        'margin': '0 3px 0 0',
 	        'fontSize': '1.05rem',
-	        'padding': '8px 5px',
 	        'lineHeight': '1',
 	        'textAlign': 'center'
 	    };
@@ -60095,6 +60094,10 @@
 
 	var constants = _interopRequireWildcard(_constants);
 
+	var _UserName = __webpack_require__(613);
+
+	var _UserName2 = _interopRequireDefault(_UserName);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -60122,36 +60125,32 @@
 	            this.props.title
 	         )
 	      );
-	      var views = _react2.default.createElement(_NumberBox2.default, { title: 'Views', value: this.props.num_views });
-	      var votes = _react2.default.createElement(_NumberBox2.default, { title: 'Views', value: this.props.num_views });
+	      var views = _react2.default.createElement(_NumberBox2.default, { title: 'Votes', value: this.props.num_votes });
+	      var votes = _react2.default.createElement(_NumberBox2.default, { title: 'Answers', value: this.props.num_answers });
 	      var answers = _react2.default.createElement(_NumberBox2.default, { title: 'Views', value: this.props.num_views });
 	      return _react2.default.createElement(
 	         'div',
-	         { style: { width: '100%' } },
+	         { style: { marginBottom: '10px' } },
 	         _react2.default.createElement(
 	            'div',
-	            { style: { display: 'inline-block', height: '61px', position: 'relative', bottom: '10px' } },
+	            { style: { display: 'inline-block' } },
 	            views,
 	            votes,
 	            answers
 	         ),
 	         _react2.default.createElement(
 	            'div',
-	            { style: { display: 'inline-block', width: '75%' } },
+	            { style: { display: 'inline-block' } },
 	            title,
 	            _react2.default.createElement('br', null),
 	            tags,
 	            _react2.default.createElement(
 	               'span',
-	               { style: { float: 'right' } },
+	               { style: { marginLeft: '10px' } },
 	               this.props.last_active !== null ? _react2.default.createElement(_Timestamp2.default, { title: 'last active', datetime: this.props.last_active }) : null,
 	               _react2.default.createElement(_Timestamp2.default, { title: 'posted', datetime: this.props.created }),
 	               ' by ',
-	               _react2.default.createElement(
-	                  _reactRouter.Link,
-	                  { to: 'user_profile/' + this.props.created_by },
-	                  this.props.created_by_name
-	               )
+	               _react2.default.createElement(_UserName2.default, { id: this.props.created_by, name: this.props.created_by_name })
 	            )
 	         )
 	      );
@@ -60167,6 +60166,36 @@
 	};
 
 	exports.default = (0, _recompose.pure)(QuestionRow);
+
+/***/ },
+/* 613 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(172);
+
+	var _constants = __webpack_require__(452);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var UserName = function UserName(props) {
+	  return _react2.default.createElement(
+	    _reactRouter.Link,
+	    { to: _constants.BASE_URL + 'profile/' + props.id },
+	    props.name
+	  );
+	};
+
+	exports.default = UserName;
 
 /***/ }
 /******/ ]);

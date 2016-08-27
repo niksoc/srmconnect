@@ -4,9 +4,7 @@ const NumberBox = (props)=>{
     const style = {
         'display': 'inline-block',
         'minWidth': '51px',
-        'margin': '0 3px 0 0',
         'fontSize': '1.05rem',
-        'padding': '8px 5px',
         'lineHeight': '1',
         'textAlign': 'center'
     };

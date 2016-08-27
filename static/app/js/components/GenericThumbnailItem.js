@@ -10,6 +10,7 @@ import NumberBox from'./common/NumberBox';
 import TagList from'./common/TagList';
 import {getViewPortWidth} from '../utils';
 import * as constants from '../constants';
+import UserName from './UserName';
 
 const GenericThumbnailItem = React.createClass({render(){
     const rowStyle= {
@@ -30,7 +31,7 @@ const GenericThumbnailItem = React.createClass({render(){
             <div style={maxHeight}><Markdown>{this.props.text}</Markdown></div>
 	    <Link to={uri}>more</Link><br/>
 	    <span className="pull-right">
-	    <Timestamp title='posted' datetime={this.props.created}/> by <Link to ={'user_profile/'+this.props.created_by}>{this.props.created_by_name}</Link>
+	    <Timestamp title='posted' datetime={this.props.created}/> by <UserName id={this.props.created_by} name={this.props.created_by_name}/>
 	    </span> 
       </Thumbnail>);
     else return(
@@ -46,7 +47,7 @@ const GenericThumbnailItem = React.createClass({render(){
 	    <Link to={uri}>more</Link><br/>
 	    {tags}<br/>
 	    <span style={{position:'absolute', bottom:'5px'}}>
-	    <Timestamp title='posted' datetime={this.props.created}/> by <Link to ={'user_profile/'+this.props.created_by}>{this.props.created_by_name}</Link>
+	    <Timestamp title='posted' datetime={this.props.created}/> by <UserName id={this.props.created_by} name={this.props.created_by_name}/>
 	    </span> 
 	    </Media.Body>
 	    </Media>

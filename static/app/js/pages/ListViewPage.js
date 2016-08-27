@@ -71,9 +71,6 @@ class ListViewPage extends React.Component{
 	const inlineBlock = {
 	    'display':'inline-block'
 	};
-	const orderingStyle = {
-	    'marginTop':'65px'
-	};
 	const orderingButtons = this.props.route.orderings.map((name, i)=>
 							    <NavItem eventKey={i} key={i}>
 							       {this.props.route.orderings[i].slice(1,this.props.route.orderings[i].length)}
@@ -84,8 +81,8 @@ class ListViewPage extends React.Component{
 		<InfoPanel title='latest' />
 		</Col>
 		<Col sm={8}>
-		<PageTitle title={this.props.route.title} style={inlineBlock} src={`/api/create/${this.props.route.model}/`} />
-		<Nav style={orderingStyle} bsStyle="tabs" activeKey={this.state.ordering} onSelect={this.handleOrderingSelect.bind(this)} pullRight>
+		<PageTitle title={this.props.route.title} src={`/api/create/${this.props.route.model}/`} />
+		<span style={{position:'relative', bottom:'20px'}}>sort by:</span> <Nav bsStyle="pills" style={{...inlineBlock, marginBottom:'10px'}} activeKey={this.state.ordering} onSelect={this.handleOrderingSelect.bind(this)}>
 		{orderingButtons}
 		</Nav> 
 		<ListView data={this.state.data} class={this.props.route.class} bsStyle={this.props.route.bsStyle} model={this.props.route.model} detail_url={`${BASE_URL}${this.props.route.title}/`} />

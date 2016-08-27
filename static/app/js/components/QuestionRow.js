@@ -7,6 +7,7 @@ import Timestamp from './Timestamp';
 import TagList from'./common/TagList';
 import UserThumb from './UserThumb';
 import * as constants from '../constants';
+import UserName from './UserName';
 
 const QuestionRow=React.createClass({render(){
     const maxHeight = {
@@ -21,15 +22,15 @@ const QuestionRow=React.createClass({render(){
     const uri = this.props.uri+ pk + '/';
     const tags = <TagList tag_names={this.props.tag_names} bsStyle={this.props.bsStyle} />;
     const title = (<h4 style={{display:'inline-block'}}><Link to={uri}>{this.props.title}</Link></h4>);
-    const views=(<NumberBox title='Views' value={this.props.num_views}/>); 
-    const votes=(<NumberBox title='Views' value={this.props.num_views}/>); 
+    const views=(<NumberBox title='Votes' value={this.props.num_votes}/>); 
+    const votes=(<NumberBox title='Answers' value={this.props.num_answers}/>); 
     const answers=(<NumberBox title='Views' value={this.props.num_views}/>); 
     return (
-	    <div style={{width:'100%'}}><div style={{display:'inline-block', height:'61px', position:'relative', bottom:'10px'}}>{views}{votes}{answers}</div>
-	    <div style={{display:'inline-block', width:'75%'}}>{title}<br/>{tags}
-	    <span style={{float:'right'}}>
+	    <div style={{marginBottom:'10px'}}><div style={{display:'inline-block'}}>{views}{votes}{answers}</div>
+	    <div style={{display:'inline-block'}}>{title}<br/>{tags}
+	    <span style={{marginLeft:'10px'}}>
 	    {this.props.last_active!==null?<Timestamp title='last active' datetime={this.props.last_active} />:null}
-	    <Timestamp title='posted' datetime={this.props.created}/> by <Link to ={'user_profile/'+this.props.created_by}>{this.props.created_by_name}</Link>
+	    <Timestamp title='posted' datetime={this.props.created}/> by <UserName id={this.props.created_by} name={this.props.created_by_name}/>
 	    </span> 
 	</div></div>
     );
