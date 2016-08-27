@@ -34,6 +34,10 @@ class ListViewPage extends React.Component{
     componentWillUnmount(){
 	this.ignoreLastFetch = true; 
     }
+    componentDidMount(){
+	this.getPageCount();
+	this.updateListData();
+    }
     componentWillReceiveProps(newProps){
 	this.setState({
 	    data:[],

@@ -1,8 +1,8 @@
 import React from 'react';
 
 const OwnerVisible = (props, context) =>{
-    if(context.isLoggedIn && props.user===this.context.user.user )
-	return (<span>{props.element}</span>);
+    if(context.isLoggedIn && props.owner===context.user.user )
+	return props.element;
     else return null;
 };
 

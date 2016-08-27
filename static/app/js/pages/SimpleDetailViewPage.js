@@ -9,6 +9,7 @@ import Timestamp from '../components/Timestamp';
 import CommentBox from '../components/CommentBox';
 import LoggedInVisible from '../visibility/LoggedInVisible';
 import FormFrameModal from '../components/FormFrameModal';
+import DetailOptions from '../components/DetailOptions';
 
 class SimpleDetailViewPage extends React.Component{
     constructor(){
@@ -20,7 +21,7 @@ class SimpleDetailViewPage extends React.Component{
     updateData(props = this.props){
 	axios.get(`/api/detail/${props.route.model}/${props.params.id}/`) 
 	    .then(({data})=> {if(!this.ignoreLastFetch) this.setState({data});})
-	    .catch((error)=> console.log(error)); 
+	    .catch((error)=> this.setState({data:{error: 'What you\'re looking for doesn\'t exist'}})); 
     }
     fetchComments(num = '', props = this.props){
 	    axios.get(`/api/list/comment/?for=${props.route.model}&id=${props.params.id}&num=${num}`) 
@@ -40,7 +41,7 @@ class SimpleDetailViewPage extends React.Component{
     componentWillUnmount(){
 	this.ignoreLastFetch = true; 
     }
-	componentWillReceiveProps(newProps){
+    componentWillReceiveProps(newProps){
 	if(newProps.pk !== this.props.pk){
 	    this.init();
 	}
@@ -52,6 +53,8 @@ class SimpleDetailViewPage extends React.Component{
     render(){ 
 	const numComments = 2;
 	const fields = this.state.data.fields;
+	if(this.state.data.error)
+	    return <h3>{this.state.data.error}</h3>;
 	if(fields && (!this.props.comments || this.state.comments)){
 	    const style = {
 		position:'relative',
@@ -70,6 +73,7 @@ class SimpleDetailViewPage extends React.Component{
 	    let viewAll = null; 
 	    let commentBoxes = null;
 	    let addCommentModal = null;
+	    const options = (<DetailOptions owner={fields.created_by} item={this.props.route.model} edit_src={`/api/edit/${this.props.route.model}/${this.state.data.pk}/`} delete_src={`/api/delete/${this.props.route.model}/${this.state.data.pk}/`}/>);
 	    if(this.props.route.comments && this.state.comments){
 		let comments = null;
 		if(!this.state.commentsExpanded && this.state.comments.length>numComments){
@@ -80,13 +84,13 @@ class SimpleDetailViewPage extends React.Component{
 		    comments = this.state.comments;
 		    addCommentModal = <FormFrameModal title="Add Comment" buttonText="add comment" src={`/api/create/comment/?for=${this.props.route.model}&id=${this.props.params.id}`}/>;
 		}
-		commentBoxes = comments.map((fields,i)=><CommentBox style={borderBottom} key={i} fields={fields} />); 
+		commentBoxes = comments.map((fields,i)=><CommentBox style={borderBottom} key={i} for={this.props.route.model} fields={fields} />); 
 	    }
 	    return( 
 		    <div style={{marginBottom:'40px'}}> 
 		    <PageTitle title={this.props.route.title} src={`/api/create/${this.props.route.model}/`} />
 		    <div>
-		    <h3 style={borderBottom}>{fields.title}</h3>
+		    <h3 style={borderBottom}>{fields.title}<span>{options}</span></h3>
 		    <div style={{display:'inline-block'}} className="pull-right">{fields.num_views} views</div>
 		    <div style={{...borderBottom,overflow:'hidden',width:'100%'}}>
 		    <Markdown>{fields.text}</Markdown>
