@@ -1,5 +1,5 @@
 import React from 'react';
-import {Nav, NavItem} from 'react-bootstrap';
+import {Nav, NavItem, PageHeader} from 'react-bootstrap';
 import PageTitle from '../components/PageTitle';
 import ListView from '../components/ModelViews/ListView';
 import DetailView from '../components/ModelViews/DetailView';
@@ -18,7 +18,8 @@ class ListViewPage extends React.Component{
 	return `/api/list/${model}/?page=1&ordering=${ordering}`;
     }
     updateListData(props = this.props){
-    this.props.route.model.forEach((model) => {
+    this.props.route.features.forEach((feature) => {
+	const model = feature.model;
     	axios.get(this.construct_data_url(props, model)) 
 	        .then(({data})=> {
                 let data1 = this.state.data;
@@ -49,13 +50,14 @@ class ListViewPage extends React.Component{
 	const orderingStyle = {
 	    'marginTop':'20px'
 	};
-    const latestFeatures = this.props.route.model.map((model,i)=><div key={i}><PageTitle title={this.props.route.title[i]} style={inlineBlock} 
-			src={`/api/create/${this.props.route.model[i]}/`} />
-		<ListView data={this.state.data[model]} class={this.props.route.class[i]} 
-			bsStyle={this.props.route.bsStyle[i]} model={this.props.route.model[i]}
-			 detail_url={`${BASE_URL}${this.props.route.title[i]}/`} /></div>);
+    const latestFeatures = this.props.route.features.map((feature,i)=><div key={i}><PageTitle title={feature.title} style={inlineBlock} 
+			src={`/api/create/${feature.model}/`} />
+		<ListView data={this.state.data[feature.model]} class={feature.class} 
+			bsStyle={feature.bsStyle} model={feature.model}
+			 detail_url={`${BASE_URL}${feature.model}/`} /></div>);
 	return ( 
 		<div> 
+		<PageHeader>{this.props.route.mainTitle}</PageHeader>
 		{latestFeatures}
 		</div>
 	);

@@ -29,14 +29,14 @@ export class UserThumb extends React.Component{
 	return(
 		<Media>
 		<Media.Left align="middle">
-		<Link to={constants.BASE_URL + 'user_profile/'+fields.user}>
+		<Link to={constants.BASE_URL + 'profile/'+ fields.user}>
 		<img width={50} height={50} alt={fields.display_name} src={fields.profile_image} />
 		</Link>
 		</Media.Left>
 		<Media.Body style={{maxWidth:'110px'}}>
 		<Media.Heading style={style}>
 		<Link to={constants.BASE_URL
- + 'user_profile/'+fields.user}>{fields.display_name}</Link>
+ + 'profile/'+fields.user}>{fields.display_name}</Link>
 		</Media.Heading>
 		dept: {fields.dept? fields.dept : '-'} <br/>
 		year: {fields.dept? fields.year : '-'}

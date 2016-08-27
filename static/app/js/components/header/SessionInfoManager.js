@@ -2,11 +2,12 @@ import React from 'react';
 import {Navbar, Nav, NavItem, MenuItem, NavDropdown} from 'react-bootstrap';
 import {browserHistory} from 'react-router';
 import GenericModal from '../common/GenericModal';
+import {BASE_URL} from '../../constants';
 import LoginForm from './LoginForm';
 
 class SessionInfoManager extends React.Component{
     onSelectHandler(eventkey){
-	if(eventkey===1) browserHistory.push('profile');
+	if(eventkey===1) browserHistory.push(BASE_URL + 'profile/' + this.context.user.id);
 	if(eventkey===2) location.pathname = 'app/logout';
     }
     render(){

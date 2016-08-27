@@ -1,7 +1,6 @@
 import React from 'react';
 import {Col, Row, Glyphicon, Nav, NavItem} from 'react-bootstrap'; 
 import {Link, browserHistory} from 'react-router';
-import LatestFeaturesPanel from './LatestFeaturesPanel'; 
 import GenericModal from './common/GenericModal';
 import FormFrame from './common/FormFrame';
 import * as constants from '../constants';
@@ -30,7 +29,7 @@ class FeatureNav extends React.Component{
 		<NavItem eventKey={'qa/'}>Q&A</NavItem>
 		<NavItem eventKey={'wanted/'}>Wanted</NavItem>
 		<NavItem eventKey={'available/'}>Available</NavItem>
-		<NavItem eventKey={'story/'}>Experience Speak</NavItem>
+		<NavItem eventKey={'story/'}>Experience Speaks</NavItem>
 		<NavItem eventKey={'project/'}>Project</NavItem>
 		</Nav>
 		</div>

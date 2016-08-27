@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {ListGroup,ListGroupItem} from 'react-bootstrap';
 import Layout from './Layout';
-import ExperienceSpeaks from './pages/ExperienceSpeaks';
 import ListViewPage from './pages/ListViewPage';
 import MultiListViewPage from './pages/MultiListViewPage';
 import SimpleDetailViewPage from './pages/SimpleDetailViewPage';
@@ -12,7 +11,7 @@ import DetailView from './components/ModelViews/DetailView';
 import Available from './pages/Available';
 import GenericPanelItem from './components/GenericPanelItem';
 import GenericThumbnailItem from './components/GenericThumbnailItem';
-import GenericMediaItem from './components/GenericMediaItem';
+import StoryRow from './components/StoryRow';
 import {BASE_URL} from './constants';
 import axios from 'axios';
 import QuestionRow from './components/QuestionRow';
@@ -36,14 +35,43 @@ function redirectToLatest(nextState, replaceState){
     replaceState(BASE_URL);
 }
 
+const features = [ 
+    {
+	title:'Question',
+	model:'question',
+	bsStyle:'primary',
+	class:QuestionRow
+    },
+    {
+	title:'Wanted',
+	model:'wanted',
+	bsStyle:'info',
+	class:GenericPanelItem
+    },
+    {
+	title:'Available',
+	model:'available',
+	bsStyle:'success',
+	class:GenericPanelItem
+    },
+    {
+	title:'Experience Speaks',
+	model:'story',
+	bsStyle:'',
+	class:StoryRow
+    },
+    {
+	title:'Project',
+	model:'project',
+	bsStyle:'warning',
+	class:GenericThumbnailItem
+    },
+];
+
+
 const routes = (
 	<Route path={BASE_URL} component={Layout}>
-	<IndexRoute component={MultiListViewPage}
-	title={['Wanted','Available','Project','Question']}
-	class={[GenericPanelItem, GenericPanelItem,GenericThumbnailItem,QuestionRow]}
-	model={['wanted','available','project','question']} 
-	bsStyle={['info','success','success','info']}
-	/>
+	<IndexRoute mainTitle='Latest' component={MultiListViewPage} features={features}/>
 	<Route title='Question' class={QuestionRow} path='qa' model='question' 
 		bsStyle='primary' orderings={['-created','-num_views']} component={ListViewPage} />
 	<Route title='Wanted' class={GenericPanelItem} path='wanted' model='wanted' 
@@ -56,7 +84,7 @@ const routes = (
 		bsStyle='warning' orderings={['-created','-num_views']} component={ListViewPage} />
 	<Route title='Event' class={GenericThumbnailItem} path='event' model='event' 
 		bsStyle='info' orderings={['-created','-num_views']} component={ListViewPage} />
-	<Route title='Experience Speaks' class={GenericMediaItem} path='story' model='story' 
+	<Route title='Experience Speaks' class={StoryRow} path='story' model='story' 
 		bsStyle='info' orderings={['-created','-num_views']} component={ListViewPage} />
 	<Route path='*' component={MultiListViewPage} onEnter={redirectToLatest}/>
 	</Route>);

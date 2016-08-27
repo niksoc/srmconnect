@@ -7,6 +7,7 @@ import Timestamp from './Timestamp';
 import UserThumb from './UserThumb';
 import Markdown from './Markdown';
 import NumberBox from'./common/NumberBox';
+import TagList from'./common/TagList';
 import {getViewPortWidth} from '../utils';
 import * as constants from '../constants';
 
@@ -19,24 +20,9 @@ const GenericThumbnailItem = React.createClass({render(){
 	maxHeight:'120px',
 	overflow:'hidden'
     };
-    const margin = {
-	marginLeft:'5px' 
-    };
-
- 
     const pk = this.props.id;
     const uri = this.props.uri+ pk + '/';
-    const tags = this.props.tag_names.map((label,i)=>(<Label key={i} bsStyle={this.props.bsStyle} 
-        style={margin}>{label}</Label>)); 
-    const text=(<p>{this.props.text}</p>);
-    const footer = (<span>
-		    <Timestamp title='created' datetime={this.props.created}/><br/>
-		    <UserThumb id={this.props.created_by}/></span>); 
-   const created = (<span> 
-		    <Timestamp title='created' datetime={this.props.created}/>
-		   </span>); 
-
-   const views=(<div> <NumberBox title='Views' value={this.props.num_views}/></div>);
+    const tags = <TagList tag_names={this.props.tag_names} bsStyle={this.props.bsStyle} />;
     if(getViewPortWidth() < constants.md)
     return (
 	    <Thumbnail src={this.props.image} style={{maxWidth:'300px', ...rowStyle, width:'100%', overflow:'hidden'}} alt="project image">
