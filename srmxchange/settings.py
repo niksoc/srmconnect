@@ -100,7 +100,7 @@ WSGI_APPLICATION = 'srmxchange.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': os.environ['db_engine'],
         'NAME': os.environ['db_name'],
         'USER': os.environ['db_user'],
         'PASSWORD': os.environ['db_password'],
