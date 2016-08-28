@@ -41,7 +41,7 @@ class InfoPanel extends React.Component{
 	    return (
 		    <div>
 		    <h4 onClick={ ()=> this.setState({ open: !this.state.open })}>
-		    New to the site? <small>read more<span className="caret" /></small>
+		    New to the site/this section? <small>read on<span className="caret" /></small>
 		    </h4>
 		    <Panel collapsible expanded={this.state.open}>
 		    <Markdown>{this.state.data.text}</Markdown>

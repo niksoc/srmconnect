@@ -48550,11 +48550,11 @@
 																			{ onClick: function onClick() {
 																									return _this3.setState({ open: !_this3.state.open });
 																						} },
-																			'New to the site? ',
+																			'New to the site/this section? ',
 																			_react2.default.createElement(
 																						'small',
 																						null,
-																						'read more',
+																						'read on',
 																						_react2.default.createElement('span', { className: 'caret' })
 																			)
 																),
