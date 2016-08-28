@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 import app.views
 
 urlpatterns = [
+    url(r'^/?$', app.views.redirect_to_home_bare),
     url(r'^admin/', admin.site.urls),
     url('^searchableselect/', include('searchableselect.urls')),
     url('^markdown/', include('django_markdown.urls')),

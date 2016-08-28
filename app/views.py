@@ -29,6 +29,10 @@ def home(request):
     )
 
 
+def redirect_to_home_bare(request):
+    return redirect('/app/')
+
+
 def redirect_to_home(request, route):
     request.session['route'] = route
     return redirect('/app/')

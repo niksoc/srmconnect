@@ -43937,7 +43937,7 @@
 																			_react2.default.createElement(
 																						_reactBootstrap.Navbar.Brand,
 																						null,
-																						'SRM|Connect'
+																						'SRM | Connect'
 																			),
 																			_react2.default.createElement(
 																						_reactBootstrap.DropdownButton,
@@ -60267,6 +60267,7 @@
 	               'span',
 	               { style: { marginLeft: '10px' } },
 	               this.props.last_active !== null ? _react2.default.createElement(_Timestamp2.default, { title: 'last active', datetime: this.props.last_active }) : null,
+	               ' | ',
 	               _react2.default.createElement(_Timestamp2.default, { title: 'posted', datetime: this.props.created }),
 	               ' by ',
 	               _react2.default.createElement(_UserName2.default, { id: this.props.created_by, name: this.props.created_by_name })

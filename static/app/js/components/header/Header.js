@@ -47,7 +47,7 @@ class Header extends React.Component {
 		<header> 
 		<Navbar>
 		<Navbar.Header>
-		<Navbar.Brand>SRM|Connect</Navbar.Brand>
+		<Navbar.Brand>SRM | Connect</Navbar.Brand>
 		<DropdownButton id="srm connect option" title=""> 
 		<MenuItem eventKey={1.1}>About</MenuItem>
 		<MenuItem eventKey={1.2}>Feedback</MenuItem>
