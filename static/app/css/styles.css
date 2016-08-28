@@ -13,6 +13,10 @@ a, .link{
     width:100%;
     overflow:hidden;
 }
+#profile-table tr td:first-child{
+    font-weight:bold;
+}
+    
 /* 
  * header styles 
 */

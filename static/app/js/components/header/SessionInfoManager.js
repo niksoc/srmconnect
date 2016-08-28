@@ -7,7 +7,7 @@ import LoginForm from './LoginForm';
 
 class SessionInfoManager extends React.Component{
     onSelectHandler(eventkey){
-	if(eventkey===1) browserHistory.push(BASE_URL + 'profile/' + this.context.user.id);
+	if(eventkey===1) browserHistory.push(BASE_URL + 'profile/' + this.context.user.user);
 	if(eventkey===2) location.pathname = 'app/logout';
     }
     render(){

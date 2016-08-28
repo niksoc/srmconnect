@@ -11,6 +11,7 @@ from imagekit.processors import ResizeToFill
 from django_markdown.models import MarkdownField
 from django.utils.html import escape
 from hitcount.models import HitCountMixin
+from django.db.models import F
 import datetime
 
 
@@ -79,11 +80,11 @@ class UserProfile(models.Model):
         ('Phd', 'Phd'),
     )
     year_choices = (
-        ('I', 1),
-        ('II', 2),
-        ('III', 3),
-        ('IV', 4),
-        ('V', 5),
+        (1, 'I'),
+        (2, 'II'),
+        (3, 'III'),
+        (4, 'IV'),
+        (5, 'V'),
     )
     campus_choices = (
         ('KTR', 'Kattankulathur'),
@@ -100,7 +101,7 @@ class UserProfile(models.Model):
     course = models.CharField(choices=course_choices,
                               max_length=10, null=True, blank=True)
     department = models.ForeignKey(
-        Dept, on_delete=models.SET_NULL, null=True)
+        Dept, on_delete=models.SET_NULL, blank=True, null=True)
     year = models.IntegerField(choices=year_choices, null=True, blank=True)
     campus = models.CharField(choices=campus_choices,
                               max_length=3, null=True, blank=True)
@@ -110,7 +111,8 @@ class UserProfile(models.Model):
                                         processors=[ResizeToFill(50, 50)],
                                         format='JPEG',
                                         options={'quality': 60},
-                                        default='profiles/default.jpg')
+                                        default='profiles/default.jpg',
+                                        blank=True)
     interests = models.ManyToManyField(Tag, blank=True)
     num_views = models.IntegerField(default=0)
 
@@ -127,6 +129,13 @@ class UserProfile(models.Model):
 
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
+
+
+class Notification(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    message = models.CharField(max_length=100)
+    url = models.CharField(max_length=100)
 
 
 class Feature(TimeStampedModel, ActivatableModelMixin):
@@ -202,6 +211,14 @@ class Answer(TimeStampedModel, ActivatableModelMixin):
         self.__original_modified = self.modified
 
     def save(self, *args, **kwargs):
+        if not self.pk:
+            q = self.for_question
+            q.num_answers += 1
+            for follower in q.followers.all():
+                n = Notification(
+                    owner=follower, message='New answer to ' + q.title, url='question/' + str(q.id))
+                n.save()
+
         _modified = True
         if self.text == self.__original_text:
             _modified = False
@@ -215,16 +232,10 @@ class Answer(TimeStampedModel, ActivatableModelMixin):
         ordering = ('created', 'num_votes')
 
     def delete(self, *args, **kwargs):
-        self.for_question.num_answers -= 1
-        self.for_question.save()
+        q = self.for_question
+        q.num_answers -= 1
+        q.save()
         super(Answer, self).delete(*args, **kwargs)
-
-
-class Notification(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
-    message = models.CharField(max_length=100)
-    url = models.URLField(max_length=100)
 
 
 class Story(Feature):
@@ -300,7 +311,28 @@ class CommentBaseModel(TimeStampedModel, ActivatableModelMixin):
         self.__original_text = self.text
         self.__original_modified = self.modified
 
-    def save(self, force_insert=False, force_update=False, *args, **kwargs):
+    def comment_created(instance):
+        i = instance.for_item
+        # notifying all followers
+        for follower in i.followers.all():
+            if follower == instance.created_by:
+                continue
+            model = str(i.__class__).split('.')[2].split('\'')[0]
+            if model == 'Answer':
+                title = 'answer ' + i.text[:5]
+            else:
+                title = i.title
+            n = Notification(
+                owner=follower, message='New comment on ' + model + ' "' + title + '"',
+                url='/' + str(i.__class__).split('.')[2].split('\'')[0] + '/' + str(i.id))
+            n.save()
+        # add creator to follower list if not already in it
+        if not i.followers.filter(id=instance.created_by.id).exists():
+            i.followers.add(instance.created_by)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.comment_created()
         _modified = True
         if self.text == self.__original_text:
             _modified = False
@@ -322,6 +354,7 @@ class Comment_Question(CommentBaseModel):
         q = self.for_item
         q.last_active = datetime.datetime.now()
         q.save()
+        super(Comment_Question, self).save(*args, **kwargs)
 
 
 class Comment_Answer(CommentBaseModel):

@@ -7,8 +7,10 @@ from . import models
 
 # periodically has to be checked whether num_votes = votes.count()
 
+# no signal gets fired, (cause unknown ) so  none of the functions here
+# are used, instead they are moved to model methods
 
-def update_num_votes(instance, action, **kwargs):
+def update_num_votes(sender, instance, action, **kwargs):
     if(action == 'post_add'):
         instance.num_votes = F('num_votes') + 1
     elif(action == 'post_remove'):
@@ -35,11 +37,13 @@ def answer_deleted(instance, **kwargs):
     q.save()
 
 
-def comment_created(instance, created, sender, **kwargs):
+def comment_created(sender, instance, created, **kwargs):
     if created:
         i = instance.for_item
         # notifying all followers
         for follower in i.followers:
+            if follower == instance.created_by:
+                continue
             model = str(i.__class__).split('.')[2].split('\'')[0]
             if model == 'Answer':
                 title = 'answer ' + i.text[:5]
@@ -54,8 +58,13 @@ def comment_created(instance, created, sender, **kwargs):
             i.add(instance.created_by)
 
 
-m2m_changed.connect(update_num_votes, sender=models.Answer.votes.through)
-m2m_changed.connect(update_num_votes, sender=models.Question.votes.through)
-m2m_changed.connect(update_num_votes, sender=models.Story.votes.through)
-post_save.connect(answer_created, sender=models.Answer)
-post_delete.connect(answer_deleted, sender=models.Answer)
+# m2m_changed.connect(update_num_votes)
+#m2m_changed.connect(update_num_votes, sender=models.Question.votes.through)
+#m2m_changed.connect(update_num_votes, sender=models.Story.votes.through)
+#post_save.connect(answer_created, sender=models.Answer)
+#post_delete.connect(answer_deleted, sender=models.Answer)
+# post_save.connect(comment_created, sender=models.Comment_Story)
+# post_save.connect(comment_created, sender=models.Comment_Answer)
+# post_save.connect(comment_created, sender=models.Comment_Wanted)
+# post_save.connect(comment_created, sender=models.Comment_Available)
+# post_save.connect(comment_created, sender=models.Comment_Question)

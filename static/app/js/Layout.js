@@ -1,8 +1,11 @@
 import React from 'react';
+import {Col} from 'react-bootstrap';
+import axios from 'axios';
 import Header from './components/header/Header';
 import FeatureNav from './components/FeatureNav';
-import axios from 'axios';
 import UserThumb from './components/UserThumb';
+import InfoPanel from './components/InfoPanel';
+import {BASE_URL} from './constants';
 
 class Layout extends React.Component{
     constructor(){
@@ -37,12 +40,20 @@ class Layout extends React.Component{
 	};
     }
     render(){
-	return (
+	let path = this.props.location.pathname.replace(BASE_URL,'');
+	path = path===''? 'latest':path.slice(0,-1);
+	console.log(path);
+ 	return (
 		<div> 
 		<Header />
 		<div className='container'>
 		<FeatureNav />
+		<Col className="info-panel" sm={4}>
+		<InfoPanel title={path} />
+		</Col>
+		<Col sm={8}>
 		{this.props.children}
+	    </Col>
 		</div>
 		</div>
 	);

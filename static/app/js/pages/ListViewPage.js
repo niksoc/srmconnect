@@ -77,10 +77,6 @@ class ListViewPage extends React.Component{
 							    </NavItem>);
 	return ( 
 		<div> 
-		<Col className="info-panel" sm={4}>
-		<InfoPanel title='latest' />
-		</Col>
-		<Col sm={8}>
 		<PageTitle title={this.props.route.title} src={`/api/create/${this.props.route.model}/`} />
 		<span style={{position:'relative', bottom:'20px'}}>sort by:</span> <Nav bsStyle="pills" style={{...inlineBlock, marginBottom:'10px'}} activeKey={this.state.ordering} onSelect={this.handleOrderingSelect.bind(this)}>
 		{orderingButtons}
@@ -97,7 +93,6 @@ class ListViewPage extends React.Component{
 	    maxButtons={3}
 	    activePage={this.state.page}
 	    onSelect={this.handlePageSelect.bind(this)} />
-		</Col>
 		</div>
 	);
     }

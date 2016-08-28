@@ -2,7 +2,7 @@ import React from 'react';
 
 const LoggedInVisible = (props, context) =>{
     if(context.isLoggedIn)
-	return (<span>{props.element}</span>);
+	return props.element;
     else return null;
 };
 

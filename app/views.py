@@ -6,8 +6,10 @@ import django
 from django.shortcuts import (render, redirect)
 from django.http import HttpRequest
 from django.http import JsonResponse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.http import Http404
+from django.apps import apps
+from django.db.models import F
 from . import utils
 from . import models
 
@@ -34,22 +36,7 @@ def redirect_to_home(request, route):
 
 def logout(request):
     django.contrib.auth.logout(request)
-    return HttpResponseRedirect("/app/")
-
-
-def questions(request):
-    """REST api for Question model."""
-    assert isinstance(request, HttpRequest)
-    return JsonResponse([
-        {'num_votes': 34,
-         'num_answers': 4,
-         'num_views': 100,
-         'title': 'Who let the dogs out?'},
-        {'num_votes': 4,
-         'num_answers': 1,
-         'num_views': 11,
-         'title': 'Is global warming real?'}
-    ], safe=False)
+    return redirect("/app/")
 
 
 def user(request):
@@ -59,6 +46,95 @@ def user(request):
         return JsonResponse(utils.to_dict(userProfile))
     else:
         raise Http404
+
+
+def is_subscribed(request):
+    user = request.user
+    model = request.GET['for']
+    id = request.GET['id']
+    item = apps.get_model(
+        'app.' + model).objects.get(pk=id)
+    isSubscribed = item.followers.filter(id=user.id).exists()
+    return JsonResponse({'subscribed': isSubscribed})
+
+
+def subscribe(request):
+    user = request.user
+    model = request.GET['for']
+    id = request.GET['id']
+    item = apps.get_model(
+        'app.' + model).objects.get(pk=id)
+    isSubscribed = item.followers.filter(id=user.id).exists()
+    if not isSubscribed:
+        item.followers.add(user)
+        item.save()
+    return HttpResponse(status=200)
+
+
+def unsubscribe(request):
+    user = request.user
+    model = request.GET['for']
+    id = request.GET['id']
+    item = apps.get_model(
+        'app.' + model).objects.get(pk=id)
+    while item.followers.filter(id=user.id).exists():
+        item.followers.remove(user)
+        item.save()
+    return HttpResponse(status=200)
+
+
+def voted(request):
+    user = request.user
+    model = request.GET['for']
+    id = request.GET['id']
+    item = apps.get_model(
+        'app.' + model).objects.get(pk=id)
+    voted = item.votes.filter(id=user.id).exists()
+    return JsonResponse({'voted': voted})
+
+
+def vote(request):
+    user = request.user
+    model = request.GET['for']
+    id = request.GET['id']
+    item = apps.get_model(
+        'app.' + model).objects.get(pk=id)
+    voted = item.votes.filter(id=user.id).exists()
+    print(voted)
+    if not voted:
+        item.votes.add(user)
+        print(item.num_votes)
+        item.num_votes = F('num_votes') + 1
+        item.save()
+    return HttpResponse(status=200)
+
+
+def unvote(request):
+    user = request.user
+    model = request.GET['for']
+    id = request.GET['id']
+    item = apps.get_model(
+        'app.' + model).objects.get(pk=id)
+    while item.votes.filter(id=user.id).exists():
+        item.votes.remove(user)
+        item.num_votes = F('num_votes') - 1
+        item.save()
+    return HttpResponse(status=200)
+
+
+def notifications(request):
+    user = request.user
+    notifications = models.Notification.objects.filter(
+        owner=user).order_by('-created')[:10]
+    data = []
+    for obj in notifications:
+        data.append(utils.to_dict(obj))
+    return JsonResponse(data, safe=False)
+
+
+def clear_notifications(request):
+    user = request.user
+    models.Notification.objects.filter(owner=user).delete()
 
 
 def moderator(request):

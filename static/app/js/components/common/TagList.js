@@ -8,4 +8,9 @@ const TagList = (props)=>{
     return <span {...props.style}>{tags}</span>;
 };
 
+TagList.propTypes = {
+    tag_names:React.PropTypes.array,
+    bsStyle:React.PropTypes.string
+};
+
 export default pure(TagList);

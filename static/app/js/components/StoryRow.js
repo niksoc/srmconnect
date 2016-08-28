@@ -17,7 +17,8 @@ const ExperienceRow = React.createClass({render(){
        'height':'120' 
      };
      const viewStyle={
-         'padding':'10px 0px 0px 0px'
+         'padding':'22px 0px 0px 0px'
+
      };
     const pk = this.props.id;
     const uri = this.props.uri+ pk + '/';

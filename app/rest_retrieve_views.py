@@ -186,6 +186,10 @@ def UserProfileDetailView(request, pk):
             userProfile.num_views = F('num_views') + 1
             userProfile.save()
     fields = utils.to_dict(userProfile)
+    fields['interest_names'] = []
+    for interest in fields['interests']:
+        fields['interest_names'].append(
+            models.Tag.objects.get(pk=interest).name)
     profile_dict = {'model': "app.userprofile",
                     'pk': fields['id'], 'fields': fields}
     return JsonResponse(profile_dict)

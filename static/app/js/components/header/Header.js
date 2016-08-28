@@ -1,9 +1,41 @@
 import React from 'react';
 import {Button, Navbar, Nav, NavItem, MenuItem, NavDropdown, DropdownButton} from 'react-bootstrap';
+import axios from 'axios';
 import SessionInfoManager from './SessionInfoManager';
+import Timestamp from '../Timestamp';
+import LoggedInVisible from '../../visibility/LoggedInVisible';
+import {BASE_URL} from '../../constants';
+import {Link, browserHistory} from 'react-router';
 
 class Header extends React.Component {
+    constructor(){
+	super();
+	this.state ={notifications:[]};
+    }
+    componentDidMount(){
+	axios.get(BASE_URL + 'notifications/') 
+	    .then(({data})=> this.setState({notifications:data}))
+	    .catch((error)=> console.error(error)); 
+    }
+    clearNotifications(){
+	axios.get(BASE_URL + 'clear_notifications/');
+	this.setState({notifications:[]});
+    }
     render(){
+	let notifications = null;
+	let title = 'Notifications';
+	let clearButton = null;
+	if(this.state.notifications.length>0){
+	    title = 'Notifications !';
+	    clearButton = <MenuItem key={0} onClick={()=>this.clearNotifications.bind(this)}>clear</MenuItem>; 
+	}
+	const notif_list = this.state.notifications.map((n,i)=><MenuItem key={i+1} onClick={()=>browserHistory.push(BASE_URL+n.url)}>{n.message} - <Timestamp title='' datetime={n.created}/></MenuItem>);
+	notifications = (
+		<NavDropdown id="Notifications" title="Notifications"> 
+		{clearButton}
+		{notif_list}
+		</NavDropdown> 
+	);
 	return (
 		<header> 
 		<Navbar>
@@ -18,7 +50,7 @@ class Header extends React.Component {
 		</Navbar.Header>
 		<Navbar.Collapse>
 		<Nav pullRight>
-		<NavItem eventKey={1} href="#">Notifications</NavItem>
+		<LoggedInVisible element={notifications}/>
 		<SessionInfoManager />
 		</Nav>
 		</Navbar.Collapse>
@@ -28,4 +60,4 @@ class Header extends React.Component {
     }
 };
 
-export default Header
+export default Header;

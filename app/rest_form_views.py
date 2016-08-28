@@ -1,4 +1,5 @@
 from django.http import (HttpResponse, Http404)
+from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django import forms
 from django.views.generic import (CreateView, UpdateView, DeleteView)
@@ -217,13 +218,38 @@ class ProjectUpdateFormView(CommonUpdateFormViewBase):
     queryset = models.Project.objects.filter(is_active=True)
 
 
-class UserProfileUpdateFormView(CommonUpdateFormViewBase):
+class UserProfileUpdateFormView(UpdateView):
+    template_name = 'app/form.html'
+
+    def get_object(self, queryset=None):
+        queryset = User.objects.all()
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        if pk is not None:
+            queryset = queryset.filter(pk=pk)
+        if pk is None:
+            raise AttributeError("Generic detail view %s must be called with "
+                                 "either an object pk or a slug."
+                                 % self.__class__.__name__)
+        try:
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj.userprofile
+
+    def form_valid(self, form):
+        if(not self.request.user.is_authenticated()):
+            return HttpResponse(status=401)
+        if(not self.get_object().user == self.request.user):
+            return HttpResponse(status=403)
+        form.save()
+        return super(UserProfileUpdateFormView, self).form_valid(form)
 
     class FormClass(ModelForm):
 
         class Meta:
             model = models.UserProfile
-            exclude = ('user', )
+            exclude = ('user', 'num_views')
             widgets = {'interests': SearchableSelect(
                 model='app.Tag', search_field='name', many=True)}
     form_class = FormClass
@@ -240,6 +266,9 @@ class AnswerCreateFormView(CreateView):
 
     def get(self, request, *args, **kwargs):
         self.for_id = request.GET['id']
+        if(models.Question.objects.get(pk=self.for_id).answer_set.filter(created_by=request.user).exists()):
+            return HttpResponse(status=403, content="""You are not allowed to answer more than once,
+            please edit your existing answer""")
         return super(AnswerCreateFormView, self).get(request, * args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -249,6 +278,8 @@ class AnswerCreateFormView(CreateView):
 
     def post(self, request, *args, **kwargs):
         for_id = request.GET.get('id')
+        if(models.Question.objects.get(pk=for_id).answer_set.filter(created_by=request.user).exists()):
+            return HttpResponse(status=403)
         self.for_question = models.Question.objects.get(
             pk=for_id, is_active=True)
         return super(AnswerCreateFormView, self).post(request, * args, **kwargs)
@@ -259,8 +290,6 @@ class AnswerCreateFormView(CreateView):
         obj = form.save(commit=False)
         obj.created_by = self.request.user
         obj.for_question = self.for_question
-        obj.for_question.num_answers += 1
-        obj.for_question.save()
         obj.save()
         return super(AnswerCreateFormView, self).form_valid(form)
 

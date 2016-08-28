@@ -26,7 +26,7 @@ class FeatureNav extends React.Component{
 		<div> 
 		<Nav bsStyle="pills" justified activeKey={this.state.activeFeature} onSelect={this.handleSelect.bind(this)}>
 		<NavItem eventKey={''}>Latest</NavItem>
-		<NavItem eventKey={'qa/'}>Q&A</NavItem>
+		<NavItem eventKey={'question/'}>Q&A</NavItem>
 		<NavItem eventKey={'wanted/'}>Wanted</NavItem>
 		<NavItem eventKey={'available/'}>Available</NavItem>
 		<NavItem eventKey={'story/'}>Experience Speaks</NavItem>
