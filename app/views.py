@@ -50,6 +50,8 @@ def user(request):
 
 def is_subscribed(request):
     user = request.user
+    if not user.is_authenticated():
+        raise Http404
     model = request.GET['for']
     id = request.GET['id']
     item = apps.get_model(
@@ -85,6 +87,8 @@ def unsubscribe(request):
 
 def voted(request):
     user = request.user
+    if not user.is_authenticated():
+        raise Http404
     model = request.GET['for']
     id = request.GET['id']
     item = apps.get_model(
@@ -129,6 +133,7 @@ def notifications(request):
     data = []
     for obj in notifications:
         data.append(utils.to_dict(obj))
+    print(data)
     return JsonResponse(data, safe=False)
 
 

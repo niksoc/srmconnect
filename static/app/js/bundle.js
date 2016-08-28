@@ -43865,16 +43865,23 @@
 				}
 
 				_createClass(Header, [{
-							key: 'componentDidMount',
-							value: function componentDidMount() {
+							key: 'init',
+							value: function init() {
 										var _this2 = this;
 
-										_axios2.default.get(_constants.BASE_URL + 'notifications/').then(function (_ref) {
+										var context = arguments.length <= 0 || arguments[0] === undefined ? this.context : arguments[0];
+
+										if (context.isLoggedIn) _axios2.default.get(_constants.BASE_URL + 'notifications/').then(function (_ref) {
 													var data = _ref.data;
 													return _this2.setState({ notifications: data });
 										}).catch(function (error) {
 													return console.error(error);
 										});
+							}
+				}, {
+							key: 'componentDidMount',
+							value: function componentDidMount() {
+										this.init();
 							}
 				}, {
 							key: 'clearNotifications',
@@ -43883,10 +43890,13 @@
 										this.setState({ notifications: [] });
 							}
 				}, {
+							key: 'componentWillReceiveProps',
+							value: function componentWillReceiveProps(nextProps, nextContext) {
+										this.init(nextContext);
+							}
+				}, {
 							key: 'render',
 							value: function render() {
-										var _this3 = this;
-
 										var notifications = null;
 										var title = 'Notifications';
 										var clearButton = null;
@@ -43894,9 +43904,7 @@
 													title = 'Notifications !';
 													clearButton = _react2.default.createElement(
 																_reactBootstrap.MenuItem,
-																{ key: 0, onClick: function onClick() {
-																						return _this3.clearNotifications.bind(_this3);
-																			} },
+																{ key: 0, eventKey: 1, onSelect: this.clearNotifications.bind(this) },
 																'clear'
 													);
 										}
@@ -43913,7 +43921,7 @@
 										});
 										notifications = _react2.default.createElement(
 													_reactBootstrap.NavDropdown,
-													{ id: 'Notifications', title: 'Notifications' },
+													{ id: 'Notifications', title: title },
 													clearButton,
 													notif_list
 										);
@@ -43929,11 +43937,11 @@
 																			_react2.default.createElement(
 																						_reactBootstrap.Navbar.Brand,
 																						null,
-																						'srmXchange'
+																						'SRM|Connect'
 																			),
 																			_react2.default.createElement(
 																						_reactBootstrap.DropdownButton,
-																						{ id: 'srmXchange option', title: '' },
+																						{ id: 'srm connect option', title: '' },
 																						_react2.default.createElement(
 																									_reactBootstrap.MenuItem,
 																									{ eventKey: 1.1 },
@@ -43971,6 +43979,10 @@
 	}(_react2.default.Component);
 
 	;
+
+	Header.contextTypes = {
+				isLoggedIn: _react2.default.PropTypes.bool
+	};
 
 	exports.default = Header;
 
@@ -59222,7 +59234,7 @@
 
 										var props = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
 
-										if (props.route.comments) _axios2.default.get('/app/is_subscribed/?for=' + props.route.model + '&id=' + props.fields.id).then(function (_ref) {
+										if (props.route.comments && this.context.isLoggedIn) _axios2.default.get('/app/is_subscribed/?for=' + props.route.model + '&id=' + props.fields.id).then(function (_ref) {
 													var data = _ref.data;
 													if (!_this2.ignoreLastFetch) _this2.setState({ subscribed: data.subscribed });
 										}).catch(function (error) {
@@ -59294,7 +59306,7 @@
 													this.fetchComments(3);
 													this.updateData();
 										}
-										if (this.props.route.votes) {
+										if (this.props.route.votes && this.context.isLoggedIn) {
 													this.checkvoted();
 										}
 							}
@@ -59363,26 +59375,22 @@
 																			);
 																}
 																if (_this5.props.route.votes) {
-																			if (_this5.state.voted) vote = _react2.default.createElement(
+																			var votelink = null;
+																			if (_this5.state.voted) votelink = _react2.default.createElement(
+																						'a',
+																						{ style: { marginRight: '5px' }, onClick: _this5.unvote.bind(_this5) },
+																						'unvote'
+																			);else votelink = _react2.default.createElement(
+																						'a',
+																						{ style: { marginRight: '5px' }, onClick: _this5.vote.bind(_this5) },
+																						'vote'
+																			);
+																			vote = _react2.default.createElement(
 																						'span',
 																						null,
 																						fields.num_votes,
 																						' votes ',
-																						_react2.default.createElement(
-																									'a',
-																									{ style: { marginRight: '5px' }, onClick: _this5.unvote.bind(_this5) },
-																									'unvote'
-																						)
-																			);else vote = _react2.default.createElement(
-																						'span',
-																						null,
-																						fields.num_votes,
-																						' votes ',
-																						_react2.default.createElement(
-																									'a',
-																									{ style: { marginRight: '5px' }, onClick: _this5.vote.bind(_this5) },
-																									'vote'
-																						)
+																						_react2.default.createElement(_LoggedInVisible2.default, { element: votelink })
 																			);
 																}
 																var options = _react2.default.createElement(_DetailOptions2.default, { owner: fields.created_by, item: _this5.props.route.model, edit_src: '/api/edit/' + _this5.props.route.model + '/' + fields.id + '/', delete_src: '/api/delete/' + _this5.props.route.model + '/' + fields.id + '/' });
@@ -59436,7 +59444,7 @@
 																												),
 																												modified_by
 																									),
-																									subscribe,
+																									_react2.default.createElement(_LoggedInVisible2.default, { element: subscribe }),
 																									commentBoxes,
 																									viewAll,
 																									_react2.default.createElement(_LoggedInVisible2.default, { element: addCommentModal })
@@ -59452,6 +59460,10 @@
 
 				return DetailView;
 	}(_react2.default.Component);
+
+	DetailView.contextTypes = {
+				isLoggedIn: _react2.default.PropTypes.bool
+	};
 
 	exports.default = DetailView;
 
@@ -59724,7 +59736,7 @@
 													return _this2.setState({ error: 'What you\'re looking for doesn\'t exist' });
 										});
 
-										if (props.route.comments) _axios2.default.get('/app/is_subscribed/?for=' + props.route.model + '&id=' + props.params.id).then(function (_ref2) {
+										if (props.route.comments && this.context.isLoggedIn) _axios2.default.get('/app/is_subscribed/?for=' + props.route.model + '&id=' + props.params.id).then(function (_ref2) {
 													var data = _ref2.data;
 													if (!_this2.ignoreLastFetch) _this2.setState({ subscribed: data.subscribed });
 										}).catch(function (error) {
@@ -59796,7 +59808,7 @@
 													this.setState({ error: false, commentsExpanded: false });
 													this.fetchComments(3);
 										}
-										if (this.props.route.votes) {
+										if (this.props.route.votes && this.context.isLoggedIn) {
 													this.checkvoted();
 										}
 							}
@@ -59870,26 +59882,22 @@
 																			);
 																}
 																if (_this5.props.route.votes) {
-																			if (_this5.state.voted) vote = _react2.default.createElement(
+																			var votelink = null;
+																			if (_this5.state.voted) votelink = _react2.default.createElement(
+																						'a',
+																						{ style: { marginRight: '5px' }, onClick: _this5.unvote.bind(_this5) },
+																						'unvote'
+																			);else votelink = _react2.default.createElement(
+																						'a',
+																						{ style: { marginRight: '5px' }, onClick: _this5.vote.bind(_this5) },
+																						'vote'
+																			);
+																			vote = _react2.default.createElement(
 																						'span',
 																						null,
 																						fields.num_votes,
 																						' votes ',
-																						_react2.default.createElement(
-																									'a',
-																									{ style: { marginRight: '5px' }, onClick: _this5.unvote.bind(_this5) },
-																									'unvote'
-																						)
-																			);else vote = _react2.default.createElement(
-																						'span',
-																						null,
-																						fields.num_votes,
-																						' votes ',
-																						_react2.default.createElement(
-																									'a',
-																									{ style: { marginRight: '5px' }, onClick: _this5.vote.bind(_this5) },
-																									'vote'
-																						)
+																						_react2.default.createElement(_LoggedInVisible2.default, { element: votelink })
 																			);
 																}
 																var options = _react2.default.createElement(_DetailOptions2.default, { owner: fields.created_by, item: _this5.props.route.model, edit_src: '/api/edit/' + _this5.props.route.model + '/' + _this5.state.data.pk + '/', delete_src: '/api/delete/' + _this5.props.route.model + '/' + _this5.state.data.pk + '/' });
@@ -59951,7 +59959,7 @@
 																												),
 																												modified_by
 																									),
-																									subscribe,
+																									_react2.default.createElement(_LoggedInVisible2.default, { element: subscribe }),
 																									commentBoxes,
 																									viewAll,
 																									_react2.default.createElement(_LoggedInVisible2.default, { element: addCommentModal })
@@ -59967,6 +59975,10 @@
 
 				return SimpleDetailViewPage;
 	}(_react2.default.Component);
+
+	SimpleDetailViewPage.contextTypes = {
+				isLoggedIn: _react2.default.PropTypes.bool
+	};
 
 	exports.default = SimpleDetailViewPage;
 

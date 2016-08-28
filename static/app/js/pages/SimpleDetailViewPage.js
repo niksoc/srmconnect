@@ -25,7 +25,7 @@ class SimpleDetailViewPage extends React.Component{
 	    .then(({data})=> {if(!this.ignoreLastFetch) this.setState({data});})
 	    .catch((error)=> this.setState({error: 'What you\'re looking for doesn\'t exist'})); 
 
-	if(props.route.comments)
+	if(props.route.comments && this.context.isLoggedIn)
 	    axios.get(`/app/is_subscribed/?for=${props.route.model}&id=${props.params.id}`) 
 	    .then(({data})=> {if(!this.ignoreLastFetch) this.setState({subscribed:data.subscribed});})
 	    .catch((error)=> console.error(error)); 
@@ -62,7 +62,7 @@ class SimpleDetailViewPage extends React.Component{
 	    this.setState({error:false, commentsExpanded:false});
 	    this.fetchComments(3);
 	}
-	if(this.props.route.votes){
+	if(this.props.route.votes && this.context.isLoggedIn){
 	    this.checkvoted();
 	}
     }
@@ -113,11 +113,12 @@ class SimpleDetailViewPage extends React.Component{
 		    subscribe = <a style={{marginRight:'5px'}} onClick={this.subscribe.bind(this)}>subscribe</a>;
 	    }
 	    if(this.props.route.votes){
+		let votelink = null;
 		if(this.state.voted)
-		    vote = <span>{fields.num_votes} votes <a style={{marginRight:'5px'}} onClick={this.unvote.bind(this)}>unvote</a></span>;
-		else
-		    vote = <span>{fields.num_votes} votes <a style={{marginRight:'5px'}} onClick={this.vote.bind(this)}>vote</a></span>;
-	    }
+		    votelink = <a style={{marginRight:'5px'}} onClick={this.unvote.bind(this)}>unvote</a>;
+		else votelink = <a style={{marginRight:'5px'}} onClick={this.vote.bind(this)}>vote</a>;
+		vote = <span>{fields.num_votes} votes <LoggedInVisible element={votelink}/></span>;
+	    } 
 	    const options = (<DetailOptions owner={fields.created_by} item={this.props.route.model} edit_src={`/api/edit/${this.props.route.model}/${this.state.data.pk}/`} delete_src={`/api/delete/${this.props.route.model}/${this.state.data.pk}/`}/>);
 	    if(this.props.route.comments && this.state.comments){
 		let comments = null;
@@ -142,7 +143,7 @@ class SimpleDetailViewPage extends React.Component{
 		    <div className="pull-right" style={{marginLeft:'10px'}}><Timestamp style={style} title='created' datetime={fields.created} /><UserThumb id={fields.created_by} /></div>
 		    {modified_by} 
 		</div>
-		    {subscribe}
+		    <LoggedInVisible element={subscribe} />
 		    {commentBoxes}
 		{viewAll}
 <LoggedInVisible element={addCommentModal}/>
@@ -154,6 +155,10 @@ class SimpleDetailViewPage extends React.Component{
 	
     } 
 }
+
+SimpleDetailViewPage.contextTypes = {
+  isLoggedIn: React.PropTypes.bool
+};
 
 export default SimpleDetailViewPage;
 

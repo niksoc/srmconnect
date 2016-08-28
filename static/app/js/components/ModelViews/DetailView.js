@@ -20,7 +20,7 @@ class DetailView extends React.Component{
 	};
     }
     updateData(props = this.props){
-	if(props.route.comments)
+	if(props.route.comments && this.context.isLoggedIn)
 	    axios.get(`/app/is_subscribed/?for=${props.route.model}&id=${props.fields.id}`) 
 	    .then(({data})=> {if(!this.ignoreLastFetch) this.setState({subscribed:data.subscribed});})
 	    .catch((error)=> console.error(error)); 
@@ -58,7 +58,7 @@ class DetailView extends React.Component{
 	    this.fetchComments(3);
 	    this.updateData();
 	}
-	if(this.props.route.votes){
+	if(this.props.route.votes && this.context.isLoggedIn){
 	    this.checkvoted();
 	}
     }
@@ -107,11 +107,12 @@ class DetailView extends React.Component{
 		    subscribe = <a style={{marginRight:'5px'}} onClick={this.subscribe.bind(this)}>subscribe</a>;
 	    }
 	    if(this.props.route.votes){
+		let votelink = null;
 		if(this.state.voted)
-		    vote = <span>{fields.num_votes} votes <a style={{marginRight:'5px'}} onClick={this.unvote.bind(this)}>unvote</a></span>;
-		else
-		    vote = <span>{fields.num_votes} votes <a style={{marginRight:'5px'}} onClick={this.vote.bind(this)}>vote</a></span>;
-	    }
+		    votelink = <a style={{marginRight:'5px'}} onClick={this.unvote.bind(this)}>unvote</a>;
+		else votelink = <a style={{marginRight:'5px'}} onClick={this.vote.bind(this)}>vote</a>;
+		vote = <span>{fields.num_votes} votes <LoggedInVisible element={votelink}/></span>;
+	    } 
 	    const options = (<DetailOptions owner={fields.created_by} item={this.props.route.model} edit_src={`/api/edit/${this.props.route.model}/${fields.id}/`} delete_src={`/api/delete/${this.props.route.model}/${fields.id}/`}/>);
 	    if(this.props.route.comments && this.state.comments){
 		let comments = null;
@@ -134,7 +135,7 @@ class DetailView extends React.Component{
 		    <div className="pull-right" style={{marginLeft:'10px'}}><Timestamp style={style} title='created' datetime={fields.created} /><UserThumb id={fields.created_by} /></div>
 		    {modified_by} 
 		</div>
-		    {subscribe}
+		    <LoggedInVisible element={subscribe}/>
 		    {commentBoxes}
 		{viewAll}
 <LoggedInVisible element={addCommentModal}/>
@@ -146,6 +147,10 @@ class DetailView extends React.Component{
 	
     } 
 }
+
+DetailView.contextTypes = {
+  isLoggedIn: React.PropTypes.bool
+};
 
 export default DetailView;
 

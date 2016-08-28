@@ -215,6 +215,8 @@ class Answer(TimeStampedModel, ActivatableModelMixin):
             q = self.for_question
             q.num_answers += 1
             for follower in q.followers.all():
+                if follower == self.created_by:
+                    continue
                 n = Notification(
                     owner=follower, message='New answer to ' + q.title, url='question/' + str(q.id))
                 n.save()

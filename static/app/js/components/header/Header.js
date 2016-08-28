@@ -12,14 +12,21 @@ class Header extends React.Component {
 	super();
 	this.state ={notifications:[]};
     }
-    componentDidMount(){
+    init(context = this.context){
+	if(context.isLoggedIn)
 	axios.get(BASE_URL + 'notifications/') 
 	    .then(({data})=> this.setState({notifications:data}))
 	    .catch((error)=> console.error(error)); 
     }
+    componentDidMount(){
+	this.init();
+    }
     clearNotifications(){
 	axios.get(BASE_URL + 'clear_notifications/');
 	this.setState({notifications:[]});
+    }
+    componentWillReceiveProps(nextProps, nextContext){
+	this.init(nextContext);
     }
     render(){
 	let notifications = null;
@@ -27,11 +34,11 @@ class Header extends React.Component {
 	let clearButton = null;
 	if(this.state.notifications.length>0){
 	    title = 'Notifications !';
-	    clearButton = <MenuItem key={0} onClick={()=>this.clearNotifications.bind(this)}>clear</MenuItem>; 
+	    clearButton = <MenuItem key={0} eventKey={1} onSelect={this.clearNotifications.bind(this)}>clear</MenuItem>; 
 	}
 	const notif_list = this.state.notifications.map((n,i)=><MenuItem key={i+1} onClick={()=>browserHistory.push(BASE_URL+n.url)}>{n.message} - <Timestamp title='' datetime={n.created}/></MenuItem>);
 	notifications = (
-		<NavDropdown id="Notifications" title="Notifications"> 
+		<NavDropdown id="Notifications" title={title}> 
 		{clearButton}
 		{notif_list}
 		</NavDropdown> 
@@ -40,8 +47,8 @@ class Header extends React.Component {
 		<header> 
 		<Navbar>
 		<Navbar.Header>
-		<Navbar.Brand>srmXchange</Navbar.Brand>
-		<DropdownButton id="srmXchange option" title=""> 
+		<Navbar.Brand>SRM|Connect</Navbar.Brand>
+		<DropdownButton id="srm connect option" title=""> 
 		<MenuItem eventKey={1.1}>About</MenuItem>
 		<MenuItem eventKey={1.2}>Feedback</MenuItem>
 		<MenuItem eventKey={1.3}>Join us!</MenuItem>
@@ -58,6 +65,10 @@ class Header extends React.Component {
 		</header> 
 	);
     }
+};
+
+Header.contextTypes = {
+  isLoggedIn: React.PropTypes.bool
 };
 
 export default Header;
