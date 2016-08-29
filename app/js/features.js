@@ -9,7 +9,7 @@ const FEATURES = [
 	model:'question',
 	bsStyle:'primary',
 	class:QuestionRow,
-	orderings:['-created','-num_votes', '-num_views'],
+	orderings:['-created','-last_active', '-num_votes', '-num_views'],
 	comments:true,
 	votes:true
     },

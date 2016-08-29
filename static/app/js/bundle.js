@@ -43768,8 +43768,8 @@
 			key: 'render',
 			value: function render() {
 				var path = this.props.location.pathname.replace(_constants.BASE_URL, '');
+				path = path.replace(/\d+/g, 'id');
 				path = path === '' ? 'latest' : path.slice(0, -1);
-				console.log(path);
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -60191,7 +60191,7 @@
 				model: 'question',
 				bsStyle: 'primary',
 				class: _QuestionRow2.default,
-				orderings: ['-created', '-num_votes', '-num_views'],
+				orderings: ['-created', '-last_active', '-num_votes', '-num_views'],
 				comments: true,
 				votes: true
 	}, {

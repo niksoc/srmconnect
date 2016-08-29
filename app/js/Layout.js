@@ -41,8 +41,8 @@ class Layout extends React.Component{
     }
     render(){
 	let path = this.props.location.pathname.replace(BASE_URL,'');
+	path = path.replace(/\d+/g, 'id');
 	path = path===''? 'latest':path.slice(0,-1);
-	console.log(path);
  	return (
 		<div> 
 		<Header />
