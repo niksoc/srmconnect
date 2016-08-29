@@ -79,7 +79,7 @@ urlpatterns = [
     url(r'^detail/project/(?P<pk>\d+)/$',
         rest_retrieve_views.ProjectDetailView.as_view()),
     url(r'^list/comment/$',
-        rest_retrieve_views.CommentListView.as_view()),
+        rest_retrieve_views.CommentListView),
     url(r'^list/answer/$',
         rest_retrieve_views.AnswerListView.as_view()),
     url(r'^detail/user_profile/(?P<pk>\d+)/$',

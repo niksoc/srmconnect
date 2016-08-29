@@ -10,6 +10,8 @@ from django.http import HttpResponse
 from django.http import Http404
 from django.apps import apps
 from django.db.models import F
+from django.views.decorators.http import condition
+import datetime
 from . import utils
 from . import models
 
@@ -108,10 +110,8 @@ def vote(request):
     item = apps.get_model(
         'app.' + model).objects.get(pk=id)
     voted = item.votes.filter(id=user.id).exists()
-    print(voted)
     if not voted:
         item.votes.add(user)
-        print(item.num_votes)
         item.num_votes = F('num_votes') + 1
         item.save()
     return HttpResponse(status=200)
@@ -130,6 +130,14 @@ def unvote(request):
     return HttpResponse(status=200)
 
 
+def latest_notification(request):
+    try:
+        return models.Notification.objects.filter(owner=request.user).latest("created").created
+    except:
+        return datetime.datetime(1996, 11, 28)
+
+
+@condition(last_modified_func=latest_notification)
 def notifications(request):
     user = request.user
     notifications = models.Notification.objects.filter(
@@ -137,13 +145,13 @@ def notifications(request):
     data = []
     for obj in notifications:
         data.append(utils.to_dict(obj))
-    print(data)
     return JsonResponse(data, safe=False)
 
 
 def clear_notifications(request):
     user = request.user
     models.Notification.objects.filter(owner=user).delete()
+    return HttpResponse(status=200)
 
 
 def moderator(request):

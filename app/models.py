@@ -322,11 +322,12 @@ class CommentBaseModel(TimeStampedModel, ActivatableModelMixin):
             model = str(i.__class__).split('.')[2].split('\'')[0]
             if model == 'Answer':
                 title = 'answer ' + i.text[:5]
+                model = 'Question'
             else:
                 title = i.title
             n = Notification(
                 owner=follower, message='New comment on ' + model + ' "' + title + '"',
-                url='/' + str(i.__class__).split('.')[2].split('\'')[0] + '/' + str(i.id))
+                url='/' + model + '/' + str(i.id))
             n.save()
         # add creator to follower list if not already in it
         if not i.followers.filter(id=instance.created_by.id).exists():
@@ -406,3 +407,4 @@ admin.site.register(Comment_Available)
 admin.site.register(Comment_Wanted)
 admin.site.register(Comment_Story)
 admin.site.register(App_Text)
+admin.site.register(Dept)

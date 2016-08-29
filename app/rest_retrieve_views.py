@@ -3,10 +3,11 @@ from django.views.generic import (ListView, DetailView)
 from django.core import serializers
 from django.apps import apps
 from django.shortcuts import get_object_or_404
-from hitcount.views import HitCountDetailView
 from hitcount.views import HitCountMixin
 from hitcount.models import HitCount
 from django.db.models import F
+from django.views.decorators.http import condition
+import datetime
 
 from . import models
 from . import utils
@@ -89,32 +90,41 @@ class BaseDetailView(DetailView):
         return HttpResponse(serializers.serialize('json', obj)[1:-1], content_type="application/json")
 
 
-class CommentListView(ListView):
+def latest_comment(request):
+    for_model_name = request.GET['for']
+    for_id = request.GET['id']
+    model = apps.get_model('app.Comment_' + for_model_name)
+    for_item = apps.get_model(
+        'app.' + for_model_name).objects.get(pk=for_id)
+    try:
+        return model.objects.filter(
+            is_active=True, for_item=for_item).latest("created").created
+    except:
+        return datetime.datetime(1996, 11, 28)
+
+
+@condition(last_modified_func=latest_comment)
+def CommentListView(request):
     ordering = 'created'
-
-    def render_to_response(self, context, **response_kwargs):
-        data = []
-        for i, obj in enumerate(context.get('object_list')):
-            if self.num and self.num != '' and i >= int(self.num):
-                break
-            data.append(utils.to_dict(obj))
-        processDataList(data)
-        return JsonResponse(data, safe=False)
-
-    def get(self, request, *args, **kwargs):
-        self.for_model_name = request.GET['for']
-        self.for_id = request.GET['id']
-        model = apps.get_model('app.Comment_' + self.for_model_name)
-        for_item = apps.get_model(
-            'app.' + self.for_model_name).objects.get(pk=self.for_id)
-        self.num = request.GET.get('num')
-        if self.num:
-            # if limited no. of comments is requested, we give them latest
-            # comments first
-            self.ordering = '-created'
-        self.queryset = model.objects.filter(
-            is_active=True, for_item=for_item)
-        return super().get(request, *args, **kwargs)
+    for_model_name = request.GET['for']
+    for_id = request.GET['id']
+    model = apps.get_model('app.Comment_' + for_model_name)
+    for_item = apps.get_model(
+        'app.' + for_model_name).objects.get(pk=for_id)
+    num = request.GET.get('num')
+    if num:
+        # if limited no. of comments is requested, we give them latest
+        # comments first
+        ordering = '-created'
+    queryset = model.objects.filter(
+        is_active=True, for_item=for_item).order_by(ordering)
+    data = []
+    for i, obj in enumerate(queryset):
+        if num and num != '' and i >= int(num):
+            break
+        data.append(utils.to_dict(obj))
+    processDataList(data)
+    return JsonResponse(data, safe=False)
 
 
 class AnswerListView(ListView):

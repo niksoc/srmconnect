@@ -266,7 +266,7 @@ class AnswerCreateFormView(CreateView):
 
     def get(self, request, *args, **kwargs):
         self.for_id = request.GET['id']
-        if(models.Question.objects.get(pk=self.for_id).answer_set.filter(created_by=request.user).exists()):
+        if(models.Question.objects.get(pk=self.for_id).answer_set.filter(is_active=True, created_by=request.user).exists()):
             return HttpResponse(status=403, content="""You are not allowed to answer more than once,
             please edit your existing answer""")
         return super(AnswerCreateFormView, self).get(request, * args, **kwargs)
@@ -278,7 +278,7 @@ class AnswerCreateFormView(CreateView):
 
     def post(self, request, *args, **kwargs):
         for_id = request.GET.get('id')
-        if(models.Question.objects.get(pk=for_id).answer_set.filter(created_by=request.user).exists()):
+        if(models.Question.objects.get(pk=for_id).answer_set.filter(is_active=True, created_by=request.user).exists()):
             return HttpResponse(status=403)
         self.for_question = models.Question.objects.get(
             pk=for_id, is_active=True)

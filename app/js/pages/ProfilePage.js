@@ -52,6 +52,7 @@ export class ProfilePage extends React.Component{
 	const editIcon = <Glyphicon glyph="pencil" />;
 	const editButton = <FormFrameModal title="Edit Profile" buttonText={editIcon} src={`/api/edit/user_profile/${fields.user}/`} />;
 	const interests = <TagList tag_names={fields.interest_names} bsStyle="primary" />;
+	if(fields.profile_text === null) fields.profile_text = '';
 	return(
 		<div>
 		<PageHeader>Profile <small>{editButton}</small></PageHeader>

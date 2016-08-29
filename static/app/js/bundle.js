@@ -45208,11 +45208,15 @@
 
 										var context = arguments.length <= 0 || arguments[0] === undefined ? this.context : arguments[0];
 
-										if (context.isLoggedIn) _axios2.default.get(_constants.BASE_URL + 'notifications/').then(function (_ref) {
-													var data = _ref.data;
-													return _this2.setState({ notifications: data });
+										if (!this.lastmodified) _axios2.default.get(_constants.BASE_URL + 'notifications/?cache=' + new Date().getTime()).then(function (response) {
+													_this2.lastmodified = response.headers['last-modified'];_this2.setState({ notifications: response.data });
 										}).catch(function (error) {
-													return console.error(error);
+													if (error.status !== '304') console.error(error);
+										});else _axios2.default.get(_constants.BASE_URL + 'notifications/?cache=' + new Date().getTime(), { headers: { 'If-Modified-Since': this.lastmodified } }).then(function (response) {
+													_this2.lastmodified = response.headers['last-modified'];
+													_this2.setState({ notifications: response.data });
+										}).catch(function (error) {
+													if (error.response.status !== 304) console.error(error);
 										});
 							}
 				}, {
@@ -45221,15 +45225,25 @@
 										this.init();
 							}
 				}, {
+							key: 'componentWillReceiveProps',
+							value: function componentWillReceiveProps(nxtProps, nextContext) {
+										if (nextContext.isLoggedIn && !this.interval) {
+													this.interval = window.setInterval(this.init.bind(this), 10000);
+										}
+							}
+				}, {
+							key: 'componentWillUnmount',
+							value: function componentWillUnmount() {
+										if (this.interval) {
+													window.clearInterval(this.interval);
+													this.interval = null;
+										}
+							}
+				}, {
 							key: 'clearNotifications',
 							value: function clearNotifications() {
 										_axios2.default.get(_constants.BASE_URL + 'clear_notifications/');
 										this.setState({ notifications: [] });
-							}
-				}, {
-							key: 'componentWillReceiveProps',
-							value: function componentWillReceiveProps(nextProps, nextContext) {
-										this.init(nextContext);
 							}
 				}, {
 							key: 'render',
@@ -47992,11 +48006,11 @@
 																			)
 																),
 																'dept: ',
-																fields.dept ? fields.dept : '-',
+																fields.department ? fields.department : '-',
 																' ',
 																_react2.default.createElement('br', null),
 																'year: ',
-																fields.dept ? fields.year : '-'
+																fields.year ? fields.year : '-'
 													)
 										);
 							}
@@ -59244,41 +59258,49 @@
 				}, {
 							key: 'subscribe',
 							value: function subscribe() {
-										_axios2.default.get('/app/subscribe/?for=' + this.props.route.model + '&id=' + this.props.fields.id).then(function (response) {
-													return window.alert('subscribed');
+										var _this3 = this;
+
+										_axios2.default.get('/app/subscribe/?for=' + this.props.route.model + '&id=' + this.props.params.id).then(function (response) {
+													return _this3.setState({ subscribed: true });
 										});
 							}
 				}, {
 							key: 'unsubscribe',
 							value: function unsubscribe() {
-										_axios2.default.get('/app/unsubscribe/?for=' + this.props.route.model + '&id=' + this.props.fields.id).then(function (response) {
-													return window.alert('unsubscribed');
+										var _this4 = this;
+
+										_axios2.default.get('/app/unsubscribe/?for=' + this.props.route.model + '&id=' + this.props.params.id).then(function (response) {
+													return _this4.setState({ subscribed: false });
 										});
 							}
 				}, {
 							key: 'vote',
 							value: function vote() {
-										_axios2.default.get('/app/vote/?for=' + this.props.route.model + '&id=' + this.props.fields.id).then(function (response) {
-													return window.alert('voted');
+										var _this5 = this;
+
+										_axios2.default.get('/app/vote/?for=' + this.props.route.model + '&id=' + this.props.params.id).then(function (response) {
+													return _this5.setState({ voted: true });
 										});
 							}
 				}, {
 							key: 'unvote',
 							value: function unvote() {
-										_axios2.default.get('/app/unvote/?for=' + this.props.route.model + '&id=' + this.props.fields.id).then(function (response) {
-													return window.alert('vote withdrawn');
+										var _this6 = this;
+
+										_axios2.default.get('/app/unvote/?for=' + this.props.route.model + '&id=' + this.props.params.id).then(function (response) {
+													return _this6.setState({ voted: false });
 										});
 							}
 				}, {
 							key: 'checkvoted',
 							value: function checkvoted() {
-										var _this3 = this;
+										var _this7 = this;
 
 										var props = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
 
 										_axios2.default.get('/app/voted/?for=' + props.route.model + '&id=' + props.fields.id).then(function (_ref2) {
 													var data = _ref2.data;
-													if (!_this3.ignoreLastFetch) _this3.setState({ voted: data.voted });
+													if (!_this7.ignoreLastFetch) _this7.setState({ voted: data.voted });
 										}).catch(function (error) {
 													return console.error(error);
 										});
@@ -59286,16 +59308,24 @@
 				}, {
 							key: 'fetchComments',
 							value: function fetchComments() {
-										var _this4 = this;
-
 										var num = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
-										var props = arguments.length <= 1 || arguments[1] === undefined ? this.props : arguments[1];
 
-										_axios2.default.get('/api/list/comment/?for=' + props.route.model + '&id=' + props.fields.id + '&num=' + num).then(function (_ref3) {
-													var data = _ref3.data;
-													if (!_this4.ignoreLastFetch) _this4.setState({ comments: data });
+										var _this8 = this;
+
+										var force = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+										var props = arguments.length <= 2 || arguments[2] === undefined ? this.props : arguments[2];
+
+										if (!this.lastmodified || force) _axios2.default.get('/api/list/comment/?for=' + this.props.route.model + '&id=' + this.props.params.id + '&num=' + num).then(function (response) {
+													_this8.lastmodified = response.headers['last-modified'];_this8.setState({ comments: response.data });
 										}).catch(function (error) {
-													return console.log(error);
+													if (error.response.status != 304) console.error(error);
+										});else _axios2.default.get('/api/list/comment/?for=' + props.route.model + '&id=' + props.params.id + '&num=' + num + '&cache=' + new Date().getTime(), { headers: { 'If-Modified-Since': this.lastmodified } }).then(function (response) {
+													if (!_this8.ignoreLastFetch) {
+																_this8.lastmodified = response.headers['last-modified'];
+																_this8.setState({ comments: response.data });
+													}
+										}).catch(function (error) {
+													if (error.response.status !== 304) console.error(error);
 										});
 							}
 				}, {
@@ -59319,6 +59349,7 @@
 							key: 'componentWillUnmount',
 							value: function componentWillUnmount() {
 										this.ignoreLastFetch = true;
+										if (this.interval) window.clearInterval(this.interval);
 							}
 				}, {
 							key: 'componentWillReceiveProps',
@@ -59330,13 +59361,16 @@
 				}, {
 							key: 'expandComments',
 							value: function expandComments() {
-										this.fetchComments();
+										this.fetchComments('', true);
+										if (!this.interval) {
+													this.interval = window.setInterval(this.fetchComments.bind(this), 10000);
+										}
 										this.setState({ commentsExpanded: true });
 							}
 				}, {
 							key: 'render',
 							value: function render() {
-										var _this5 = this;
+										var _this9 = this;
 
 										var numComments = 2;
 										var fields = this.props.fields;
@@ -59363,26 +59397,26 @@
 																var addCommentModal = null;
 																var subscribe = null;
 																var vote = null;
-																if (_this5.props.route.comments) {
-																			if (_this5.state.subscribed) subscribe = _react2.default.createElement(
+																if (_this9.props.route.comments) {
+																			if (_this9.state.subscribed) subscribe = _react2.default.createElement(
 																						'a',
-																						{ style: { marginRight: '5px' }, onClick: _this5.unsubscribe.bind(_this5) },
+																						{ style: { marginRight: '5px' }, onClick: _this9.unsubscribe.bind(_this9) },
 																						'unsubscribe'
 																			);else subscribe = _react2.default.createElement(
 																						'a',
-																						{ style: { marginRight: '5px' }, onClick: _this5.subscribe.bind(_this5) },
+																						{ style: { marginRight: '5px' }, onClick: _this9.subscribe.bind(_this9) },
 																						'subscribe'
 																			);
 																}
-																if (_this5.props.route.votes) {
+																if (_this9.props.route.votes) {
 																			var votelink = null;
-																			if (_this5.state.voted) votelink = _react2.default.createElement(
+																			if (_this9.state.voted) votelink = _react2.default.createElement(
 																						'a',
-																						{ style: { marginRight: '5px' }, onClick: _this5.unvote.bind(_this5) },
+																						{ style: { marginRight: '5px' }, onClick: _this9.unvote.bind(_this9) },
 																						'unvote'
 																			);else votelink = _react2.default.createElement(
 																						'a',
-																						{ style: { marginRight: '5px' }, onClick: _this5.vote.bind(_this5) },
+																						{ style: { marginRight: '5px' }, onClick: _this9.vote.bind(_this9) },
 																						'vote'
 																			);
 																			vote = _react2.default.createElement(
@@ -59393,22 +59427,22 @@
 																						_react2.default.createElement(_LoggedInVisible2.default, { element: votelink })
 																			);
 																}
-																var options = _react2.default.createElement(_DetailOptions2.default, { owner: fields.created_by, item: _this5.props.route.model, edit_src: '/api/edit/' + _this5.props.route.model + '/' + fields.id + '/', delete_src: '/api/delete/' + _this5.props.route.model + '/' + fields.id + '/' });
-																if (_this5.props.route.comments && _this5.state.comments) {
+																var options = _react2.default.createElement(_DetailOptions2.default, { owner: fields.created_by, item: _this9.props.route.model, edit_src: '/api/edit/' + _this9.props.route.model + '/' + fields.id + '/', delete_src: '/api/delete/' + _this9.props.route.model + '/' + fields.id + '/' });
+																if (_this9.props.route.comments && _this9.state.comments) {
 																			var comments = null;
-																			if (!_this5.state.commentsExpanded && _this5.state.comments.length > numComments) {
-																						comments = _this5.state.comments.slice(0, numComments).reverse();
+																			if (!_this9.state.commentsExpanded && _this9.state.comments.length > numComments) {
+																						comments = _this9.state.comments.slice(0, numComments).reverse();
 																						viewAll = _react2.default.createElement(
 																									'a',
-																									{ onClick: _this5.expandComments.bind(_this5) },
+																									{ onClick: _this9.expandComments.bind(_this9) },
 																									'view all comments'
 																						);
 																			} else {
-																						comments = _this5.state.comments;
-																						addCommentModal = _react2.default.createElement(_FormFrameModal2.default, { title: 'Add Comment', buttonText: 'add comment', src: '/api/create/comment/?for=' + _this5.props.route.model + '&id=' + _this5.props.fields.id });
+																						comments = _this9.state.comments;
+																						addCommentModal = _react2.default.createElement(_FormFrameModal2.default, { title: 'Add Comment', buttonText: 'add comment', src: '/api/create/comment/?for=' + _this9.props.route.model + '&id=' + _this9.props.fields.id });
 																			}
 																			commentBoxes = comments.map(function (fields, i) {
-																						return _react2.default.createElement(_CommentBox2.default, { style: borderBottom, key: i, 'for': _this5.props.route.model, fields: fields });
+																						return _react2.default.createElement(_CommentBox2.default, { style: borderBottom, key: i, 'for': _this9.props.route.model, fields: fields });
 																			});
 																}
 																return {
@@ -59746,41 +59780,49 @@
 				}, {
 							key: 'subscribe',
 							value: function subscribe() {
+										var _this3 = this;
+
 										_axios2.default.get('/app/subscribe/?for=' + this.props.route.model + '&id=' + this.props.params.id).then(function (response) {
-													return window.alert('subscribed');
+													return _this3.setState({ subscribed: true });
 										});
 							}
 				}, {
 							key: 'unsubscribe',
 							value: function unsubscribe() {
+										var _this4 = this;
+
 										_axios2.default.get('/app/unsubscribe/?for=' + this.props.route.model + '&id=' + this.props.params.id).then(function (response) {
-													return window.alert('unsubscribed');
+													return _this4.setState({ subscribed: false });
 										});
 							}
 				}, {
 							key: 'vote',
 							value: function vote() {
+										var _this5 = this;
+
 										_axios2.default.get('/app/vote/?for=' + this.props.route.model + '&id=' + this.props.params.id).then(function (response) {
-													return window.alert('voted');
+													return _this5.setState({ voted: true });
 										});
 							}
 				}, {
 							key: 'unvote',
 							value: function unvote() {
+										var _this6 = this;
+
 										_axios2.default.get('/app/unvote/?for=' + this.props.route.model + '&id=' + this.props.params.id).then(function (response) {
-													return window.alert('vote withdrawn');
+													return _this6.setState({ voted: false });
 										});
 							}
 				}, {
 							key: 'checkvoted',
 							value: function checkvoted() {
-										var _this3 = this;
+										var _this7 = this;
 
 										var props = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
 
 										_axios2.default.get('/app/voted/?for=' + props.route.model + '&id=' + props.params.id).then(function (_ref3) {
 													var data = _ref3.data;
-													if (!_this3.ignoreLastFetch) _this3.setState({ voted: data.voted });
+													if (!_this7.ignoreLastFetch) _this7.setState({ voted: data.voted });
 										}).catch(function (error) {
 													return console.error(error);
 										});
@@ -59788,16 +59830,24 @@
 				}, {
 							key: 'fetchComments',
 							value: function fetchComments() {
-										var _this4 = this;
-
 										var num = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
-										var props = arguments.length <= 1 || arguments[1] === undefined ? this.props : arguments[1];
 
-										_axios2.default.get('/api/list/comment/?for=' + props.route.model + '&id=' + props.params.id + '&num=' + num).then(function (_ref4) {
-													var data = _ref4.data;
-													if (!_this4.ignoreLastFetch) _this4.setState({ comments: data });
+										var _this8 = this;
+
+										var force = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+										var props = arguments.length <= 2 || arguments[2] === undefined ? this.props : arguments[2];
+
+										if (!this.lastmodified || force) _axios2.default.get('/api/list/comment/?for=' + this.props.route.model + '&id=' + this.props.params.id + '&num=' + num).then(function (response) {
+													_this8.lastmodified = response.headers['last-modified'];_this8.setState({ comments: response.data });
 										}).catch(function (error) {
-													return console.log(error);
+													if (error.response.status != 304) console.error(error);
+										});else _axios2.default.get('/api/list/comment/?for=' + props.route.model + '&id=' + props.params.id + '&num=' + num + '&cache=' + new Date().getTime(), { headers: { 'If-Modified-Since': this.lastmodified } }).then(function (response) {
+													if (!_this8.ignoreLastFetch) {
+																_this8.lastmodified = response.headers['last-modified'];
+																_this8.setState({ comments: response.data });
+													}
+										}).catch(function (error) {
+													if (error.response.status !== 304) console.error(error);
 										});
 							}
 				}, {
@@ -59821,10 +59871,11 @@
 							key: 'componentWillUnmount',
 							value: function componentWillUnmount() {
 										this.ignoreLastFetch = true;
+										if (this.interval) window.clearInterval(this.interval);
 							}
 				}, {
 							key: 'componentWillReceiveProps',
-							value: function componentWillReceiveProps(newProps) {
+							value: function componentWillReceiveProps(newProps, newContext) {
 										if (newProps.pk !== this.props.pk) {
 													this.init();
 										}
@@ -59832,13 +59883,16 @@
 				}, {
 							key: 'expandComments',
 							value: function expandComments() {
-										this.fetchComments();
+										this.fetchComments('', true);
+										if (!this.interval) {
+													this.interval = window.setInterval(this.fetchComments.bind(this), 10000);
+										}
 										this.setState({ commentsExpanded: true });
 							}
 				}, {
 							key: 'render',
 							value: function render() {
-										var _this5 = this;
+										var _this9 = this;
 
 										var numComments = 2;
 										var fields = this.state.data.fields;
@@ -59870,26 +59924,26 @@
 																var addCommentModal = null;
 																var subscribe = null;
 																var vote = null;
-																if (_this5.props.route.comments) {
-																			if (_this5.state.subscribed) subscribe = _react2.default.createElement(
+																if (_this9.props.route.comments) {
+																			if (_this9.state.subscribed) subscribe = _react2.default.createElement(
 																						'a',
-																						{ style: { marginRight: '5px' }, onClick: _this5.unsubscribe.bind(_this5) },
+																						{ style: { marginRight: '5px' }, onClick: _this9.unsubscribe.bind(_this9) },
 																						'unsubscribe'
 																			);else subscribe = _react2.default.createElement(
 																						'a',
-																						{ style: { marginRight: '5px' }, onClick: _this5.subscribe.bind(_this5) },
+																						{ style: { marginRight: '5px' }, onClick: _this9.subscribe.bind(_this9) },
 																						'subscribe'
 																			);
 																}
-																if (_this5.props.route.votes) {
+																if (_this9.props.route.votes) {
 																			var votelink = null;
-																			if (_this5.state.voted) votelink = _react2.default.createElement(
+																			if (_this9.state.voted) votelink = _react2.default.createElement(
 																						'a',
-																						{ style: { marginRight: '5px' }, onClick: _this5.unvote.bind(_this5) },
+																						{ style: { marginRight: '5px' }, onClick: _this9.unvote.bind(_this9) },
 																						'unvote'
 																			);else votelink = _react2.default.createElement(
 																						'a',
-																						{ style: { marginRight: '5px' }, onClick: _this5.vote.bind(_this5) },
+																						{ style: { marginRight: '5px' }, onClick: _this9.vote.bind(_this9) },
 																						'vote'
 																			);
 																			vote = _react2.default.createElement(
@@ -59900,29 +59954,29 @@
 																						_react2.default.createElement(_LoggedInVisible2.default, { element: votelink })
 																			);
 																}
-																var options = _react2.default.createElement(_DetailOptions2.default, { owner: fields.created_by, item: _this5.props.route.model, edit_src: '/api/edit/' + _this5.props.route.model + '/' + _this5.state.data.pk + '/', delete_src: '/api/delete/' + _this5.props.route.model + '/' + _this5.state.data.pk + '/' });
-																if (_this5.props.route.comments && _this5.state.comments) {
+																var options = _react2.default.createElement(_DetailOptions2.default, { owner: fields.created_by, item: _this9.props.route.model, edit_src: '/api/edit/' + _this9.props.route.model + '/' + _this9.state.data.pk + '/', delete_src: '/api/delete/' + _this9.props.route.model + '/' + _this9.state.data.pk + '/' });
+																if (_this9.props.route.comments && _this9.state.comments) {
 																			var comments = null;
-																			if (!_this5.state.commentsExpanded && _this5.state.comments.length > numComments) {
-																						comments = _this5.state.comments.slice(0, numComments).reverse();
+																			if (!_this9.state.commentsExpanded && _this9.state.comments.length > numComments) {
+																						comments = _this9.state.comments.slice(0, numComments).reverse();
 																						viewAll = _react2.default.createElement(
 																									'a',
-																									{ onClick: _this5.expandComments.bind(_this5) },
+																									{ onClick: _this9.expandComments.bind(_this9) },
 																									'view all comments'
 																						);
 																			} else {
-																						comments = _this5.state.comments;
-																						addCommentModal = _react2.default.createElement(_FormFrameModal2.default, { title: 'Add Comment', buttonText: 'add comment', src: '/api/create/comment/?for=' + _this5.props.route.model + '&id=' + _this5.props.params.id });
+																						comments = _this9.state.comments;
+																						addCommentModal = _react2.default.createElement(_FormFrameModal2.default, { title: 'Add Comment', buttonText: 'add comment', src: '/api/create/comment/?for=' + _this9.props.route.model + '&id=' + _this9.props.params.id });
 																			}
 																			commentBoxes = comments.map(function (fields, i) {
-																						return _react2.default.createElement(_CommentBox2.default, { style: borderBottom, key: i, 'for': _this5.props.route.model, fields: fields });
+																						return _react2.default.createElement(_CommentBox2.default, { style: borderBottom, key: i, 'for': _this9.props.route.model, fields: fields });
 																			});
 																}
 																return {
 																			v: _react2.default.createElement(
 																						'div',
 																						{ style: { marginBottom: '40px' } },
-																						_react2.default.createElement(_PageTitle2.default, { title: _this5.props.route.title, src: '/api/create/' + _this5.props.route.model + '/' }),
+																						_react2.default.createElement(_PageTitle2.default, { title: _this9.props.route.title, src: '/api/create/' + _this9.props.route.model + '/' }),
 																						_react2.default.createElement(
 																									'div',
 																									null,
@@ -60899,6 +60953,7 @@
 										var editIcon = _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: 'pencil' });
 										var editButton = _react2.default.createElement(_FormFrameModal2.default, { title: 'Edit Profile', buttonText: editIcon, src: '/api/edit/user_profile/' + fields.user + '/' });
 										var interests = _react2.default.createElement(_TagList2.default, { tag_names: fields.interest_names, bsStyle: 'primary' });
+										if (fields.profile_text === null) fields.profile_text = '';
 										return _react2.default.createElement(
 													'div',
 													null,
