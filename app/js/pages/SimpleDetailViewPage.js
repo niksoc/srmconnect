@@ -32,36 +32,44 @@ class SimpleDetailViewPage extends React.Component{
     }
     subscribe(){
 	axios.get(`/app/subscribe/?for=${this.props.route.model}&id=${this.props.params.id}`)
-	    .then((response)=>window.alert('subscribed'));
+	    .then((response)=>this.setState({subscribed:true}));
     }
     unsubscribe(){
 	axios.get(`/app/unsubscribe/?for=${this.props.route.model}&id=${this.props.params.id}`)
-	    .then((response)=>window.alert('unsubscribed'));
+	    .then((response)=>this.setState({subscribed:false}));
     }
     vote(){
 	axios.get(`/app/vote/?for=${this.props.route.model}&id=${this.props.params.id}`)
-	    .then((response)=>window.alert('voted'));
+	    .then((response)=>this.setState({voted:true}));
     }
     unvote(){
 	axios.get(`/app/unvote/?for=${this.props.route.model}&id=${this.props.params.id}`)
-	    .then((response)=>window.alert('vote withdrawn'));
+	    .then((response)=>this.setState({voted:false}));
     }
     checkvoted(props=this.props){
 	    axios.get(`/app/voted/?for=${props.route.model}&id=${props.params.id}`) 
 	    .then(({data})=> {if(!this.ignoreLastFetch) this.setState({voted:data.voted});})
 	    .catch((error)=> console.error(error)); 
     }
-    fetchComments(num = '', props = this.props){
-	    axios.get(`/api/list/comment/?for=${props.route.model}&id=${props.params.id}&num=${num}`) 
-	    .then(({data})=> {if(!this.ignoreLastFetch) this.setState({comments: data});})
-	    .catch((error)=> console.log(error)); 
+    fetchComments(num = '', force=false, props = this.props){
+	if(!this.lastmodified || force)
+	axios.get(`/api/list/comment/?for=${this.props.route.model}&id=${this.props.params.id}&num=${num}`)
+	    .then((response)=> {this.lastmodified = response.headers['last-modified'];this.setState({comments:response.data});}) 
+	    .catch((error)=> {if(error.response.status!=304) console.error(error);}); 
+	else
+	axios.get(`/api/list/comment/?for=${props.route.model}&id=${props.params.id}&num=${num}&cache=${new Date().getTime()}`,
+		  {headers:{'If-Modified-Since':this.lastmodified}}) 
+	    .then((response)=> {if(!this.ignoreLastFetch){
+		this.lastmodified = response.headers['last-modified'];
+		this.setState({comments: response.data});}})
+	    .catch((error)=> {if(error.response.status!==304) console.error(error);}); 
     } 
     init(){
 	this.updateData(); 
 	if(this.props.route.comments){
 	    this.setState({error:false, commentsExpanded:false});
 	    this.fetchComments(3);
-	}
+	} 
 	if(this.props.route.votes && this.context.isLoggedIn){
 	    this.checkvoted();
 	}
@@ -71,14 +79,19 @@ class SimpleDetailViewPage extends React.Component{
     } 
     componentWillUnmount(){
 	this.ignoreLastFetch = true; 
+	if(this.interval)
+	    window.clearInterval(this.interval);
     }
-    componentWillReceiveProps(newProps){
+    componentWillReceiveProps(newProps, newContext){
 	if(newProps.pk !== this.props.pk){
 	    this.init();
-	}
+	} 
     } 
     expandComments(){
-	this.fetchComments();
+	this.fetchComments('',true);
+	if(!this.interval){
+	    this.interval = window.setInterval(this.fetchComments.bind(this), 10000);
+	}
 	this.setState({commentsExpanded:true});
     }
     render(){ 

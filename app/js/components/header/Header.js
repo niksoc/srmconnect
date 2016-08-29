@@ -13,20 +13,36 @@ class Header extends React.Component {
 	this.state ={notifications:[]};
     }
     init(context = this.context){
-	if(context.isLoggedIn)
-	axios.get(BASE_URL + 'notifications/') 
-	    .then(({data})=> this.setState({notifications:data}))
-	    .catch((error)=> console.error(error)); 
+	if(!this.lastmodified)
+	    axios.get(BASE_URL + 'notifications/?cache=' + new Date().getTime()) 
+	    .then((response)=>{this.lastmodified = response.headers['last-modified'];this.setState({notifications:response.data});})
+	    .catch((error)=> {if(error.status!=='304') console.error(error);}); 
+	else
+	    axios.get(BASE_URL + 'notifications/?cache=' + new Date().getTime(),
+		  {headers:{'If-Modified-Since':this.lastmodified}}) 
+	    .then((response)=> {
+		this.lastmodified = response.headers['last-modified'];
+		this.setState({notifications: response.data});})
+	    .catch((error)=> {if(error.response.status!==304) console.error(error);}); 
+
     }
     componentDidMount(){
 	this.init();
     }
+    componentWillReceiveProps(nxtProps, nextContext){
+	if(nextContext.isLoggedIn && !this.interval){
+	    this.interval = window.setInterval(this.init.bind(this), 10000);
+	}
+    }
+    componentWillUnmount(){
+	if(this.interval){
+	    window.clearInterval(this.interval);
+	    this.interval = null;
+	}
+    }
     clearNotifications(){
 	axios.get(BASE_URL + 'clear_notifications/');
 	this.setState({notifications:[]});
-    }
-    componentWillReceiveProps(nextProps, nextContext){
-	this.init(nextContext);
     }
     render(){
 	let notifications = null;
