@@ -9,7 +9,7 @@ import django_markdown.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0015_auto_20160821_1521'),
+        ('app', '0014_auto_20160816_1950'),
     ]
 
     operations = [

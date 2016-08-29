@@ -60,6 +60,9 @@ class ActivatableModelMixin(models.Model):
 class Dept(models.Model):
     name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, blank=False)
@@ -153,6 +156,9 @@ class Feature(TimeStampedModel, ActivatableModelMixin):
         self.__original_title_text = (self.title, self.text)
         self.__original_modified = self.modified
 
+    def __str__(self):
+        return self.title
+
     def save(self, *args, **kwargs):
         _modified = True
         if (self.title, self.text) == self.__original_title_text:
@@ -204,6 +210,9 @@ class Answer(TimeStampedModel, ActivatableModelMixin):
 
     __original_text = None
     __original_modified = None
+
+    def __str__(self):
+        return self.text[:20]
 
     def __init__(self, *args, **kwargs):
         super(Answer, self).__init__(*args, **kwargs)
@@ -343,6 +352,9 @@ class CommentBaseModel(TimeStampedModel, ActivatableModelMixin):
             _modified=_modified, *args, **kwargs)
         self.__original_text = self.text
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         abstract = True
 
@@ -392,6 +404,19 @@ class App_Text(models.Model):
     title = models.CharField(max_length=20, unique=True)
     text = MarkdownField()
 
+    def __str__(self):
+        return self.title
+
+
+class Feedback(models.Model):
+    title = models.CharField(max_length=20, unique=True,
+                             verbose_name="your name, dept and year")
+    text = MarkdownField()
+
+    def __str__(self):
+        return self.title
+
+
 admin.site.register(UserProfile)
 admin.site.register(Question)
 admin.site.register(Answer)
@@ -407,4 +432,5 @@ admin.site.register(Comment_Available)
 admin.site.register(Comment_Wanted)
 admin.site.register(Comment_Story)
 admin.site.register(App_Text)
+admin.site.register(Feedback)
 admin.site.register(Dept)

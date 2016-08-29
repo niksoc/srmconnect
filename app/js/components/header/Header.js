@@ -2,6 +2,7 @@ import React from 'react';
 import {Button, Navbar, Nav, NavItem, MenuItem, NavDropdown, DropdownButton} from 'react-bootstrap';
 import axios from 'axios';
 import SessionInfoManager from './SessionInfoManager';
+import FormFrameModal from '../FormFrameModal';
 import Timestamp from '../Timestamp';
 import LoggedInVisible from '../../visibility/LoggedInVisible';
 import {BASE_URL} from '../../constants';
@@ -65,14 +66,14 @@ class Header extends React.Component {
 		<Navbar.Header>
 		<Navbar.Brand>SRM | Connect</Navbar.Brand>
 		<DropdownButton id="srm connect option" title=""> 
-		<MenuItem eventKey={1.1}>About</MenuItem>
-		<MenuItem eventKey={1.2}>Feedback</MenuItem>
-		<MenuItem eventKey={1.3}>Join us!</MenuItem>
+		<MenuItem eventKey={1.1}>About(under const.)</MenuItem>
+		<MenuItem eventKey={1.3}>Join us!(under const.)</MenuItem>
 		</DropdownButton> 
 		<Navbar.Toggle />
 		</Navbar.Header>
 		<Navbar.Collapse>
 		<Nav pullRight>
+		<NavItem><FormFrameModal buttonText='Feedback' title='Feedback' src='/api/create/feedback/'/></NavItem>
 		<LoggedInVisible element={notifications}/>
 		<SessionInfoManager />
 		</Nav>

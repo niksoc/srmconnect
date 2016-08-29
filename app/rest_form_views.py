@@ -75,15 +75,16 @@ tagsWidget = {
 }
 
 
-class App_TextCreateFormView(CommonCreateFormViewBase):
+class FeedbackCreateFormView(CreateView):
+    template_name = 'app/form.html'
     fields = ('title', 'text')
-    model = models.App_Text
+    model = models.Feedback
     success_url = "/app/message/success/"
 
 
-class App_TextUpdateFormView(CommonUpdateFormViewBase):
+class FeedbackUpdateFormView(CommonUpdateFormViewBase):
     fields = ('title', 'text')
-    model = models.App_Text
+    model = models.Feedback
     success_url = "/app/message/success/"
 
 
@@ -440,5 +441,5 @@ class ProjectDeleteView(CommonDeleteViewBase):
     queryset = models.Project.objects.filter(is_active=True)
 
 
-class App_TextDeleteView(CommonDeleteViewBase):
-    queryset = models.App_Text.objects.all()
+class FeedbackDeleteView(CommonDeleteViewBase):
+    queryset = models.Feedback.objects.all()

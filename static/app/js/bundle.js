@@ -126,7 +126,7 @@
 		_reactRouter.Router,
 		{ history: _reactRouter.browserHistory },
 		routes
-	), app);
+		), app);
 
 /***/ },
 /* 1 */
@@ -43804,7 +43804,7 @@
 		user: _react2.default.PropTypes.object
 	};
 
-	exports.default = Layout;
+		exports.default = Layout;
 
 /***/ },
 /* 449 */
@@ -45169,6 +45169,10 @@
 
 	var _SessionInfoManager2 = _interopRequireDefault(_SessionInfoManager);
 
+	var _FormFrameModal = __webpack_require__(597);
+
+	var _FormFrameModal2 = _interopRequireDefault(_FormFrameModal);
+
 	var _Timestamp = __webpack_require__(476);
 
 	var _Timestamp2 = _interopRequireDefault(_Timestamp);
@@ -45296,17 +45300,12 @@
 																						_react2.default.createElement(
 																									_reactBootstrap.MenuItem,
 																									{ eventKey: 1.1 },
-																									'About'
-																						),
-																						_react2.default.createElement(
-																									_reactBootstrap.MenuItem,
-																									{ eventKey: 1.2 },
-																									'Feedback'
+																									'About(under const.)'
 																						),
 																						_react2.default.createElement(
 																									_reactBootstrap.MenuItem,
 																									{ eventKey: 1.3 },
-																									'Join us!'
+																									'Join us!(under const.)'
 																						)
 																			),
 																			_react2.default.createElement(_reactBootstrap.Navbar.Toggle, null)
@@ -45317,6 +45316,11 @@
 																			_react2.default.createElement(
 																						_reactBootstrap.Nav,
 																						{ pullRight: true },
+																						_react2.default.createElement(
+																									_reactBootstrap.NavItem,
+																									null,
+																									_react2.default.createElement(_FormFrameModal2.default, { buttonText: 'Feedback', title: 'Feedback', src: '/api/create/feedback/' })
+																						),
 																						_react2.default.createElement(_LoggedInVisible2.default, { element: notifications }),
 																						_react2.default.createElement(_SessionInfoManager2.default, null)
 																			)
@@ -45335,7 +45339,7 @@
 				isLoggedIn: _react2.default.PropTypes.bool
 	};
 
-	exports.default = Header;
+		exports.default = Header;
 
 /***/ },
 /* 472 */
@@ -45427,7 +45431,7 @@
 		user: _react2.default.PropTypes.object
 	};
 
-	exports.default = SessionInfoManager;
+		exports.default = SessionInfoManager;
 
 /***/ },
 /* 473 */
@@ -45526,7 +45530,7 @@
 				'title': ''
 	};
 
-	exports.default = GenericModal;
+		exports.default = GenericModal;
 
 /***/ },
 /* 474 */
@@ -45583,7 +45587,7 @@
 		)
 	);
 
-	exports.default = LoginForm;
+		exports.default = LoginForm;
 
 /***/ },
 /* 476 */
@@ -45635,7 +45639,7 @@
 	    datetime: _react2.default.PropTypes.string
 	};
 
-	exports.default = (0, _recompose.pure)(Timestamp);
+		exports.default = (0, _recompose.pure)(Timestamp);
 
 /***/ },
 /* 477 */
@@ -47757,7 +47761,7 @@
 	    user: _react2.default.PropTypes.object
 	};
 
-	exports.default = LoggedInVisible;
+		exports.default = LoggedInVisible;
 
 /***/ },
 /* 526 */
@@ -47875,7 +47879,7 @@
 				return FeatureNav;
 	}(_react2.default.Component);
 
-	exports.default = FeatureNav;
+		exports.default = FeatureNav;
 
 /***/ },
 /* 527 */
@@ -48023,7 +48027,7 @@
 				id: _react2.default.PropTypes.number
 	};
 
-	exports.default = UserThumb;
+		exports.default = UserThumb;
 
 /***/ },
 /* 529 */
@@ -48158,7 +48162,7 @@
 				return InfoPanel;
 	}(_react2.default.Component);
 
-	exports.default = InfoPanel;
+		exports.default = InfoPanel;
 
 /***/ },
 /* 530 */
@@ -58980,7 +58984,7 @@
 					data: _react2.default.PropTypes.array
 	};
 
-	exports.default = (0, _recompose.pure)(ListView);
+		exports.default = (0, _recompose.pure)(ListView);
 
 /***/ },
 /* 599 */
@@ -59499,7 +59503,7 @@
 				isLoggedIn: _react2.default.PropTypes.bool
 	};
 
-	exports.default = DetailView;
+		exports.default = DetailView;
 
 /***/ },
 /* 602 */
@@ -59575,7 +59579,7 @@
 	    for: _react2.default.PropTypes.string
 	};
 
-	exports.default = (0, _recompose.pure)(CommentBox);
+		exports.default = (0, _recompose.pure)(CommentBox);
 
 /***/ },
 /* 603 */
@@ -59640,7 +59644,7 @@
 	    owner: _react2.default.PropTypes.number
 	};
 
-	exports.default = DetailOptions;
+		exports.default = DetailOptions;
 
 /***/ },
 /* 604 */
@@ -59668,7 +59672,7 @@
 	    user: _react2.default.PropTypes.object
 	};
 
-	exports.default = OwnerVisible;
+		exports.default = OwnerVisible;
 
 /***/ },
 /* 605 */
@@ -60034,7 +60038,7 @@
 				isLoggedIn: _react2.default.PropTypes.bool
 	};
 
-	exports.default = SimpleDetailViewPage;
+		exports.default = SimpleDetailViewPage;
 
 /***/ },
 /* 606 */
@@ -60225,7 +60229,7 @@
 				class: _GenericThumbnailItem2.default,
 				orderings: ['-created', '-num_views']
 	}];
-	exports.default = FEATURES;
+		exports.default = FEATURES;
 
 /***/ },
 /* 608 */
@@ -60339,7 +60343,7 @@
 	   bsStyle: _react2.default.PropTypes.string
 	};
 
-	exports.default = (0, _recompose.pure)(QuestionRow);
+		exports.default = (0, _recompose.pure)(QuestionRow);
 
 /***/ },
 /* 609 */
@@ -60432,7 +60436,7 @@
 	    bsStyle: _react2.default.PropTypes.string
 	};
 
-	exports.default = (0, _recompose.pure)(TagList);
+		exports.default = (0, _recompose.pure)(TagList);
 
 /***/ },
 /* 611 */
@@ -60565,7 +60569,7 @@
 	    bsStyle: _react2.default.PropTypes.string
 	};
 
-	exports.default = (0, _recompose.pure)(GenericPanelItem);
+		exports.default = (0, _recompose.pure)(GenericPanelItem);
 
 /***/ },
 /* 613 */
@@ -60722,7 +60726,7 @@
 				bsStyle: _react2.default.PropTypes.string
 	};
 
-	exports.default = (0, _recompose.pure)(GenericThumbnailItem);
+		exports.default = (0, _recompose.pure)(GenericThumbnailItem);
 
 /***/ },
 /* 614 */
@@ -60823,7 +60827,7 @@
 	    bsStyle: _react2.default.PropTypes.string
 	};
 
-	exports.default = (0, _recompose.pure)(ExperienceRow);
+		exports.default = (0, _recompose.pure)(ExperienceRow);
 
 /***/ },
 /* 615 */
@@ -61128,7 +61132,8 @@
 				return ProfilePage;
 	}(_react2.default.Component);
 
-	exports.default = ProfilePage;
+		exports.default = ProfilePage;
 
 /***/ }
 /******/ ]);
+//# sourceMappingURL=bundle.js.map
