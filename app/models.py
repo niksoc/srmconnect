@@ -410,7 +410,7 @@ class App_Text(models.Model):
 
 class Feedback(models.Model):
     title = models.CharField(max_length=20, unique=True,
-                             verbose_name="your name, dept and year")
+                             verbose_name="your email")
     text = MarkdownField()
 
     def __str__(self):

@@ -22,6 +22,9 @@ class InfoPanel extends React.Component{
     componentWillUnmount(){
 	this.ignoreLastFetch = true; 
     }
+    componentDidMount(){
+	this.fetchData();
+    }
     componentWillReceiveProps(newProps){
 	this.setState({
 	    data:{}

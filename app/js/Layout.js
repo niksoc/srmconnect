@@ -22,14 +22,14 @@ class Layout extends React.Component{
 		this.setState({isLoggedIn:true, user:data}) 
 		 )
 	    .catch(function (error) {
-
+		if(error.response.status !== 404) console.error(error);
 	    });
 	axios.get('/app/moderator/')
 	    .then(({data})=>
 		  this.setState({isModerator:true}) 
 		 )
 	    .catch(function (error) {
-
+		if(error.response.status !== 404) console.error(error);
 	    });
     } 
     getChildContext() {
