@@ -67,8 +67,7 @@ class Dept(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=50, blank=False)
     is_moderator_only = models.BooleanField(default=False)
-    dept = models.ForeignKey(
-        Dept, on_delete=models.SET_NULL, null=True)
+    dept = models.ManyToManyField(Dept, blank=True)
     count = models.IntegerField(default=0)
 
     def __str__(self):
