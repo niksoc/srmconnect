@@ -38,6 +38,8 @@ urlpatterns = [
         rest_form_views.AnswerUpdateFormView.as_view()),
     url(r'^create/feedback/$',
         rest_form_views.FeedbackCreateFormView.as_view()),
+    url(r'^create/tag/$',
+        rest_form_views.TagCreateFormView.as_view()),
     url(r'^delete/answer/(?P<pk>\d+)/$',
         rest_form_views.AnswerDeleteView.as_view()),
     url(r'^delete/project/(?P<pk>\d+)/$',

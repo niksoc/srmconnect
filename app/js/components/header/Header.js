@@ -60,6 +60,7 @@ class Header extends React.Component {
 		{notif_list}
 		</NavDropdown> 
 	);
+	const addTags = <NavItem><FormFrameModal src="/api/create/tag/" buttonText="Add Tag" title="Add Tag" /></NavItem>;
 	return (
 		<header> 
 		<Navbar>
@@ -74,6 +75,7 @@ class Header extends React.Component {
 		<Navbar.Collapse>
 		<Nav pullRight>
 		<NavItem><FormFrameModal buttonText='Feedback' title='Feedback' src='/api/create/feedback/'/></NavItem>
+		<LoggedInVisible element={addTags}/>
 		<LoggedInVisible element={notifications}/>
 		<SessionInfoManager />
 		</Nav>

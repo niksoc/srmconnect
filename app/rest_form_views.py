@@ -82,6 +82,13 @@ class FeedbackCreateFormView(CreateView):
     success_url = "/app/message/success/"
 
 
+class TagCreateFormView(CreateView):
+    template_name = 'app/form.html'
+    fields = ('name', 'dept')
+    model = models.Tag
+    success_url = "/app/message/success/"
+
+
 class FeedbackUpdateFormView(CommonUpdateFormViewBase):
     fields = ('title', 'text')
     model = models.Feedback

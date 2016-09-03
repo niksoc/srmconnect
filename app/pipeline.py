@@ -30,7 +30,8 @@ def save_profile(backend, user, is_new, response, *args, **kwargs):
 
     if(backend.name == 'facebook'):
         if is_new:
-            url = 'http://graph.facebook.com/{0}/picture'.format(response['id'])
+            url = 'http://graph.facebook.com/{0}/picture'.format(response[
+                                                                 'id'])
             try:
                 response_img = request('GET', url)
                 response_img.raise_for_status()
@@ -39,7 +40,7 @@ def save_profile(backend, user, is_new, response, *args, **kwargs):
             else:
                 profile.profile_image.save('{0}_facebook.jpg'.format(user.username),
                                            ContentFile(response_img.content))
-            profile.display_name = response.get('username')
+            profile.display_name = response.get('name')
             profile.first_name = response.get('first_name')
             profile.last_name = response.get('last_name')
             profile.save()

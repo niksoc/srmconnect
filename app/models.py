@@ -67,7 +67,8 @@ class Dept(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=50, blank=False)
     is_moderator_only = models.BooleanField(default=False)
-    dept = models.ManyToManyField(Dept, blank=True)
+    dept = models.ManyToManyField(Dept, blank=True, null=True,
+                                  verbose_name='related departments (hold shift for multiple)')
     count = models.IntegerField(default=0)
 
     def __str__(self):

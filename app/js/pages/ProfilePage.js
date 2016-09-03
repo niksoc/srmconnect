@@ -60,7 +60,7 @@ export class ProfilePage extends React.Component{
 		</Row>
 		<br/>
 		
-		<h1 style={{borderBottom:'1px solid black'}}>{fields.display_name}<small>{fields.num_views}</small></h1>
+		<h1 style={{borderBottom:'1px solid black'}}>{fields.display_name}<small style={{marginLeft:'10px'}}>{fields.num_views} views</small></h1>
 		<table id='profile-table'> 
 		<tbody>
 		<tr><td>First Name</td><td>{fields.first_name}</td></tr>
