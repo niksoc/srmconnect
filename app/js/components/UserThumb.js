@@ -38,7 +38,7 @@ export class UserThumb extends React.Component{
 		<Link to={constants.BASE_URL
  + 'profile/'+fields.user}>{fields.display_name}</Link>
 		</Media.Heading>
-		dept: {fields.department? fields.department : '-'} <br/>
+		dept: {fields.dept_name? fields.dept_name : '-'} <br/>
 		year: {fields.year? fields.year : '-'}
 	    </Media.Body>
 	    </Media>

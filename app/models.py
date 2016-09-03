@@ -118,6 +118,9 @@ class UserProfile(models.Model):
     interests = models.ManyToManyField(Tag, blank=True)
     num_views = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.display_name
+
     def save(self, *args, **kwargs):
         if not self.id and not self.display_name:
             self.display_name = self.first_name + self.last_name
@@ -187,7 +190,8 @@ class Question(Feature):
 
     def save(self, *args, **kwargs):
         super(Question, self).save(*args, **kwargs)
-        self.followers.add(self.created_by)
+        if(not self.followers.filter(id=self.created_by.id).exists()):
+            self.followers.add(self.created_by)
 
     class Meta:
         ordering = ('created', 'num_views', 'num_votes', )
@@ -222,6 +226,8 @@ class Answer(TimeStampedModel, ActivatableModelMixin):
         if not self.pk:
             q = self.for_question
             q.num_answers += 1
+            if(not self.followers.filter(id=self.created_by.id).exists()):
+                self.followers.add(self.created_by)
             for follower in q.followers.all():
                 if follower == self.created_by:
                     continue
@@ -262,6 +268,11 @@ class Story(Feature):
     class Meta:
         ordering = ('created', 'num_views', 'num_votes', )
 
+    def save(self, *args, **kwargs):
+        super(Story, self).save(*args, **kwargs)
+        if(not self.followers.filter(id=self.created_by.id).exists()):
+            self.followers.add(self.created_by)
+
 
 class Wanted(Feature):
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
@@ -274,6 +285,11 @@ class Wanted(Feature):
     class Meta:
         ordering = ('created', 'num_views', )
 
+    def save(self, *args, **kwargs):
+        super(Wanted, self).save(*args, **kwargs)
+        if(not self.followers.filter(id=self.created_by.id).exists()):
+            self.followers.add(self.created_by)
+
 
 class Available(Feature):
     created_by = models.ForeignKey(User, on_delete=models.PROTECT,
@@ -285,6 +301,11 @@ class Available(Feature):
 
     class Meta:
         ordering = ('created', 'num_views', )
+
+    def save(self, *args, **kwargs):
+        super(Available, self).save(*args, **kwargs)
+        if(not self.followers.filter(id=self.created_by.id).exists()):
+            self.followers.add(self.created_by)
 
 
 class Project(Feature):
@@ -408,7 +429,7 @@ class App_Text(models.Model):
 
 
 class Feedback(models.Model):
-    title = models.CharField(max_length=20, unique=True,
+    title = models.CharField(max_length=50, unique=True,
                              verbose_name="your email")
     text = MarkdownField()
 

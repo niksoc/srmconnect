@@ -6,7 +6,7 @@ import DetailView from '../components/ModelViews/DetailView';
 import axios from 'axios';
 import {BASE_URL} from '../constants';
 
-class ListViewPage extends React.Component{
+class MultiListViewPage extends React.Component{
     constructor(){
 	    super();
 	    this.state = {
@@ -15,7 +15,8 @@ class ListViewPage extends React.Component{
     }
     construct_data_url(props = this.props, model){
 	const ordering = '-created';
-	return `/api/list/${model}/?page=1&ordering=${ordering}`;
+	const created_by = props.route.created_by? props.route.created_by : '';
+	return `/api/list/${model}/?page=1&ordering=${ordering}&created_by=${created_by}`;
     }
     updateListData(props = this.props){
     this.props.route.features.forEach((feature) => {
@@ -50,17 +51,17 @@ class ListViewPage extends React.Component{
 	const orderingStyle = {
 	    'marginTop':'20px'
 	};
-    const latestFeatures = this.props.route.features.map((feature,i)=><div key={i}><PageTitle title={feature.title} style={inlineBlock} 
+    const features = this.props.route.features.map((feature,i)=><div key={i}><PageTitle title={feature.title} style={inlineBlock} 
 			src={`/api/create/${feature.model}/`} />
-		<ListView data={this.state.data[feature.model]} class={feature.class} 
+						   <ListView data={this.state.data[feature.model]} class={this.props.route.class? this.props.route.class :feature.class} 
 			bsStyle={feature.bsStyle} model={feature.model}
 			 detail_url={`${BASE_URL}${feature.model}/`} /></div>);
 	return ( 
 		<div> 
 		<PageHeader>{this.props.route.mainTitle}</PageHeader>
-		{latestFeatures}
+		{features}
 		</div>
 	);
     }
 };
-export default ListViewPage; 
+export default MultiListViewPage; 

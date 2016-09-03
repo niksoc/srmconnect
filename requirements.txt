@@ -5,6 +5,7 @@ defusedxml==0.4.1
 Django==1.10
 django-appconf==1.0.2
 django-braces==1.9.0
+django-cleanup==0.4.2
 django-dotenv==1.4.1
 django-extensions==1.7.1
 django-hitcount==1.2.2

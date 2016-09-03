@@ -9,7 +9,10 @@ import Timestamp from '../components/Timestamp';
 import FormFrameModal from '../components/FormFrameModal';
 import TagList from '../components/common/TagList';
 import UserThumb from '../components/UserThumb';
+import MultiListViewPage from '../pages/MultiListViewPage';
 import Markdown from '../components/Markdown';
+import LinkItem from '../components/LinkItem';
+import FEATURES from '../features';
 
 
 export class ProfilePage extends React.Component{
@@ -43,12 +46,6 @@ export class ProfilePage extends React.Component{
 	    'background':'solid gray' 
 	};
 
-	const nameStyle={
-	    'borderBottom':'1px solid gray',
-	    'fontWeight':'bold',
-	    'fontSize':'250%',
-	    'color':'black' 
-	};
 	const editIcon = <Glyphicon glyph="pencil" />;
 	const editButton = <FormFrameModal title="Edit Profile" buttonText={editIcon} src={`/api/edit/user_profile/${fields.user}/`} />;
 	const interests = <TagList tag_names={fields.interest_names} bsStyle="primary" />;
@@ -63,7 +60,7 @@ export class ProfilePage extends React.Component{
 		</Row>
 		<br/>
 		
-		<div style={nameStyle}>{fields.display_name}</div><br/>
+		<h1 style={{borderBottom:'1px solid black'}}>{fields.display_name}<small>{fields.num_views}</small></h1>
 		<table id='profile-table'> 
 		<tbody>
 		<tr><td>First Name</td><td>{fields.first_name}</td></tr>
@@ -73,10 +70,11 @@ export class ProfilePage extends React.Component{
 		<tr><td>Registration Number</td><td>{fields.register_no}</td></tr>
 		<tr><td>Course</td><td>{fields.course}</td></tr>
 		<tr><td>Campus</td><td>{fields.campus}</td></tr>
-		<tr><td>Department</td><td>{fields.department}</td></tr>
+		<tr><td>Department</td><td>{fields.dept_name}</td></tr>
 		<tr><td>Profile text:</td><td><Markdown>{fields.profile_text}</Markdown></td></tr>
 		</tbody>
 		</table>
+		<MultiListViewPage  route={{mainTitle:"Activity", features:FEATURES, created_by:fields.user, class:LinkItem}} />
 		</div>
 		
 	);

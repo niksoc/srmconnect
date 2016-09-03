@@ -33,15 +33,6 @@ const GenericPanelItem = React.createClass({render(){
     );
 }});
 
-GenericPanelItem.propTypes = {
-    pk:React.PropTypes.number,
-    uri:React.PropTypes.string,
-    fields:React.PropTypes.object,
-    tags:React.PropTypes.array,
-    bsStyle:React.PropTypes.string
-};
-    
-
 export default pure(GenericPanelItem);
 
 

@@ -1,5 +1,6 @@
 from requests import request, HTTPError
 from django.core.files.base import ContentFile
+from django.contrib.auth import logout
 
 
 def save_profile(backend, user, is_new, response, *args, **kwargs):
@@ -18,7 +19,7 @@ def save_profile(backend, user, is_new, response, *args, **kwargs):
                     pass
                 else:
                     profile.profile_image.save('{0}_google.jpg'.format(user.username),
-                                            ContentFile(response_img.content))
+                                               ContentFile(response_img.content))
             profile.display_name = response.get('displayName')
             name = response.get('name')
             profile.first_name = name.get('givenName')
@@ -42,3 +43,21 @@ def save_profile(backend, user, is_new, response, *args, **kwargs):
             profile.first_name = response.get('first_name')
             profile.last_name = response.get('last_name')
             profile.save()
+
+
+def social_user(backend, uid, user=None, *args, **kwargs):
+    '''OVERRIDED: It will logout the current user
+    instead of raise an exception '''
+
+    provider = backend.name
+    social = backend.strategy.storage.user.get_social_auth(provider, uid)
+    if social:
+        if user and social.user != user:
+            logout(backend.strategy.request)
+            # msg = 'This {0} account is already in use.'.format(provider)
+            # raise AuthAlreadyAssociated(backend, msg)
+        user = social.user
+    return {'social': social,
+            'user': user,
+            'is_new': user is None,
+            'new_association': False}

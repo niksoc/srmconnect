@@ -4,6 +4,7 @@ from django.core import serializers
 from django.apps import apps
 from django.shortcuts import get_object_or_404
 from hitcount.views import HitCountMixin
+from django.contrib.auth.models import User
 from hitcount.models import HitCount
 from django.db.models import F
 from django.views.decorators.http import condition
@@ -60,12 +61,17 @@ class BaseListView(ListView):
     def get(self, request, *args, **kwargs):
         self.ordering = request.GET.get('ordering')
         tags = request.GET.get('tags')
+        created_by = request.GET.get('created_by')
+        query = {'is_active': True}
         if tags:
             tags = [tag for tag in tags.split(',')]
-            self.queryset = self.model.objects.filter(
-                is_active=True, tags__in=tags)
-        else:
-            self.queryset = self.model.objects.filter(is_active=True)
+            query['tags__in'] = tags
+        try:
+            if created_by:
+                query['created_by'] = User.objects.get(id=created_by)
+        except:
+            pass
+        self.queryset = self.model.objects.filter(**query)
         return super().get(self, request, *args, **kwargs)
 
 
@@ -196,6 +202,11 @@ def UserProfileDetailView(request, pk):
             userProfile.num_views = F('num_views') + 1
             userProfile.save()
     fields = utils.to_dict(userProfile)
+    if(fields['department']):
+        fields['dept_name'] = models.Dept.objects.get(
+            id=fields['department']).name
+    else:
+        fields['dept_name'] = None
     fields['interest_names'] = []
     for interest in fields['interests']:
         fields['interest_names'].append(

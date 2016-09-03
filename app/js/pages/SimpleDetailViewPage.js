@@ -53,7 +53,7 @@ class SimpleDetailViewPage extends React.Component{
     }
     fetchComments(num = '', force=false, props = this.props){
 	if(!this.lastmodified || force)
-	axios.get(`/api/list/comment/?for=${this.props.route.model}&id=${this.props.params.id}&num=${num}`)
+	axios.get(`/api/list/comment/?for=${props.route.model}&id=${props.params.id}&num=${num}`)
 	    .then((response)=> {this.lastmodified = response.headers['last-modified'];this.setState({comments:response.data});}) 
 	    .catch((error)=> {if(error.response.status!=304) console.error(error);}); 
 	else
@@ -64,13 +64,13 @@ class SimpleDetailViewPage extends React.Component{
 		this.setState({comments: response.data});}})
 	    .catch((error)=> {if(error.response.status!==304) console.error(error);}); 
     } 
-    init(){
-	this.updateData(); 
-	if(this.props.route.comments){
+    init(props = this.props, context = this.context){
+	this.updateData(props);
+	if(props.route.comments){
 	    this.setState({error:false, commentsExpanded:false});
 	    this.fetchComments(3);
 	} 
-	if(this.props.route.votes && this.context.isLoggedIn){
+	if(props.route.votes && context.isLoggedIn){
 	    this.checkvoted();
 	}
     }
@@ -83,8 +83,8 @@ class SimpleDetailViewPage extends React.Component{
 	    window.clearInterval(this.interval);
     }
     componentWillReceiveProps(newProps, newContext){
-	if(newProps.pk !== this.props.pk){
-	    this.init();
+	if(newProps.params.id !== this.props.params.id || this.context.isLoggedIn!=newContext.isLoggedIn){ 
+	    this.init(newProps, newContext);
 	} 
     } 
     expandComments(){

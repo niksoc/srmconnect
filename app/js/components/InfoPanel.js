@@ -17,7 +17,7 @@ class InfoPanel extends React.Component{
     fetchData(props = this.props){
 	axios.get(`/api/detail/app_text/${props.title}`) 
 	    .then(({data})=> {if(!this.ignoreLastFetch) this.setState({data});})
-	    .catch((error)=> console.log(error)); 
+	    .catch((error)=> {if(error.response.status!==404) console.error(error);}); 
     }
     componentWillUnmount(){
 	this.ignoreLastFetch = true; 

@@ -27,19 +27,19 @@ class DetailView extends React.Component{
 	    
     }
     subscribe(){
-	axios.get(`/app/subscribe/?for=${this.props.route.model}&id=${this.props.params.id}`)
+	axios.get(`/app/subscribe/?for=${this.props.route.model}&id=${this.props.fields.id}`)
 	    .then((response)=>this.setState({subscribed:true}));
     }
     unsubscribe(){
-	axios.get(`/app/unsubscribe/?for=${this.props.route.model}&id=${this.props.params.id}`)
+	axios.get(`/app/unsubscribe/?for=${this.props.route.model}&id=${this.props.fields.id}`)
 	    .then((response)=>this.setState({subscribed:false}));
     }
     vote(){
-	axios.get(`/app/vote/?for=${this.props.route.model}&id=${this.props.params.id}`)
+	axios.get(`/app/vote/?for=${this.props.route.model}&id=${this.props.fields.id}`)
 	    .then((response)=>this.setState({voted:true}));
     }
     unvote(){
-	axios.get(`/app/unvote/?for=${this.props.route.model}&id=${this.props.params.id}`)
+	axios.get(`/app/unvote/?for=${this.props.route.model}&id=${this.props.fields.id}`)
 	    .then((response)=>this.setState({voted:false}));
     }
     checkvoted(props=this.props){
@@ -49,24 +49,24 @@ class DetailView extends React.Component{
     }
     fetchComments(num = '', force=false, props = this.props){
 	if(!this.lastmodified || force)
-	axios.get(`/api/list/comment/?for=${this.props.route.model}&id=${this.props.params.id}&num=${num}`)
+	axios.get(`/api/list/comment/?for=${props.route.model}&id=${props.fields.id}&num=${num}`)
 	    .then((response)=> {this.lastmodified = response.headers['last-modified'];this.setState({comments:response.data});}) 
 	    .catch((error)=> {if(error.response.status!=304) console.error(error);}); 
 	else
-	axios.get(`/api/list/comment/?for=${props.route.model}&id=${props.params.id}&num=${num}&cache=${new Date().getTime()}`,
+	axios.get(`/api/list/comment/?for=${props.route.model}&id=${props.fields.id}&num=${num}&cache=${new Date().getTime()}`,
 		  {headers:{'If-Modified-Since':this.lastmodified}}) 
 	    .then((response)=> {if(!this.ignoreLastFetch){
 		this.lastmodified = response.headers['last-modified'];
 		this.setState({comments: response.data});}})
 	    .catch((error)=> {if(error.response.status!==304) console.error(error);}); 
     } 
-    init(){
-	if(this.props.route.comments){
+    init(props = this.props, context = this.context){
+	this.updateData(props);
+	if(props.route.comments){
 	    this.setState({error:false, commentsExpanded:false});
 	    this.fetchComments(3);
-	    this.updateData();
-	}
-	if(this.props.route.votes && this.context.isLoggedIn){
+	} 
+	if(props.route.votes && context.isLoggedIn){
 	    this.checkvoted();
 	}
     }
@@ -78,8 +78,8 @@ class DetailView extends React.Component{
 	if(this.interval)
 	    window.clearInterval(this.interval);
     }
-    componentWillReceiveProps(newProps){
-	if(newProps.pk !== this.props.pk){
+    componentWillReceiveProps(newProps, newContext){
+	if(newProps.fields.id !== this.props.fields.id || this.context.isLoggedIn!=newContext.isLoggedIn){ 
 	    this.init();
 	}
     } 
