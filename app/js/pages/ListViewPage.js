@@ -81,7 +81,7 @@ class ListViewPage extends React.Component{
 		<span style={{position:'relative', bottom:'20px'}}>sort by:</span> <Nav bsStyle="pills" style={{...inlineBlock, marginBottom:'10px'}} activeKey={this.state.ordering} onSelect={this.handleOrderingSelect.bind(this)}>
 		{orderingButtons}
 		</Nav> 
-		<ListView data={this.state.data} class={this.props.route.class} bsStyle={this.props.route.bsStyle} model={this.props.route.model} detail_url={`${BASE_URL}${this.props.route.title}/`} />
+		<ListView data={this.state.data} class={this.props.route.class} bsStyle={this.props.route.bsStyle} model={this.props.route.model} detail_url={`${BASE_URL}${this.props.route.model}/`} />
 		<Pagination
 	    prev
 	    next
