@@ -224,7 +224,14 @@ class Answer(TimeStampedModel, ActivatableModelMixin):
         self.__original_modified = self.modified
 
     def save(self, *args, **kwargs):
+        flag = False
         if not self.pk:
+            flag = True
+        _modified = True
+        if self.text == self.__original_text:
+            _modified = False
+        super(Answer, self).save(_modified=_modified, *args, **kwargs)
+        if flag:
             q = self.for_question
             q.num_answers += 1
             if(not self.followers.filter(id=self.created_by.id).exists()):
@@ -236,10 +243,6 @@ class Answer(TimeStampedModel, ActivatableModelMixin):
                     owner=follower, message='New answer to ' + q.title, url='question/' + str(q.id))
                 n.save()
 
-        _modified = True
-        if self.text == self.__original_text:
-            _modified = False
-        super(Answer, self).save(_modified=_modified, *args, **kwargs)
         self.__original_text = self.text
         q = self.for_question
         q.last_active = datetime.datetime.now()
