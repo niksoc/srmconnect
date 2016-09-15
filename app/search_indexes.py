@@ -21,6 +21,9 @@ class WantedIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return models.Wanted
 
+    def get_updated_field(self):
+        return "last_modified"
+
 
 class AvailableIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
@@ -39,6 +42,9 @@ class AvailableIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return models.Available
+
+    def get_updated_field(self):
+        return "last_modified"
 
 
 class QuestionIndex(indexes.SearchIndex, indexes.Indexable):
@@ -59,6 +65,9 @@ class QuestionIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return models.Question
 
+    def get_updated_field(self):
+        return "last_modified"
+
 
 class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
@@ -78,6 +87,9 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return models.Project
 
+    def get_updated_field(self):
+        return "last_modified"
+
 
 class StoryIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
@@ -96,3 +108,6 @@ class StoryIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return models.Story
+
+    def get_updated_field(self):
+        return "last_modified"

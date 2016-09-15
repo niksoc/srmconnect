@@ -37,6 +37,22 @@ class TimeStampedModel(models.Model):
         abstract = True
 
 
+class SearchableModel(models.Model):
+    '''adds a last modified in the point of view of indexing for search'''
+    last_modified = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.last_modified = datetime.datetime.now()
+        super(SearchableModel, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.last_modified = datetime.datetime.now()
+        super(SearchableModel, self).delete(*args, **kwargs)
+
+    class Meta:
+        abstract = True
+
+
 class ActivatableModelMixin(models.Model):
     """
     overrides delete to make is_active field false
@@ -144,7 +160,7 @@ class Notification(models.Model):
     url = models.CharField(max_length=100)
 
 
-class Feature(TimeStampedModel, ActivatableModelMixin):
+class Feature(TimeStampedModel, ActivatableModelMixin, SearchableModel):
     title = models.CharField(max_length=100, blank=False)
     text = MarkdownField()
     num_views = models.IntegerField(default=0)
