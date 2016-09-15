@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'social.apps.django_app.default',
+    'haystack',
     'django_extensions',
     'searchableselect',
     'django_markdown',
@@ -157,6 +158,14 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.user_details',
     'app.pipeline.save_profile',
 )
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://127.0.0.1:8983/solr/srmconnect'
+    },
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 

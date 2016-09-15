@@ -159,6 +159,9 @@ class Feature(TimeStampedModel, ActivatableModelMixin):
         self.__original_title_text = (self.title, self.text)
         self.__original_modified = self.modified
 
+    def get_tag_names(self):
+        return [tag.name for tag in self.tags.all()]
+
     def __str__(self):
         return self.title
 
