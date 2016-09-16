@@ -6,6 +6,7 @@ import LoadingIndicator from '../LoadingIndicator';
 const ListView = (props) => {
     const itemsPerRow = 1;
     if(props.data){
+	if(props.data.length===0) return <span style={props.style}>no items</span>;
 	const items = props.data.map((entry)=>
 					  React.createElement(props.class,
 							      {...entry,
@@ -19,7 +20,7 @@ const ListView = (props) => {
 	}
 	let slice = arrangedItems.slice(i,arrangedItems.length); 
 	rows = rows.concat(<Row key={i}>{slice}</Row>);
-	return (<div>{rows}</div>);
+	return (<div style={props.style}>{rows}</div>);
     }
     else return (<LoadingIndicator />);
 };

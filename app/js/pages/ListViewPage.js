@@ -90,7 +90,7 @@ class ListViewPage extends React.Component{
 							    </NavItem>);
 	return ( 
 		<div> 
-		<PageTitle title={this.props.route.title} src={`/api/create/${this.props.route.model}/`} />
+		<PageTitle model={this.props.route.model} title={this.props.route.title} src={`/api/create/${this.props.route.model}/`} />
 		<span style={{position:'relative', bottom:'20px'}}>sort by:</span> <Nav bsStyle="pills" style={{...inlineBlock, marginBottom:'10px'}} activeKey={this.state.ordering} onSelect={this.handleOrderingSelect.bind(this)}>
 		{orderingButtons}
 		</Nav> 

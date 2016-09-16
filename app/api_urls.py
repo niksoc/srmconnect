@@ -88,4 +88,6 @@ urlpatterns = [
         rest_retrieve_views.App_TextDetailView),
     url(r'^count/(?P<model>\w+)/$',
         rest_retrieve_views.CountView),
+    url(r'^more_like_this/(?P<model>\w+)/(?P<pk>\w+)/$',
+        rest_retrieve_views.MoreLikeThisView),
 ]

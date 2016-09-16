@@ -69,6 +69,9 @@ class SimpleDetailViewPage extends React.Component{
 	if(props.route.comments){
 	    this.setState({error:false, commentsExpanded:false});
 	    this.fetchComments(3);
+	    if(!this.interval){
+		this.interval = window.setInterval(this.fetchComments.bind(this), 10000);
+	    }
 	} 
 	if(props.route.votes && context.isLoggedIn){
 	    this.checkvoted();
@@ -79,8 +82,10 @@ class SimpleDetailViewPage extends React.Component{
     } 
     componentWillUnmount(){
 	this.ignoreLastFetch = true; 
-	if(this.interval)
+	if(this.interval){
 	    window.clearInterval(this.interval);
+	    this.interval = false;
+	}
     }
     componentWillReceiveProps(newProps, newContext){
 	if(newProps.params.id !== this.props.params.id || this.context.isLoggedIn!=newContext.isLoggedIn){ 
@@ -89,9 +94,6 @@ class SimpleDetailViewPage extends React.Component{
     } 
     expandComments(){
 	this.fetchComments('',true);
-	if(!this.interval){
-	    this.interval = window.setInterval(this.fetchComments.bind(this), 10000);
-	}
 	this.setState({commentsExpanded:true});
     }
     render(){ 

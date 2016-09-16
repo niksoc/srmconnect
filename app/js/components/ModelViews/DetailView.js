@@ -65,6 +65,9 @@ class DetailView extends React.Component{
 	if(props.route.comments){
 	    this.setState({error:false, commentsExpanded:false});
 	    this.fetchComments(3);
+	    if(!this.interval){
+		this.interval = window.setInterval(this.fetchComments.bind(this), 10000);
+	    }
 	} 
 	if(props.route.votes && context.isLoggedIn){
 	    this.checkvoted();
@@ -75,8 +78,10 @@ class DetailView extends React.Component{
     } 
     componentWillUnmount(){
 	this.ignoreLastFetch = true; 
-	if(this.interval)
+	if(this.interval){
 	    window.clearInterval(this.interval);
+	    this.interval = false;
+	}
     }
     componentWillReceiveProps(newProps, newContext){
 	if(newProps.fields.id !== this.props.fields.id || this.context.isLoggedIn!=newContext.isLoggedIn){ 
@@ -85,9 +90,6 @@ class DetailView extends React.Component{
     } 
     expandComments(){
 	this.fetchComments('',true);
-	if(!this.interval){
-	    this.interval = window.setInterval(this.fetchComments.bind(this), 10000);
-	}
 	this.setState({commentsExpanded:true});
     }
     render(){ 

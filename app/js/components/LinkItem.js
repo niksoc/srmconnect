@@ -7,8 +7,8 @@ const LinkItem = React.createClass({render(){
     const pk = this.props.id;
     const uri = this.props.uri+ pk + '/';
     const title = (<Link to={uri}>{this.props.title}</Link>);
-    const timestamp = <Timestamp title='posted' datetime={this.props.created}/>;
-    return <span>{title} - {timestamp}</span>;
+    const timestamp = this.props.created?<span> - <Timestamp title='posted' datetime={this.props.created}/></span>:null;
+    return <span>{title} {timestamp}</span>;
 }}); 
 
 export default pure(LinkItem);

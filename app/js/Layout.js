@@ -5,6 +5,7 @@ import Header from './components/header/Header';
 import FeatureNav from './components/FeatureNav';
 import UserThumb from './components/UserThumb';
 import InfoPanel from './components/InfoPanel';
+import MoreLikeThisPanel from './components/MoreLikeThisPanel';
 import {BASE_URL} from './constants';
 
 class Layout extends React.Component{
@@ -40,20 +41,34 @@ class Layout extends React.Component{
 	};
     }
     render(){
-	let path = this.props.location.pathname.replace(BASE_URL,'');
-	path = path.replace(/\d+/g, 'id');
-	path = path===''? 'latest':path.slice(0,-1);
- 	return (
+	const path = this.props.location.pathname.replace(BASE_URL,'');
+	let info_path = path.replace(/\d+/g, 'id');
+	let sidepanel = null;
+	let pos = 'top';
+	if(path.indexOf('profile')!==-1 || info_path.indexOf('\/id\/')===-1){
+	    info_path = path===''? 'latest':path.slice(0,-1);
+	    sidepanel = <InfoPanel title={info_path} />;
+	}
+	else{
+	    const id = /\d+/g.exec(path)[0];
+	    const model = /(\w+)\//.exec(path)[1];
+	    pos='bottom';
+	    sidepanel = <MoreLikeThisPanel model={model} id={id}/>;
+	}
+	sidepanel=(
+		<Col className="side-panel" sm={4}>
+		{sidepanel} 
+	    </Col>);
+	return (
 		<div> 
 		<Header />
 		<div className='container'>
 		<FeatureNav />
-		<Col className="info-panel" sm={4}>
-		<InfoPanel title={path} />
-		</Col>
+		{pos==='top'?sidepanel:null}
 		<Col sm={8}>
 		{this.props.children}
 	    </Col>
+		{pos==='bottom'?sidepanel:null}
 		</div>
 		</div>
 	);

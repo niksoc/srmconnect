@@ -1,6 +1,7 @@
 body {
     font-size:140%;
     word-wrap:break-word;
+    padding-bottom:20px;
 }
 a, .link{
     cursor:pointer;
@@ -70,10 +71,10 @@ header .btn-group .dropdown-toggle:hover{
     
 
 /* 
- * info-panel styles 
+ * side-panel styles 
 */ 
 @media(min-width:768px){
-    .info-panel{
+    .side-panel{
 	float:right;
     }
 }

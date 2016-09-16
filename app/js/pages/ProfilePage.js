@@ -12,6 +12,7 @@ import UserThumb from '../components/UserThumb';
 import MultiListViewPage from '../pages/MultiListViewPage';
 import Markdown from '../components/Markdown';
 import LinkItem from '../components/LinkItem';
+import OwnerVisible from '../visibility/OwnerVisible';
 import FEATURES from '../features';
 
 
@@ -23,7 +24,7 @@ export class ProfilePage extends React.Component{
 	};
     }
     fetchData(props = this.props){
-	axios.get(`/api/detail/user_profile/${props.params.id}/`)
+	axios.get(`/api/detail/user_profile/${props.params.id}/?count_hit=True`)
 	    .then(({data})=>{if(!this.ignoreLastFetch) this.setState({data});})
 	    .catch((error)=>console.error(error));
     }
@@ -52,7 +53,7 @@ export class ProfilePage extends React.Component{
 	if(fields.profile_text === null) fields.profile_text = '';
 	return(
 		<div>
-		<PageHeader>Profile <small>{editButton}</small></PageHeader>
+		<PageHeader>Profile <small><OwnerVisible owner={fields.user} element={editButton}/></small></PageHeader>
 		<Row>
 		<Col xs={4} md={4}>
 		<Image src={fields.profile_image} thumbnail responsive/>

@@ -217,6 +217,7 @@ def UserProfileDetailView(request, pk):
         if(hit_count_response[0]):
             userProfile.num_views = F('num_views') + 1
             userProfile.save()
+            userProfile.refresh_from_db()
     fields = utils.to_dict(userProfile)
     if(fields['department']):
         fields['dept_name'] = models.Dept.objects.get(
@@ -259,5 +260,22 @@ def CountView(request, model):
                 query['tags__in'] = tags
             count = model.objects.filter(**query).count()
         return JsonResponse({'count': count})
+    except:
+        raise Http404
+
+
+def MoreLikeThisView(request, model, pk):
+    try:
+        data = []
+        item_model = apps.get_model('app.' + model)
+        model = apps.get_model('app.' + request.GET.get('model'))
+        obj = item_model.objects.get(pk=pk)
+        obj_list = SearchQuerySet().more_like_this(
+            obj).models(model)[:5]
+        obj_list = queryset_gen(obj_list)
+        for obj in obj_list:
+            data.append({'title': obj.title, 'id': obj.id})
+        processDataList(data)
+        return JsonResponse(data, safe=False)
     except:
         raise Http404

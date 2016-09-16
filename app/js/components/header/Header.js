@@ -53,7 +53,7 @@ class Header extends React.Component {
 	    title = 'Notifications !';
 	    clearButton = <MenuItem key={0} eventKey={1} onSelect={this.clearNotifications.bind(this)}>clear</MenuItem>; 
 	}
-	const notif_list = this.state.notifications.map((n,i)=><MenuItem key={i+1} onClick={()=>browserHistory.push(BASE_URL+n.url)}>{n.message} - <Timestamp title='' datetime={n.created}/></MenuItem>);
+	const notif_list = this.state.notifications.map((n,i)=><MenuItem key={i+1} onClick={()=>browserHistory.push(BASE_URL+n.url.slice(0,-1))}>{n.message} - <Timestamp title='' datetime={n.created}/></MenuItem>);
 	notifications = (
 		<NavDropdown id="Notifications" title={title}> 
 		{clearButton}
