@@ -140,6 +140,8 @@ def latest_notification(request):
 @condition(last_modified_func=latest_notification)
 def notifications(request):
     user = request.user
+    if not user.is_authenticated():
+        raise Http404
     notifications = models.Notification.objects.filter(
         owner=user).order_by('-created')[:10]
     data = []

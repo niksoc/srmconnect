@@ -9,6 +9,7 @@ class WantedIndex(indexes.SearchIndex, indexes.Indexable):
         model_attr='created_by__userprofile__display_name', faceted=True)
     created = indexes.DateTimeField(model_attr='created')
     tags = indexes.MultiValueField()
+    num_views = indexes.IntegerField(model_attr='num_views')
 
     def prepare_tags(self, object):
         return object.get_tag_names()
@@ -31,6 +32,7 @@ class AvailableIndex(indexes.SearchIndex, indexes.Indexable):
         model_attr='created_by__userprofile__display_name', faceted=True)
     created = indexes.DateTimeField(model_attr='created')
     tags = indexes.MultiValueField()
+    num_views = indexes.IntegerField(model_attr='num_views')
 
     def prepare_tags(self, object):
         return object.get_tag_names()
@@ -52,7 +54,10 @@ class QuestionIndex(indexes.SearchIndex, indexes.Indexable):
     created_by = indexes.CharField(
         model_attr='created_by__userprofile__display_name', faceted=True)
     created = indexes.DateTimeField(model_attr='created')
+    last_active = indexes.DateTimeField(model_attr='last_active')
     tags = indexes.MultiValueField()
+    num_views = indexes.IntegerField(model_attr='num_views')
+    num_votes = indexes.IntegerField(model_attr='num_votes')
 
     def prepare_tags(self, object):
         return object.get_tag_names()
@@ -75,6 +80,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         model_attr='created_by__userprofile__display_name', faceted=True)
     created = indexes.DateTimeField(model_attr='created')
     tags = indexes.MultiValueField()
+    num_views = indexes.IntegerField(model_attr='num_views')
 
     def prepare_tags(self, object):
         return object.get_tag_names()
@@ -97,6 +103,8 @@ class StoryIndex(indexes.SearchIndex, indexes.Indexable):
         model_attr='created_by__userprofile__display_name', faceted=True)
     created = indexes.DateTimeField(model_attr='created')
     tags = indexes.MultiValueField()
+    num_views = indexes.IntegerField(model_attr='num_views')
+    num_votes = indexes.IntegerField(model_attr='num_votes')
 
     def prepare_tags(self, object):
         return object.get_tag_names()

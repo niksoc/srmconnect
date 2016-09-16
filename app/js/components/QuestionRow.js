@@ -29,7 +29,7 @@ const QuestionRow=React.createClass({render(){
 	    <div style={{marginBottom:'10px'}}><div style={{display:'inline-block'}}>{views}{votes}{answers}</div>
 	    <div style={{display:'inline-block'}}>{title}<br/>{tags}
 	    <span style={{marginLeft:'10px'}}>
-	    {this.props.last_active!==null?<Timestamp title='last active' datetime={this.props.last_active} />:null}
+	    {this.props.last_active!==this.props.created?<Timestamp title='last active' datetime={this.props.last_active} />:null}
 	{' | '}<Timestamp title='posted' datetime={this.props.created}/> by <UserName id={this.props.created_by} name={this.props.created_by_name}/>
 	    </span> 
 	</div></div>

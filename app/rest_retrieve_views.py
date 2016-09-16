@@ -8,10 +8,17 @@ from django.contrib.auth.models import User
 from hitcount.models import HitCount
 from django.db.models import F
 from django.views.decorators.http import condition
+from haystack.query import SearchQuerySet
 import datetime
 
 from . import models
 from . import utils
+
+
+def queryset_gen(search_qs):
+    '''from SearchQuerySet to QuerySet'''
+    for item in search_qs:
+        yield item.object
 
 
 def processDataList(data):
@@ -53,7 +60,10 @@ class BaseListView(ListView):
 
     def render_to_response(self, context, **response_kwargs):
         data = []
-        for obj in context.get('object_list'):
+        obj_list = context.get('object_list')
+        if self.isSearchQuery:
+            obj_list = queryset_gen(obj_list)
+        for obj in obj_list:
             data.append(utils.to_dict(obj))
         processDataList(data)
         return JsonResponse(data, safe=False)
@@ -63,6 +73,7 @@ class BaseListView(ListView):
         tags = request.GET.get('tags')
         created_by = request.GET.get('created_by')
         query = {'is_active': True}
+        self.isSearchQuery = False
         if tags:
             tags = [tag for tag in tags.split(',')]
             query['tags__in'] = tags
@@ -71,7 +82,12 @@ class BaseListView(ListView):
                 query['created_by'] = User.objects.get(id=created_by)
         except:
             pass
-        self.queryset = self.model.objects.filter(**query)
+        if request.GET.get('q'):
+            self.queryset = SearchQuerySet().auto_query(
+                request.GET.get('q')).models(self.model).load_all()
+            self.isSearchQuery = True
+        else:
+            self.queryset = self.model.objects.filter(**query)
         return super().get(self, request, *args, **kwargs)
 
 
@@ -231,12 +247,17 @@ def App_TextDetailView(request, title):
 
 def CountView(request, model):
     try:
+        query = {'is_active': True}
         tags = request.GET.get('tags')
-        if tags:
-            tags = [tag for tag in tags.split(',')]
-            return JsonResponse({'count': apps.get_model(
-                'app.' + model).objects.filter(is_active=True, tags__in=tags).count()})
-        return JsonResponse({'count': apps.get_model(
-            'app.' + model).objects.filter(is_active=True).count()})
+        q = request.GET.get('q')
+        model = apps.get_model('app.' + model)
+        if q:
+            count = SearchQuerySet().auto_query(q).models(model).count()
+        else:
+            if tags:
+                tags = [tag for tag in tags.split(',')]
+                query['tags__in'] = tags
+            count = model.objects.filter(**query).count()
+        return JsonResponse({'count': count})
     except:
         raise Http404

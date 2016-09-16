@@ -201,7 +201,7 @@ class Question(Feature):
     modified_by = models.ForeignKey(User, on_delete=models.PROTECT,
                                     related_name='questions_modified',
                                     null=True)
-    last_active = models.DateTimeField(null=True, blank=True)
+    last_active = models.DateTimeField(auto_now_add=True)
     votes = models.ManyToManyField(User, blank=True,
                                    related_name='questions_voted')
     num_votes = models.IntegerField(default=0)
