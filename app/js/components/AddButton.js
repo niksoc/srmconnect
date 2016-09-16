@@ -8,8 +8,7 @@ const AddButtonBase = (props) => (
 );
 
 const AddButton = (props) => {
-    const button = (<AddButtonBase {...props} />);
-    return(<LoggedInVisible element={button} /> );
+    return (<AddButtonBase {...props} />);
 };
 
 export default AddButton;

@@ -24,6 +24,11 @@ def isCreatorOrModerator(temp, obj, user):
 class CommonCreateFormViewBase(CreateView):
     template_name = 'app/form.html'
 
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return HttpResponse('You need to be logged in', status=401)
+        return super(CommonCreateFormViewBase).get(request, *args, **kwargs)
+
     def form_invalid(self, form):
         """
         If the form is invalid, re-render the context data with the
@@ -32,7 +37,7 @@ class CommonCreateFormViewBase(CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-        if(not self.request.user.is_authenticated()):
+        if not self.request.user.is_authenticated():
             return HttpResponse(status=401)
         obj = form.save(commit=False)
         obj.created_by = self.request.user
@@ -315,6 +320,8 @@ class CommentCreateFormView(CreateView):
     for_item = None
 
     def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return HttpResponse('You need to be logged in', status=401)
         self.for_model_name = request.GET['for']
         self.for_id = request.GET['id']
         self.model = apps.get_model('app.Comment_' + self.for_model_name)

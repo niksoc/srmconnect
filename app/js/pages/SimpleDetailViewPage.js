@@ -161,7 +161,7 @@ class SimpleDetailViewPage extends React.Component{
 		    <LoggedInVisible element={subscribe} />
 		    {commentBoxes}
 		{viewAll}
-<LoggedInVisible element={addCommentModal}/>
+		{addCommentModal} 
 		</div>
 		    </div>
 	    );
