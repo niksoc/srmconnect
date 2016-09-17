@@ -58,7 +58,7 @@ class MoreLikeThisPanel extends React.Component{
 				      bsStyle={feature.bsStyle} model={feature.model} style={{paddingLeft:'20px'}}
 				      detail_url={`${BASE_URL}${feature.model}/`} /></div>);
 	return ( 
-		<div style={{paddingLeft:'20px',border:'1px solid black', marginTop:'60px', paddingBottom:'10px'}}> 
+		<div style={{paddingLeft:'20px',border:'1px solid #e5e5e5', marginTop:'60px', paddingBottom:'10px'}}> 
 		<h2>Related</h2>
 		{features}
 		</div>
