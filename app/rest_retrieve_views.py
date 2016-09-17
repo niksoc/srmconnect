@@ -118,9 +118,6 @@ def latest_comment(request):
     model = apps.get_model('app.Comment_' + for_model_name)
     for_item = apps.get_model(
         'app.' + for_model_name).objects.get(pk=for_id)
-    created = model.objects.filter(
-        is_active=True, for_item=for_item).latest("created").created
-     
     try:
         created = model.objects.filter(
             is_active=True, for_item=for_item).latest("created").created
@@ -140,8 +137,11 @@ def CommentListView(request):
     for_model_name = request.GET['for']
     for_id = request.GET['id']
     model = apps.get_model('app.Comment_' + for_model_name)
-    for_item = apps.get_model(
-        'app.' + for_model_name).objects.get(pk=for_id)
+    try:
+        for_item = apps.get_model(
+            'app.' + for_model_name).objects.get(pk=for_id)
+    except:
+        return JsonResponse({})
     num = request.GET.get('num')
     if num:
         # if limited no. of comments is requested, we give them latest
