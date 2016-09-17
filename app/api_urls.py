@@ -52,6 +52,8 @@ urlpatterns = [
         rest_form_views.AvailableDeleteView.as_view()),
     url(r'^delete/wanted/(?P<pk>\d+)/$',
         rest_form_views.WantedDeleteView.as_view()),
+    url(r'^delete/story/(?P<pk>\d+)/$',
+        rest_form_views.StoryDeleteView.as_view()),
     url(r'^list/wanted/$',
         rest_retrieve_views.WantedListView.as_view()),
     url(r'^detail/wanted/(?P<pk>\d+)/$',
