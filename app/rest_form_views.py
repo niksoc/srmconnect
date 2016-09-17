@@ -262,7 +262,7 @@ class UserProfileUpdateFormView(UpdateView):
 
         class Meta:
             model = models.UserProfile
-            exclude = ('user', 'num_views')
+            exclude = ('user', 'num_views', 'is_active')
             widgets = {'interests': SearchableSelect(
                 model='app.Tag', search_field='name', many=True)}
     form_class = FormClass
