@@ -149,7 +149,7 @@ class SimpleDetailViewPage extends React.Component{
 	    }
 	    return( 
 		    <div style={{marginBottom:'40px'}}> 
-		    <PageTitle title={this.props.route.title} src={`/api/create/${this.props.route.model}/`} />
+		    <PageTitle model={this.props.route.model} title={this.props.route.title} src={`/api/create/${this.props.route.model}/`} />
 		    <div>
 		    <h3 style={borderBottom}>{fields.title}<span>{options}</span></h3>
 		    <div style={{display:'inline-block'}} className="pull-right">{fields.num_views} views {vote}</div>
