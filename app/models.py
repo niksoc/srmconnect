@@ -10,8 +10,6 @@ from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from django_markdown.models import MarkdownField
 from django.utils.html import escape
-from hitcount.models import HitCountMixin
-from django.db.models import F
 import datetime
 
 
@@ -148,6 +146,40 @@ class UserProfile(models.Model):
         self.last_name = escape(self.last_name)
         self.display_name = escape(self.display_name)
         self.register_no = escape(self.register_no)
+
+    def get_interest_names(self):
+        return [interest.name for interest in self.interests.all()]
+
+    def get_search_text(self):
+        d = self.__dict__.copy()
+        d.pop('id')
+        d.pop('user_id')
+        d.pop('profile_image')
+        d.pop('num_views')
+        d.pop('_state')
+        if d.get('department_id'):
+            d['department'] = Dept.objects.get(pk=d.pop('department_id')).name
+        d['interests'] = self.get_interest_names()
+        if d.get('year'):
+            d['year'] = str(d['year']) + ' year'
+        return str(d.values())[14:-2].replace("'", '').replace(',', ' ')
+
+    first_name = models.CharField(max_length=25)
+    last_name = models.CharField(max_length=25)
+    display_name = models.CharField(max_length=50)
+    register_no = models.CharField(
+        max_length=20, unique=True, null=True, blank=True)
+    course = models.CharField(choices=course_choices,
+                              max_length=10, null=True, blank=True)
+    department = models.ForeignKey(
+        Dept, on_delete=models.SET_NULL, blank=True, null=True)
+    year = models.IntegerField(choices=year_choices, null=True, blank=True)
+    campus = models.CharField(choices=campus_choices,
+                              max_length=3, null=True, blank=True)
+    profile_text = MarkdownField(
+        max_length=500, null=True, blank=True, verbose_name='Describe yourself')
+    interests = models.ManyToManyField(Tag, blank=True)
+    is_active = models.BooleanField(default=True)
 
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])

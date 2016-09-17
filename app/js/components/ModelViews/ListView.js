@@ -4,7 +4,7 @@ import {pure} from 'recompose';
 import LoadingIndicator from '../LoadingIndicator';
  
 const ListView = (props) => {
-    const itemsPerRow = 1;
+    const itemsPerRow = props.itemsPerRow || 1;
     if(props.data){
 	if(props.data.length===0) return <span style={props.style}>no items</span>;
 	const items = props.data.map((entry)=>

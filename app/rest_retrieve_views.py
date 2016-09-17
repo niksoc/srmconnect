@@ -207,8 +207,13 @@ class ProjectDetailView(BaseDetailView):
     queryset = models.Project.objects.filter(is_active=True)
 
 
+class UserProfileListView(BaseListView):
+    model = models.UserProfile
+
 # kind of a hack view to get the userprofile according to user pk
 # and not userProfile pk
+
+
 def UserProfileDetailView(request, pk):
     userProfile = models.User.objects.get(pk=pk).userprofile
     if request.GET.get('count_hit'):
@@ -251,6 +256,9 @@ def CountView(request, model):
         query = {'is_active': True}
         tags = request.GET.get('tags')
         q = request.GET.get('q')
+        model = model.replace('_', '')
+        if model == 'userprofile':
+            query = {}
         model = apps.get_model('app.' + model)
         if q:
             count = SearchQuerySet().auto_query(q).models(model).count()
@@ -260,7 +268,7 @@ def CountView(request, model):
                 query['tags__in'] = tags
             count = model.objects.filter(**query).count()
         return JsonResponse({'count': count})
-    except:
+    except ArithmeticError:
         raise Http404
 
 
@@ -270,8 +278,9 @@ def MoreLikeThisView(request, model, pk):
         item_model = apps.get_model('app.' + model)
         model = apps.get_model('app.' + request.GET.get('model'))
         obj = item_model.objects.get(pk=pk)
-        obj_list = SearchQuerySet().more_like_this(
-            obj).models(model)[:5]
+        obj_list = SearchQuerySet().models(model).more_like_this(obj)
+        if request.GET.get('num'):
+            obj_list = obj_list[:request.GET.get('num')]
         obj_list = queryset_gen(obj_list)
         for obj in obj_list:
             data.append({'title': obj.title, 'id': obj.id})

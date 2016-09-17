@@ -1,0 +1,1 @@
+{{ object.get_search_text|safe }}

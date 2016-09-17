@@ -27,7 +27,7 @@ class CommonCreateFormViewBase(CreateView):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
             return HttpResponse('You need to be logged in', status=401)
-        return super(CommonCreateFormViewBase).get(request, *args, **kwargs)
+        return super(CommonCreateFormViewBase, self).get(request, *args, **kwargs)
 
     def form_invalid(self, form):
         """

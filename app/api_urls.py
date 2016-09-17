@@ -80,6 +80,8 @@ urlpatterns = [
         rest_retrieve_views.CommentListView),
     url(r'^list/answer/$',
         rest_retrieve_views.AnswerListView.as_view()),
+    url(r'^list/user_profile/$',
+        rest_retrieve_views.UserProfileListView.as_view()),
     url(r'^detail/user_profile/(?P<pk>\d+)/$',
         rest_retrieve_views.UserProfileDetailView),
     url(r'^detail/tag/(?P<pk>\d+)/$',

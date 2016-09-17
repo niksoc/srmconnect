@@ -26,7 +26,7 @@ const ExperienceRow = React.createClass({render(){
     const tags = <TagList tag_names={this.props.tag_names}/>;
     const title = <Link style={{color:'black', fontWeight:400}} to={uri}>{this.props.title}</Link>;
     const footer = <Timestamp title='created' datetime={this.props.created}/>; 
-    const profile=(<UserThumb id={this.props.created_by}/>);
+    const profile=(<UserThumb user={this.props.created_by}/>);
     const views=<NumberBox style={{borderRight:'1px solid black'}} title='Views' value={this.props.num_views}/>;
     
     return(

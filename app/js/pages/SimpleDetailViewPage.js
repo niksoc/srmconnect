@@ -111,7 +111,7 @@ class SimpleDetailViewPage extends React.Component{
 		paddingBottom:'10px',
 		paddingTop:'10px'
 	    };
-	    const modified_ut = fields.modified_by!==fields.created_by?	<UserThumb id={fields.modified_by} />:null;
+	    const modified_ut = fields.modified_by!==fields.created_by?	<UserThumb user={fields.modified_by} />:null;
 	    const modified_by = (fields.modified !== fields.created)? (<div className="pull-right">
 								       <Timestamp style={style} title='last edited' datetime={fields.modified} />
 								       {modified_ut}
@@ -155,7 +155,7 @@ class SimpleDetailViewPage extends React.Component{
 		    <div style={{display:'inline-block'}} className="pull-right">{fields.num_views} views {vote}</div>
 		    <div style={{...borderBottom,overflow:'hidden',width:'100%'}}>
 		    <Markdown>{fields.text}</Markdown>
-		    <div className="pull-right" style={{marginLeft:'10px'}}><Timestamp style={style} title='created' datetime={fields.created} /><UserThumb id={fields.created_by} /></div>
+		    <div className="pull-right" style={{marginLeft:'10px'}}><Timestamp style={style} title='created' datetime={fields.created} /><UserThumb user={fields.created_by} /></div>
 		    {modified_by} 
 		</div>
 		    <LoggedInVisible element={subscribe} />

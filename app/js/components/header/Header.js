@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Navbar, Nav, NavItem, MenuItem, NavDropdown, DropdownButton} from 'react-bootstrap';
+import {Button, Navbar, Nav, NavItem, MenuItem, NavDropdown, DropdownButton, Image} from 'react-bootstrap';
 import axios from 'axios';
 import SessionInfoManager from './SessionInfoManager';
 import FormFrameModal from '../FormFrameModal';
@@ -65,7 +65,7 @@ class Header extends React.Component {
 		<header> 
 		<Navbar>
 		<Navbar.Header>
-		<Navbar.Brand>SRM | Connect</Navbar.Brand>
+		<Link to={BASE_URL}><Image src="/static/app/img/logo.jpg" /></Link>
 		<DropdownButton id="srm connect option" title=""> 
 		<MenuItem eventKey={1.1}>About(under const.)</MenuItem>
 		<MenuItem eventKey={1.3}>Join us!(under const.)</MenuItem>
@@ -74,6 +74,7 @@ class Header extends React.Component {
 		</Navbar.Header>
 		<Navbar.Collapse>
 		<Nav pullRight>
+		<NavItem onClick={()=>browserHistory.push(BASE_URL+'profile')}>People Search</NavItem>
 		<NavItem><FormFrameModal buttonText='Feedback' title='Feedback' src='/api/create/feedback/'/></NavItem>
 		<LoggedInVisible element={addTags}/>
 		<LoggedInVisible element={notifications}/>

@@ -88,14 +88,18 @@ class ListViewPage extends React.Component{
 							    <NavItem eventKey={i} key={i}>
 							       {this.props.route.orderings[i].slice(1,this.props.route.orderings[i].length)}
 							    </NavItem>);
+	let search = null;
+	if(this.props.route.searchForm) 
+	    search = React.createElement(this.props.route.searchForm, {setQuery:this.setQuery.bind(this)});
+	else search = React.createElement(SearchBox, {setQuery:this.setQuery.bind(this)});
 	return ( 
 		<div> 
 		<PageTitle model={this.props.route.model} title={this.props.route.title} src={`/api/create/${this.props.route.model}/`} />
 		<span style={{position:'relative', bottom:'20px'}}>sort by:</span> <Nav bsStyle="pills" style={{...inlineBlock, marginBottom:'10px'}} activeKey={this.state.ordering} onSelect={this.handleOrderingSelect.bind(this)}>
 		{orderingButtons}
 		</Nav> 
-		<SearchBox setQuery={this.setQuery.bind(this)}/>
-		<ListView data={this.state.data} class={this.props.route.class} bsStyle={this.props.route.bsStyle} model={this.props.route.model} detail_url={`${BASE_URL}${this.props.route.model}/`} />
+		{search}
+		<ListView itemsPerRow={this.props.route.itemsPerRow || 1} data={this.state.data} class={this.props.route.class} bsStyle={this.props.route.bsStyle} model={this.props.route.model} detail_url={`${BASE_URL}${this.props.route.model}/`} />
 		<Pagination
 	    prev
 	    next

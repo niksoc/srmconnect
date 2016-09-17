@@ -12,7 +12,7 @@ export class UserThumb extends React.Component{
 	};
     }
     componentDidMount(){
-	axios.get(`/api/detail/user_profile/${this.props.id}/`)
+	axios.get(`/api/detail/user_profile/${this.props.user}/`)
 	    .then(({data})=>{if(!this.ignoreLastFetch) this.setState({data});})
 	    .catch((error)=>console.error(error));
     }
