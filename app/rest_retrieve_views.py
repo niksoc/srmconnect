@@ -280,7 +280,7 @@ def MoreLikeThisView(request, model, pk):
         obj = item_model.objects.get(pk=pk)
         obj_list = SearchQuerySet().models(model).more_like_this(obj)
         if request.GET.get('num'):
-            obj_list = obj_list[:request.GET.get('num')]
+            obj_list = obj_list[:int(request.GET.get('num'))]
         obj_list = queryset_gen(obj_list)
         for obj in obj_list:
             data.append({'title': obj.title, 'id': obj.id})

@@ -17,7 +17,7 @@ class MoreLikeThisPanel extends React.Component{
         };
     }
     construct_data_url(props = this.props, model){
-	return `/api/more_like_this/${props.model}/${props.id}/?model=${model}`;
+	return `/api/more_like_this/${props.model}/${props.id}/?model=${model}&num=5`;
     }
     updateListData(props = this.props){
 	FEATURES.forEach((feature) => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Glyphicon, DropdownButton, MenuItem} from 'react-bootstrap';
 import OwnerVisible from '../visibility/OwnerVisible';
-import OwnerOrModeratorVisible from '../visibility/OwnerVisible';
+import OwnerOrModeratorVisible from '../visibility/OwnerOrModeratorVisible';
 import FormFrameModal from './FormFrameModal';
 
 const DetailOptions = (props)=>{
