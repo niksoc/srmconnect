@@ -417,6 +417,11 @@ class CommentBaseModel(TimeStampedModel, ActivatableModelMixin):
         if not i.followers.filter(id=instance.created_by.id).exists():
             i.followers.add(instance.created_by)
 
+    def delete(self, *args, **kwargs):
+        self.modified = datetime.datetime.now()
+        self.save()
+        super(CommentBaseModel, self).delete(*args, **kwargs)
+        
     def save(self, *args, **kwargs):
         if not self.pk:
             self.comment_created()

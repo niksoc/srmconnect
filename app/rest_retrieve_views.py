@@ -118,9 +118,18 @@ def latest_comment(request):
     model = apps.get_model('app.Comment_' + for_model_name)
     for_item = apps.get_model(
         'app.' + for_model_name).objects.get(pk=for_id)
+    created = model.objects.filter(
+        is_active=True, for_item=for_item).latest("created").created
+     
     try:
-        return model.objects.filter(
+        created = model.objects.filter(
             is_active=True, for_item=for_item).latest("created").created
+        modified = model.objects.filter(
+            for_item=for_item).latest("modified").modified
+        if created > modified:
+            return created
+        else:
+            return modified
     except:
         return datetime.datetime(1996, 11, 28)
 
