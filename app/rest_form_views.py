@@ -365,8 +365,9 @@ class CommentUpdateFormView(UpdateView):
     def get(self, request, *args, **kwargs):
         self.for_model_name = request.GET['for']
         self.for_id = request.GET.get('id')
-        self.queryset = apps.get_model(
-            'app.Comment_' + self.for_model_name).objects.filter(is_active=True)
+        self.model = apps.get_model(
+            'app.Comment_' + self.for_model_name)
+        self.queryset = self.model.objects.filter(is_active=True)
         return super(CommentUpdateFormView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -403,8 +404,9 @@ class CommentDeleteView(DeleteView):
     def get(self, request, *args, **kwargs):
         self.for_model_name = request.GET['for']
         self.for_id = request.GET.get('id')
-        self.queryset = apps.get_model(
-            'app.Comment_' + self.for_model_name).objects.filter(is_active=True)
+        self.model = apps.get_model(
+            'app.Comment_' + self.for_model_name)
+        self.queryset = self.model.objects.filter(is_active=True)
         return super(CommentDeleteView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):

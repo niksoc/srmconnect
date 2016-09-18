@@ -433,7 +433,7 @@ class CommentBaseModel(TimeStampedModel, ActivatableModelMixin):
         self.__original_text = self.text
 
     def __str__(self):
-        return self.title
+        return self.text
 
     class Meta:
         abstract = True
