@@ -107,9 +107,10 @@ class BaseDetailView(DetailView):
             if(hit_count_response[0]):
                 instance.num_views = F('num_views') + 1
                 instance.save()
-        obj = [obj]  # serializer needs an iterable
-        # to remove the '[' and ']' to make array -> object
-        return HttpResponse(serializers.serialize('json', obj)[1:-1], content_type="application/json")
+        fields = utils.to_dict(obj)
+        response = {'fields': fields, 'pk': obj.pk,
+                    'model': str(obj.__class__)[8:-2]}
+        return JsonResponse(response)
 
 
 def latest_comment(request):

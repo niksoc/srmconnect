@@ -1,5 +1,5 @@
 import React from 'react';
-import {pullRight} from 'react-bootstrap';
+import {pullRight, Image} from 'react-bootstrap';
 import axios from 'axios';
 import Markdown from '../components/Markdown';
 import PageTitle from '../components/PageTitle';
@@ -147,6 +147,7 @@ class SimpleDetailViewPage extends React.Component{
 		}
 		commentBoxes = comments.map((fields,i)=><CommentBox style={borderBottom} key={i} for={this.props.route.model} fields={fields} />); 
 	    }
+	    const image = fields.image? <Image src={fields.image} responsive/> : null;
 	    return( 
 		    <div style={{marginBottom:'40px'}}> 
 		    <PageTitle model={this.props.route.model} title={this.props.route.title} src={`/api/create/${this.props.route.model}/`} />
@@ -154,6 +155,7 @@ class SimpleDetailViewPage extends React.Component{
 		    <h3 style={borderBottom}>{fields.title}<span>{options}</span></h3>
 		    <div style={{display:'inline-block'}} className="pull-right">{fields.num_views} views {vote}</div>
 		    <div style={{...borderBottom,overflow:'hidden',width:'100%'}}>
+		    {image}
 		    <Markdown>{fields.text}</Markdown>
 		    <div className="pull-right" style={{marginLeft:'10px'}}><Timestamp style={style} title='created' datetime={fields.created} /><UserThumb user={fields.created_by} /></div>
 		    {modified_by} 
