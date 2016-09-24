@@ -1,7 +1,7 @@
+
 body {
     font-size:140%;
     word-wrap:break-word;
-    padding-bottom:20px;
 }
 a, .link{
     cursor:pointer;
@@ -17,7 +17,28 @@ a, .link{
 #profile-table tr td:first-child{
     font-weight:bold;
 }
-    
+
+/*
+ * for sticky footer
+*/
+
+* {
+    margin: 0;
+}
+html, body, #app, #app>:first-child {
+		      height: 100%;
+}
+.wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -4em;
+}
+.footer, .push {
+    margin-top:20px; 
+    height: 4em;
+}  
+ 
 /* 
  * header styles 
 */

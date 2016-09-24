@@ -5,6 +5,7 @@ import {ListGroup,ListGroupItem} from 'react-bootstrap';
 import Layout from './Layout';
 import ListViewPage from './pages/ListViewPage';
 import MultiListViewPage from './pages/MultiListViewPage';
+import InfoPage from './pages/InfoPage';
 import SimpleDetailViewPage from './pages/SimpleDetailViewPage';
 import QuestionAnswerPage from './pages/QuestionAnswerPage';
 import ProfilePage from './pages/ProfilePage';
@@ -32,7 +33,9 @@ const PROFILE = {
 const routes = (
 	<Route path={BASE_URL} component={Layout}>
 	<IndexRoute mainTitle='Latest' component={MultiListViewPage} features={FEATURES}/>
-	<Route  {...PROFILE} path='profile'  component={ListViewPage} />
+	<Route path='about' title='About' component={InfoPage} />
+	<Route path='join_us' title='Join Us' component={InfoPage} />
+	<Route {...PROFILE} path='profile'  component={ListViewPage} />
 	<Route  path='profile/:id' component={ProfilePage} />
 	<Route {...FEATURES[0]} path='question' component={ListViewPage} />
 	<Route {...FEATURES[0]} path='question/:id' component={QuestionAnswerPage} />

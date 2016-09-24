@@ -67,8 +67,8 @@ class Header extends React.Component {
 		<Navbar.Header>
 		<Link to={BASE_URL}><Image src="/static/app/img/logo.jpg" /></Link>
 		<DropdownButton id="srm connect option" title=""> 
-		<MenuItem eventKey={1.1}>About(under const.)</MenuItem>
-		<MenuItem eventKey={1.3}>Join us!(under const.)</MenuItem>
+		<MenuItem onClick={()=>browserHistory.push(BASE_URL+'about')}>About</MenuItem>
+		<MenuItem onClick={()=>browserHistory.push(BASE_URL+'join_us')}>Join us!</MenuItem>
 		</DropdownButton> 
 		<Navbar.Toggle />
 		</Navbar.Header>

@@ -1,23 +1,22 @@
 import React from 'react';
-import {Panel} from 'react-bootstrap';
+import {PageHeader} from 'react-bootstrap';
 import axios from 'axios';
-import Markdown from './Markdown';
+import Markdown from '../components/Markdown';
 import * as constants from '../constants';
 import {getViewPortWidth} from '../utils';
 
 
-class InfoPanel extends React.Component{
+class InfoPage extends React.Component{
     constructor(){
 	super();
 	this.state = {
-	    data:{},
-	    open: false
+	    data:{}
 	};
     }
     fetchData(props = this.props){
-	axios.get(`/api/detail/app_text/${props.title}`) 
+	axios.get(`/api/detail/app_text/${props.route.path+'_page'}`) 
 	    .then(({data})=> {if(!this.ignoreLastFetch) this.setState({data});})
-	    .catch((error)=> {if(error.response.status!==404) console.error(error);}); 
+	    .catch((error)=> {}); 
     }
     componentWillUnmount(){
 	this.ignoreLastFetch = true; 
@@ -34,25 +33,15 @@ class InfoPanel extends React.Component{
     render(){
 	if(Object.keys(this.state.data).length === 0 && this.state.data.constructor === Object)
 	    return null;
-	else if(getViewPortWidth() > constants.sm){
-	    return (
-		    <Panel style={{marginTop:'60px'}}>
-		    <Markdown>{this.state.data.text}</Markdown>
-		    </Panel>
-	    );
-	} else {
+	else {
 	    return (
 		    <div>
-		    <h4 onClick={ ()=> this.setState({ open: !this.state.open })}>
-		    New to the site/this section? <small>read on<span className="caret" /></small>
-		    </h4>
-		    <Panel collapsible expanded={this.state.open}>
+		    <PageHeader>{this.props.route.title}</PageHeader>
 		    <Markdown>{this.state.data.text}</Markdown>
-		    </Panel>
 		    </div>
 	    );
 	}
     }
 }
 	
-export default InfoPanel;
+export default InfoPage;

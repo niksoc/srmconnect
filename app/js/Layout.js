@@ -2,6 +2,7 @@ import React from 'react';
 import {Col} from 'react-bootstrap';
 import axios from 'axios';
 import Header from './components/header/Header';
+import Footer from './components/Footer';
 import FeatureNav from './components/FeatureNav';
 import UserThumb from './components/UserThumb';
 import InfoPanel from './components/InfoPanel';
@@ -39,7 +40,7 @@ class Layout extends React.Component{
 	let sidepanel = null;
 	let pos = 'top';
 	if(path.indexOf('profile')!==-1 || info_path.indexOf('\/id\/')===-1){
-	    info_path = path===''? 'latest':path.slice(0,-1);
+	    info_path = path===''? 'latest':path;
 	    sidepanel = <InfoPanel title={info_path} />;
 	}
 	else{
@@ -53,7 +54,8 @@ class Layout extends React.Component{
 		{sidepanel} 
 	    </Col>);
 	return (
-		<div> 
+		<div>
+		<div className='wrapper'> 
 		<Header />
 		<div className='container'>
 		<FeatureNav />
@@ -62,7 +64,10 @@ class Layout extends React.Component{
 		{this.props.children}
 	    </Col>
 		{pos==='bottom'?sidepanel:null}
+	    </div>
+		<div className="push"></div>
 		</div>
+		<Footer />
 		</div>
 	);
     }
