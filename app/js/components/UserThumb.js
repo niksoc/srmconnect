@@ -11,10 +11,24 @@ export class UserThumb extends React.Component{
 	    data:{}
 	};
     }
-    componentDidMount(){
-	axios.get(`/api/detail/user_profile/${this.props.user}/`)
-	    .then(({data})=>{if(!this.ignoreLastFetch) this.setState({data});})
+    fetchData(props = this.props){
+	console.log('fff');
+	axios.get(`/api/detail/user_profile/${props.user}/`)
+	    .then(({data})=>{if(!this.ignoreLastFetch && data.fields.user===this.props.user) this.setState({data});})
 	    .catch((error)=>console.error(error));
+    }
+    componentDidMount(){
+	if(!this.props.id)
+	    this.fetchData();
+	else
+	    this.setState({data:{fields:this.props}});
+    }
+    componentWillReceiveProps(newProps){
+	this.setState({data:{}});
+	if(!this.props.id)
+	    this.fetchData(newProps);
+	else
+	    this.setState({data:{fields:newProps}});
     }
     componentWillUnmount(){
 	this.ignoreLastFetch = true;
