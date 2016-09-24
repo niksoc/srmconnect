@@ -1,4 +1,1 @@
-{{ object.title|safe }}
-{{ object.text|truncatewords:30|safe }}
-{{ object.created_by.userprofile.display_name }}
-{{object.get_tag_names|join:' '}}
+feature_text.txt

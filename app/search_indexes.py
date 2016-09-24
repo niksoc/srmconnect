@@ -8,7 +8,7 @@ class WantedIndex(indexes.SearchIndex, indexes.Indexable):
     created_by = indexes.CharField(
         model_attr='created_by__userprofile__display_name', faceted=True)
     created = indexes.DateTimeField(model_attr='created')
-    tags = indexes.MultiValueField()
+    tags = indexes.MultiValueField(boost='1.1')
     num_views = indexes.IntegerField(model_attr='num_views')
 
     def prepare_tags(self, object):
@@ -31,7 +31,7 @@ class AvailableIndex(indexes.SearchIndex, indexes.Indexable):
     created_by = indexes.CharField(
         model_attr='created_by__userprofile__display_name', faceted=True)
     created = indexes.DateTimeField(model_attr='created')
-    tags = indexes.MultiValueField()
+    tags = indexes.MultiValueField(boost='1.1')
     num_views = indexes.IntegerField(model_attr='num_views')
 
     def prepare_tags(self, object):
@@ -55,7 +55,7 @@ class QuestionIndex(indexes.SearchIndex, indexes.Indexable):
         model_attr='created_by__userprofile__display_name', faceted=True)
     created = indexes.DateTimeField(model_attr='created')
     last_active = indexes.DateTimeField(model_attr='last_active')
-    tags = indexes.MultiValueField()
+    tags = indexes.MultiValueField(boost='1.1')
     num_views = indexes.IntegerField(model_attr='num_views')
     num_votes = indexes.IntegerField(model_attr='num_votes')
 
@@ -79,7 +79,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
     created_by = indexes.CharField(
         model_attr='created_by__userprofile__display_name', faceted=True)
     created = indexes.DateTimeField(model_attr='created')
-    tags = indexes.MultiValueField()
+    tags = indexes.MultiValueField(boost='1.1')
     num_views = indexes.IntegerField(model_attr='num_views')
 
     def prepare_tags(self, object):
@@ -102,7 +102,7 @@ class StoryIndex(indexes.SearchIndex, indexes.Indexable):
     created_by = indexes.CharField(
         model_attr='created_by__userprofile__display_name', faceted=True)
     created = indexes.DateTimeField(model_attr='created')
-    tags = indexes.MultiValueField()
+    tags = indexes.MultiValueField(boost='1.1')
     num_views = indexes.IntegerField(model_attr='num_views')
     num_votes = indexes.IntegerField(model_attr='num_votes')
 

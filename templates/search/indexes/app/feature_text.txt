@@ -1,0 +1,3 @@
+{{ object.title|safe }}
+{{ object.text|truncatewords:30|safe }}
+{{object.get_tag_names|join:' '}}
