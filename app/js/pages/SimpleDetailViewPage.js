@@ -67,9 +67,9 @@ class SimpleDetailViewPage extends React.Component{
     init(props = this.props, context = this.context){
 	this.updateData(props);
 	if(props.route.comments){
-	    this.setState({error:false, commentsExpanded:false});
-	    this.fetchComments(3,false,props);
-	    if(!this.interval){
+	    this.setState({error:false, commentsExpanded:false,comments:[]});
+	    this.fetchComments(3,true,props);
+	    if(!this.interval){ 
 		this.interval = window.setInterval(this.fetchComments.bind(this), 10000);
 	    }
 	} 
