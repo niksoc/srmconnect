@@ -20,14 +20,7 @@ class Layout extends React.Component{
     componentDidMount(){
 	axios.get('/app/user/')
 	    .then(({data})=>
-		this.setState({isLoggedIn:true, user:data}) 
-		 )
-	    .catch(function (error) {
-		if(error.response.status !== 404) console.error(error);
-	    });
-	axios.get('/app/moderator/')
-	    .then(({data})=>
-		  this.setState({isModerator:true}) 
+		  this.setState({isLoggedIn:true, isModerator:data.isModerator, user:data}) 
 		 )
 	    .catch(function (error) {
 		if(error.response.status !== 404) console.error(error);

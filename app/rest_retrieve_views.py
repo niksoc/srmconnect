@@ -121,13 +121,11 @@ def latest_comment(request):
         'app.' + for_model_name).objects.get(pk=for_id)
     created = modified = datetime.datetime(1996, 11, 28)
     qs = model.objects.filter(for_item=for_item)
-    if qs.exists:
-        modified = model.objects.filter(
-            for_item=for_item).latest("modified").modified
+    if qs.exists():
+        modified = qs.latest("modified").modified
     qs = qs.filter(is_active=True)
-    if qs.exists:
-        created = model.objects.filter(
-            is_active=True, for_item=for_item).latest("created").created
+    if qs.exists():
+        created = qs.latest("created").created
     if created > modified:
         return created
     else:
@@ -241,10 +239,8 @@ def UserProfileDetailView(request, pk):
             id=fields['department']).name
     else:
         fields['dept_name'] = None
-    fields['interest_names'] = []
-    for interest in fields['interests']:
-        fields['interest_names'].append(
-            models.Tag.objects.get(pk=interest).name)
+    fields['interest_names'] = userProfile.get_interest_names()
+    fields['isModerator'] = models.Moderator.objects.filter(user__id=fields['user']).exists()
     profile_dict = {'model': "app.userprofile",
                     'pk': fields['id'], 'fields': fields}
     return JsonResponse(profile_dict)

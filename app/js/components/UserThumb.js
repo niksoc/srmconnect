@@ -1,5 +1,5 @@
 import React from 'react';
-import {Media} from 'react-bootstrap';
+import {Media, Label} from 'react-bootstrap';
 import {Link} from 'react-router';
 import axios from 'axios';
 import * as constants from '../constants';
@@ -40,6 +40,7 @@ export class UserThumb extends React.Component{
 		</Media.Heading>
 		dept: {fields.dept_name? fields.dept_name : '-'} <br/>
 		year: {fields.year? fields.year : '-'}
+		{fields.isModerator?<Label bsStyle='info' style={{marginLeft:'5px', padding:'0px 2px'}}>mod</Label>:null}
 	    </Media.Body>
 	    </Media>
 		

@@ -154,11 +154,3 @@ def clear_notifications(request):
     user = request.user
     models.Notification.objects.filter(owner=user).delete()
     return HttpResponse(status=200)
-
-
-def moderator(request):
-    user = request.user
-    if(user.is_authenticated() and models.Moderator.objects.filter(user=user).exists()):
-        return JsonResponse({'isModerator': True})
-    else:
-        raise Http404

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Glyphicon,PageHeader,Media,Image,Col,Well,Row} from 'react-bootstrap';
+import {Glyphicon,Label,PageHeader,Media,Image,Col,Well,Row} from 'react-bootstrap';
 import {Link} from 'react-router';
 import axios from 'axios';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -53,15 +53,17 @@ export class ProfilePage extends React.Component{
 	if(fields.profile_text === null) fields.profile_text = '';
 	return(
 		<div>
-		<PageHeader>Profile <small><OwnerVisible owner={fields.user} element={editButton}/></small></PageHeader>
 		<Row>
 		<Col xs={4} md={4}>
-		<Image src={fields.profile_image} thumbnail responsive/>
+		<Image src={fields.profile_image} style={{marginTop:'50px'}} thumbnail responsive/>
 		</Col>
 		</Row>
-		<br/>
-		
-		<h1 style={{borderBottom:'1px solid black'}}>{fields.display_name}<small style={{marginLeft:'10px'}}>{fields.num_views} views</small></h1>
+		<h1 style={{borderBottom:'1px solid black'}}>
+		{fields.display_name}<small style={{marginLeft:'10px'}}>{fields.num_views} views
+		<OwnerVisible owner={fields.user} element={editButton}/>
+		{fields.isModerator?<Label bsStyle='info' style={{marginLeft:'5px', padding:'0px 2px'}}>mod</Label>:null}
+	    </small>
+		</h1>
 		<table id='profile-table'> 
 		<tbody>
 		<tr><td>First Name</td><td>{fields.first_name}</td></tr>
@@ -80,6 +82,6 @@ export class ProfilePage extends React.Component{
 		
 	);
     }
-}
+};
 
 export default ProfilePage;
