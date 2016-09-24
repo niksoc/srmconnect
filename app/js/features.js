@@ -34,7 +34,7 @@ const FEATURES = [
     {
 	title:'Experience Speaks',
 	model:'story',
-	bsStyle:'',
+	bsStyle:'black',
 	class:StoryRow,
 	orderings:['-created', '-num_votes', '-num_views'],
 	comments:true,

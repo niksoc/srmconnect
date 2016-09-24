@@ -108,6 +108,8 @@ class BaseDetailView(DetailView):
                 instance.num_views = F('num_views') + 1
                 instance.save()
         fields = utils.to_dict(obj)
+        if 'tags' in fields:
+            fields['tag_names'] = obj.get_tag_names()
         response = {'fields': fields, 'pk': obj.pk,
                     'model': str(obj.__class__)[8:-2]}
         return JsonResponse(response)

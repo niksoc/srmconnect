@@ -12,7 +12,6 @@ export class UserThumb extends React.Component{
 	};
     }
     fetchData(props = this.props){
-	console.log('fff');
 	axios.get(`/api/detail/user_profile/${props.user}/`)
 	    .then(({data})=>{if(!this.ignoreLastFetch && data.fields.user===this.props.user) this.setState({data});})
 	    .catch((error)=>console.error(error));

@@ -17,6 +17,9 @@ a, .link{
 #profile-table tr td:first-child{
     font-weight:bold;
 }
+.label-black{
+    background-color:black;
+}
 
 /*
  * for sticky footer
@@ -35,7 +38,6 @@ html, body, #app, #app>:first-child {
     margin: 0 auto -4em;
 }
 .footer, .push {
-    margin-top:20px; 
     height: 4em;
 }  
  

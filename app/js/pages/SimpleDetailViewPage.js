@@ -10,6 +10,7 @@ import CommentBox from '../components/CommentBox';
 import LoggedInVisible from '../visibility/LoggedInVisible';
 import FormFrameModal from '../components/FormFrameModal';
 import DetailOptions from '../components/DetailOptions';
+import TagList from '../components/common/TagList';
 
 class SimpleDetailViewPage extends React.Component{
     constructor(){
@@ -116,6 +117,7 @@ class SimpleDetailViewPage extends React.Component{
 								       <Timestamp style={style} title='last edited' datetime={fields.modified} />
 								       {modified_ut}
 								       </div>) : null; 
+	    const tags = <TagList tag_names={fields.tag_names} bsStyle={this.props.route.bsStyle} />;
 	    let viewAll = null; 
 	    let commentBoxes = null;
 	    let addCommentModal = null;
@@ -157,6 +159,7 @@ class SimpleDetailViewPage extends React.Component{
 		    <div style={{...borderBottom,overflow:'hidden',width:'100%'}}>
 		    {image}
 		    <Markdown>{fields.text}</Markdown>
+		    {tags}
 		    <div className="pull-right" style={{marginLeft:'10px'}}><Timestamp style={style} title='created' datetime={fields.created} /><UserThumb user={fields.created_by} /></div>
 		    {modified_by} 
 		</div>
