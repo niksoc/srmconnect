@@ -24,8 +24,6 @@ def save_profile(backend, user, is_new, response, *args, **kwargs):
             name = response.get('name')
             profile.first_name = name.get('givenName')
             profile.last_name = name.get('familyName')
-            if(response.get('domain') == 'srmuniv.edu.in'):
-                profile.register_no = name.get('familyName')
             profile.save()
 
     if(backend.name == 'facebook'):
