@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import FeatureNav from './components/FeatureNav';
 import UserThumb from './components/UserThumb';
 import InfoPanel from './components/InfoPanel';
+import Alerts from './components/Alerts';
 import MoreLikeThisPanel from './components/MoreLikeThisPanel';
 import {BASE_URL} from './constants';
 
@@ -58,6 +59,7 @@ class Layout extends React.Component{
 		<div className='wrapper'> 
 		<Header />
 		<div className='container'>
+		<Alerts />
 		<FeatureNav />
 		{pos==='top'?sidepanel:null}
 		<Col sm={8}>

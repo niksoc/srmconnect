@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.http import Http404
 from django.apps import apps
 from django.db.models import F
+from django.db.models import Q
 from django.views.decorators.http import condition
 import datetime
 from . import utils
@@ -159,4 +160,25 @@ def notifications(request):
 def clear_notifications(request):
     user = request.user
     models.Notification.objects.filter(owner=user).delete()
+    return HttpResponse(status=200)
+
+
+def alerts(request):
+    user = request.user
+    # alert to user 14 means alert to everybody
+    common_user = User.objects.get(pk=14)
+    if not user.is_authenticated():
+        raise Http404
+    alerts = models.AlertToUser.objects.filter(
+        Q(owner=user) | Q(owner=common_user)).filter(is_active=True).order_by('-created')
+    data = []
+    for obj in alerts:
+        data.append(utils.to_dict(obj))
+    return JsonResponse(data, safe=False)
+
+
+def clear_alert(request, pk):
+    print(pk)
+    if not models.AlertToUser.objects.get(pk=pk).owner.id == 14:
+        models.AlertToUser.objects.get(pk=pk).delete()
     return HttpResponse(status=200)

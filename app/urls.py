@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^unvote/$', views.unvote),
     url(r'^notifications/$', views.notifications),
     url(r'^clear_notifications/$', views.clear_notifications),
+    url(r'^alerts/$', views.alerts),
+    url(r'^clear_alert/(?P<pk>\d+)/$', views.clear_alert),
     url(r'^message/(?P<message>\D+)/$',
         TemplateView.as_view(template_name='app/message.html')),
     url(r'^logout', views.logout),

@@ -194,6 +194,13 @@ class Notification(models.Model):
     url = models.CharField(max_length=100)
 
 
+class AlertToUser(ActivatableModelMixin):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    text = MarkdownField()
+    is_active = models.BooleanField(default=True)
+
+
 class Feature(TimeStampedModel, ActivatableModelMixin, SearchableModel):
     title = models.CharField(max_length=100, blank=False)
     text = MarkdownField()
@@ -522,3 +529,4 @@ admin.site.register(Comment_Story)
 admin.site.register(App_Text)
 admin.site.register(Feedback)
 admin.site.register(Dept)
+admin.site.register(AlertToUser)
