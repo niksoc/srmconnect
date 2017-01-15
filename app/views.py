@@ -15,9 +15,15 @@ import datetime
 from . import utils
 from . import models
 
+from django.contrib.auth import login
+from django.contrib.auth.models import User
+
 
 def home(request):
     """Renders the home page."""
+    # uncomment the below two lines for login during testing
+    # login(request, User.objects.get(pk=2),
+    #     backend='app.testing.auth_backends.TestUserBackend')
     assert isinstance(request, HttpRequest)
     if 'route' in request.session:
         context = {'route': request.session['route']}

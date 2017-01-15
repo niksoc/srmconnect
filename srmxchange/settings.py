@@ -84,6 +84,7 @@ TEMPLATES = [
 ]
 
 AUTHENTICATION_BACKENDS = (
+    'app.testing.auth_backends.TestUserBackend',
     'social.backends.facebook.FacebookOAuth2',
     'social.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',

@@ -3,6 +3,7 @@ Definition of models.
 """
 
 from django.db import models
+from django.db.models import F
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib import admin
@@ -79,7 +80,8 @@ class Dept(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50, blank=False)
+    name = models.CharField(max_length=50, blank=False, unique=True,
+                            verbose_name='Tag Name')
     is_moderator_only = models.BooleanField(default=False)
     dept = models.ManyToManyField(Dept, blank=True, null=True,
                                   verbose_name='related departments (hold shift for multiple)')
@@ -219,6 +221,12 @@ class Feature(TimeStampedModel, ActivatableModelMixin, SearchableModel):
             _modified = False
         super(Feature, self).save(_modified=_modified, *args, **kwargs)
         self.__original_title_text = (self.title, self.text)
+
+    def delete(self, *args, **kwargs):
+        for tag in self.tags.all():
+            tag.count = F('count') - 1
+            tag.save()
+        super(Answer, self).delete(*args, **kwargs)
 
     class Meta:
         abstract = True
@@ -421,7 +429,7 @@ class CommentBaseModel(TimeStampedModel, ActivatableModelMixin):
         self.modified = datetime.datetime.now()
         self.save()
         super(CommentBaseModel, self).delete(*args, **kwargs)
-        
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.comment_created()

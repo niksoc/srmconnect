@@ -1,12 +1,11 @@
 from django.http import (HttpResponse, Http404)
 from django.contrib.auth.models import User
 from django.forms import ModelForm
-from django import forms
 from django.views.generic import (CreateView, UpdateView, DeleteView)
 from searchableselect.widgets import SearchableSelect
 from django.apps import apps
+from django.db.models import F
 
-from . import widgets
 from . import models
 
 
@@ -41,6 +40,10 @@ class CommonCreateFormViewBase(CreateView):
             return HttpResponse(status=401)
         obj = form.save(commit=False)
         obj.created_by = self.request.user
+        if hasattr(obj, 'tags'):
+            for tag in obj.tags.all():
+                tag.count = F('count') + 1
+                tag.save()
         obj.save()
         form.save_m2m()
         return super(CommonCreateFormViewBase, self).form_valid(form)
@@ -50,15 +53,33 @@ class CommonUpdateFormViewBase(UpdateView):
     template_name = 'app/form.html'
     permissions = isCreator
 
+    def update_tag_count(self, original_tags, updated_tags):
+        deleted_tags = set(original_tags).difference(updated_tags)
+        added_tags = set(updated_tags).difference(original_tags)
+        for tag in added_tags:
+            tag.count = F('count') + 1
+            tag.save()
+        for tag in deleted_tags:
+            tag.count = F('count') - 1
+            tag.save()
+
     def form_valid(self, form):
         if(not self.request.user.is_authenticated()):
             return HttpResponse(status=401)
         if(not self.permissions(self.get_object(), self.request.user)):
             return HttpResponse(status=403)
+        if hasattr(self.get_object(), 'tags'):
+            original_tags = self.get_object().tags.all()
+            # to evaluate the queryset, if we don't call this, then
+            # original_tags will be equal to updated_tags after lazy eval
+            len(original_tags)
         obj = form.save(commit=False)
         obj.modified_by = self.request.user
         obj.save()
         form.save_m2m()
+        if hasattr(obj, 'tags'):
+            updated_tags = obj.tags.all()
+            self.update_tag_count(original_tags, updated_tags)
         return super(CommonUpdateFormViewBase, self).form_valid(form)
 
 
@@ -89,9 +110,9 @@ class FeedbackCreateFormView(CreateView):
 
 class TagCreateFormView(CreateView):
     template_name = 'app/form.html'
-    fields = ('name', 'dept')
+    fields = ('name',)
     model = models.Tag
-    success_url = "/app/message/success/"
+    success_url = "/api/create/tag/"
 
 
 class FeedbackUpdateFormView(CommonUpdateFormViewBase):

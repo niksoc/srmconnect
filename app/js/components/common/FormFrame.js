@@ -1,14 +1,15 @@
 import React from 'react';
 
 const FormFrame = (props)=>{
-	const formframeStyle = {
-	    'width':'100%',
-	    'height':'500px'
-	};
-	return (
-		<iframe src={props.src} sandbox="allow-forms allow-same-origin allow-scripts" frameBorder="0" seamless style={formframeStyle}>
-		</iframe>
-	);
+    function autoResize(e){
+	//to resize iframe based on content height
+	let newheight = e.target.contentWindow.document.body.scrollHeight + 30;
+	e.target.height= (newheight) + "px";
+    }
+    return (
+	    <iframe onLoad={autoResize} src={props.src} width="100%" sandbox="allow-forms allow-same-origin allow-scripts" frameBorder="0" seamless>
+	    </iframe>
+    );
 };
 
 export default FormFrame;

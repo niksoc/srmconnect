@@ -27,7 +27,7 @@
 		{{q_title}}</p>
 		    {% endif %}
 
-		<input type="submit" value="{% if 'delete' in request.path %}Confirm Deletion{% else %}Save{% endif %}">
+		<input type="submit" value="{% if 'delete' in request.path %}Confirm Deletion{% elif 'tag' in request.path %}Create Tag{% else %}Save{% endif %}">
 
 	    </form>
     </body>
