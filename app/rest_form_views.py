@@ -40,12 +40,12 @@ class CommonCreateFormViewBase(CreateView):
             return HttpResponse(status=401)
         obj = form.save(commit=False)
         obj.created_by = self.request.user
+        obj.save()
+        form.save_m2m()
         if hasattr(obj, 'tags'):
             for tag in obj.tags.all():
                 tag.count = F('count') + 1
                 tag.save()
-        obj.save()
-        form.save_m2m()
         return super(CommonCreateFormViewBase, self).form_valid(form)
 
 
