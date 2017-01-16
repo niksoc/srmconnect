@@ -239,7 +239,7 @@ class Feature(TimeStampedModel, ActivatableModelMixin, SearchableModel):
         for tag in self.tags.all():
             tag.count = F('count') - 1
             tag.save()
-        super(Answer, self).delete(*args, **kwargs)
+        super(Feature, self).delete(*args, **kwargs)
 
     class Meta:
         abstract = True
