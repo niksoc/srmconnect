@@ -12,7 +12,7 @@ const DetailOptions = (props)=>{
     const id = props.edit_src.split('/').slice(3).join(' ').replace(/[\&\?=]/g, ' ');
     const button = (
 	    <DropdownButton bsStyle='link' title={icon} noCaret id={`edit and delete options for ${id}`}>
-	    <span><OwnerVisible element={editButton} owner={props.owner} /></span>
+	    <span><OwnerOrModeratorVisible element={editButton} owner={props.owner} /></span>
 	    <span><MenuItem eventKey="2">
 			<FormFrameModal style={props.style} src={props.delete_src} buttonText='Delete' title={'Delete ' + props.item} />
 	    </MenuItem></span>

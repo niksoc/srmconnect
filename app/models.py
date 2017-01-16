@@ -193,12 +193,18 @@ class Notification(models.Model):
     message = models.CharField(max_length=100)
     url = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.owner + ":" + self.message
+
 
 class AlertToUser(ActivatableModelMixin):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     text = MarkdownField()
     is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.owner + ":" + self.text
 
 
 class Feature(TimeStampedModel, ActivatableModelMixin, SearchableModel):

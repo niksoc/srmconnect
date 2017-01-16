@@ -56,7 +56,10 @@ def user(request):
     user = request.user
     if(user.is_authenticated()):
         userProfile = user.userprofile
-        return JsonResponse(utils.to_dict(userProfile))
+        fields = utils.to_dict(userProfile)
+        fields['isModerator'] = models.Moderator.objects.filter(
+            user__id=fields['user']).exists()
+        return JsonResponse(fields)
     else:
         raise Http404
 
