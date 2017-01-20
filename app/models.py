@@ -194,7 +194,7 @@ class Notification(models.Model):
     url = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.owner + ":" + self.message
+        return self.owner.profile.display_name + " : " + self.message
 
 
 class AlertToUser(ActivatableModelMixin):
@@ -204,7 +204,7 @@ class AlertToUser(ActivatableModelMixin):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.owner + ":" + self.text
+        return self.owner.profile.display_name + " : " + self.text
 
 
 class Feature(TimeStampedModel, ActivatableModelMixin, SearchableModel):

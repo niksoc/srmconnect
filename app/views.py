@@ -169,7 +169,7 @@ def clear_notifications(request):
 def alerts(request):
     user = request.user
     # alert to user 14 means alert to everybody
-    common_user = User.objects.get(pk=14)
+    common_user = User.objects.get(pk=1)
     if not user.is_authenticated():
         raise Http404
     alerts = models.AlertToUser.objects.filter(
